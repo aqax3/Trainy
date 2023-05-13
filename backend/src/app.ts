@@ -3,6 +3,7 @@ import "dotenv/config";
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
+import bcrypt from 'bcrypt';
 
 import User from "./User";
 
@@ -24,14 +25,22 @@ app.get("/", (req, res) => {
   res.send("Hello, World!");
 });
 
-app.post("/add-user", async (req, res) => {
-  const { name } = req.body;
 
-  if (!name) {
-    return res.status(400).send("Missing name");
+//REGISTER USER
+app.post("/register-user", async (req, res) => {
+  const { username, email, password } = req.body;
+
+  if (!username || !email || !password) {
+    return res.status(400).send("Missing user data");
   }
 
-  const user = new User({ name });
+  const existingUser = await User.findOne({ username });
+
+  if (existingUser) {
+    return res.status(400).send("Username already taken!");
+  }
+
+  const user = new User({ username, email, password });
   
   try {
     await user.save();
@@ -41,6 +50,34 @@ app.post("/add-user", async (req, res) => {
     res.status(500).send("Server error");
   }
 })
+
+//LOGIN USER
+app.post("/login-user", async (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    return res.status(400).send("Missing user data");
+  }
+
+  try {
+    const user = await User.findOne({ username });
+
+    if (!user) {
+      return res.status(400).send("User not found");
+    }
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+
+    if (!passwordMatch) {
+      return res.status(400).send("Invalid password");
+    }
+
+    res.send(user);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
+});
 
 // Start the server
 const PORT = process.env.PORT || 5000;
