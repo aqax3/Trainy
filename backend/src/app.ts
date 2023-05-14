@@ -3,9 +3,11 @@ import "dotenv/config";
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-import bcrypt from 'bcrypt';
+import bcrypt from "bcrypt";
+import { Request, Response, NextFunction } from "express";
+import jwt from "jsonwebtoken";
 
-import User from "./User";
+import User from "./schemas/User";
 
 const app = express();
 
@@ -25,7 +27,6 @@ app.get("/", (req, res) => {
   res.send("Hello, World!");
 });
 
-
 //REGISTER USER
 app.post("/register-user", async (req, res) => {
   const { username, email, password } = req.body;
@@ -41,7 +42,7 @@ app.post("/register-user", async (req, res) => {
   }
 
   const user = new User({ username, email, password });
-  
+
   try {
     await user.save();
     res.send(user);
@@ -49,7 +50,7 @@ app.post("/register-user", async (req, res) => {
     console.error(err);
     res.status(500).send("Server error");
   }
-})
+});
 
 //LOGIN USER
 app.post("/login-user", async (req, res) => {
@@ -72,7 +73,15 @@ app.post("/login-user", async (req, res) => {
       return res.status(400).send("Invalid password");
     }
 
-    res.send(user);
+    console.log(process.env.JWT_SECRET);
+
+    const userToken = jwt.sign(
+      { userId: user._id, username: user.username },
+      process.env.JWT_SECRET as string,
+      { expiresIn: "24h" }
+    );
+
+    res.send({ user, userToken });
   } catch (err) {
     console.error(err);
     res.status(500).send("Server error");

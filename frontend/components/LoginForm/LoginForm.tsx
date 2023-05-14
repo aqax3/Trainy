@@ -1,12 +1,15 @@
 import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 import React, { useState } from "react";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from 'expo-secure-store';
 
 import { StackNavigationProp } from '@react-navigation/stack';
 
 type RootStackParamList = {
     Registration: undefined;
     Login: undefined;
+    Home: {username: string};
   };
   
   type LoginScreenNavigationProp = StackNavigationProp<
@@ -37,6 +40,12 @@ export default function LoginForm({navigation}: Props) {
       setUsername("");
       setPassword("");
       setLoginStatus("Login successful!");
+
+      console.log(response.data.userToken);
+
+      await AsyncStorage.setItem('userToken', response.data.userToken);
+
+      navigation.navigate('Home', {username: response.data.user.username});
     } catch (error) {
       console.error(error);
       setLoginStatus("Login failed!");
