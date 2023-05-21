@@ -34,7 +34,7 @@ export default function RegistrationForm({ navigation }: Props) {
 
     try {
       const response = await axios.post(
-        "http://192.168.1.110:5000/register-user",
+        "http://192.168.1.10:5000/register-user",
         {
           username,
           email,

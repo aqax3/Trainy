@@ -10,6 +10,7 @@ import jwt from "jsonwebtoken";
 import User from "./schemas/User";
 import Exercise from "./schemas/Exercise";
 import Workout from "./schemas/Workout";
+import Plan from "./schemas/Plan";
 import authenticateToken from "./middleware/authenticateToken";
 
 const app = express();
@@ -139,6 +140,81 @@ app.get("/workouts", authenticateToken, async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).send("Server error");
+  }
+});
+
+//workouts1
+
+//shrani workout
+app.post('/workouts1', async (req, res) => {
+  try {
+    const workout = new Workout({
+      ...req.body,
+      user: req.user._id,
+    });
+    await workout.save();
+    res.status(201).send(workout);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
+
+//prikazi workout
+app.get('/workouts1', async (req, res) => {
+  try {
+    const workouts = await Workout.find({ user: req.user._id });
+    res.send(workouts);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+//uredi workout
+app.patch('/workouts1/:id', async (req, res) => {
+  try {
+    const workout = await Workout.findById(req.params.id);
+    if (!workout) return res.status(404).send();
+
+    Object.assign(workout, req.body);
+    await workout.save();
+    res.send(workout);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
+
+//izbrisi workout
+app.delete('/workouts1/:id', async (req, res) => {
+  try {
+    const workout = await Workout.findByIdAndDelete(req.params.id);
+    if (!workout) return res.status(404).send();
+    
+    res.send(workout);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+//Plans
+app.post('/plans', async (req, res) => {
+  try {
+    const plan = new Plan({
+      ...req.body,
+      user: req.user._id,
+    });
+    await plan.save();
+    res.status(201).send(plan);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
+
+app.get('/plans', async (req, res) => {
+  try {
+    const plans = await Plan.find({ user: req.user._id }).populate('workouts');
+    res.send(plans);
+  } catch (error) {
+    res.status(500).send(error);
   }
 });
 
