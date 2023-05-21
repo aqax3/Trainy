@@ -8,6 +8,9 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
 import User from "./schemas/User";
+import Exercise from "./schemas/Exercise";
+import Workout from "./schemas/Workout";
+import authenticateToken from "./middleware/authenticateToken";
 
 const app = express();
 
@@ -78,10 +81,61 @@ app.post("/login-user", async (req, res) => {
     const userToken = jwt.sign(
       { userId: user._id, username: user.username },
       process.env.JWT_SECRET as string,
-      { expiresIn: "24h" }
+      { expiresIn: "1h" }
     );
 
     res.send({ user, userToken });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
+});
+
+app.post("/exercises", authenticateToken, async (req, res) => {
+  const { name, description, type } = req.body;
+
+  const exercise = new Exercise({ name, description, type });
+
+  try {
+    await exercise.save();
+    res.send(exercise);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
+});
+
+app.get("/exercises", async (req, res) => {
+  try {
+    const exercises = await Exercise.find();
+    res.send(exercises);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
+});
+
+app.post("/workouts", authenticateToken, async (req, res) => {
+  const { date, exerciseIds } = req.body;
+  const { userId } = req.user;
+
+  const workout = new Workout({ userId, date, exercises: exerciseIds });
+
+  try {
+    await workout.save();
+    res.send(workout);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
+});
+
+app.get("/workouts", authenticateToken, async (req, res) => {
+  const { userId } = req.user;
+
+  try {
+    const workouts = await Workout.find({ userId }).populate('exercises');
+    res.send(workouts);
   } catch (err) {
     console.error(err);
     res.status(500).send("Server error");
