@@ -3,13 +3,18 @@ import React from "react";
 import { StackNavigationProp } from "@react-navigation/stack";
 import * as SecureStore from 'expo-secure-store';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useState, useEffect } from "react";
 
 import CookieManager from "@react-native-cookies/cookies";
+
+import { useLayoutEffect } from 'react';
+import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 
 type RootStackParamList = {
   Registration: undefined;
   Login: undefined;
   Home: { username: string };
+  AddWorkoutScreen: undefined;
 };
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "Home">;
@@ -20,17 +25,36 @@ type Props = {
 };
 
 export default function HomePage({
-  navigation,
-  route = { params: { username: "" } },
+  navigation
 }: Props) {
-  const { username } = route.params;
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    (async () => {
+      const storedUsername = await AsyncStorage.getItem('username');
+      if (storedUsername !== null) {
+        setUsername(storedUsername);
+      }
+    })();
+  }, []);
 
   const logoutUser = async () => {
     
     await AsyncStorage.removeItem('userToken');
+    await AsyncStorage.removeItem('username');
 
     navigation?.navigate("Login");
   };
+
+  useLayoutEffect(() => {
+    navigation?.setOptions({
+      headerRight: () => (
+        <HeaderButtons>
+          <Item title="Add Workout" onPress={() => navigation.navigate('AddWorkoutScreen')} />
+        </HeaderButtons>
+      ),
+    });
+  }, [navigation]);
 
   return (
     <View style={styles.container}>

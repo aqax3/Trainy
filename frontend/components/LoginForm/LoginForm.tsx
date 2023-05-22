@@ -2,7 +2,6 @@ import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 import React, { useState } from "react";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as SecureStore from 'expo-secure-store';
 
 import { StackNavigationProp } from '@react-navigation/stack';
 
@@ -29,7 +28,7 @@ export default function LoginForm({navigation}: Props) {
   const loginUser = async () => {
     try {
       const response = await axios.post(
-        "http://192.168.1.10:5000/login-user",
+        "http://192.168.1.110:5000/login-user",
         {
           username,
           password,
@@ -44,6 +43,7 @@ export default function LoginForm({navigation}: Props) {
       console.log(response.data.userToken);
 
       await AsyncStorage.setItem('userToken', response.data.userToken);
+      await AsyncStorage.setItem('username', response.data.user.username);
 
       navigation.navigate('Home', {username: response.data.user.username});
     } catch (error) {

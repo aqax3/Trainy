@@ -3,7 +3,7 @@ import { Document, Schema, model, Types } from "mongoose";
 interface IWorkout extends Document {
   userId: string;
   date: Date;
-  exercises: Types.ObjectId[]; // references Exercise documents
+  exercises: Types.ObjectId[]; 
 }
 
 const workoutSchema: Schema<IWorkout> = new Schema({

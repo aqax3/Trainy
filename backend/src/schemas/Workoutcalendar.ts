@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const workoutSchema = new mongoose.Schema({
+const WorkoutCalSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -22,5 +22,6 @@ const workoutSchema = new mongoose.Schema({
   },
 }, { timestamps: true });
 
+export default WorkoutCalSchema
 
-module.exports = mongoose.model('Workout', workoutSchema);
+module.exports = mongoose.model('Workoutcalendar', WorkoutCalSchema);
