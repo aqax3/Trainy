@@ -2,13 +2,17 @@ import { Document, Schema, model, Types } from "mongoose";
 
 interface IWorkout extends Document {
   userId: string;
-  date: Date;
+  name: string,
+  description: string,
+  duration: number,
   exercises: Types.ObjectId[]; 
 }
 
 const workoutSchema: Schema<IWorkout> = new Schema({
   userId: String,
-  date: Date,
+  name: String,
+  description: String,
+  duration: Number,
   exercises: [{ type: Schema.Types.ObjectId, ref: 'Exercise' }],
 });
 
