@@ -5,6 +5,7 @@ interface IWorkout extends Document {
   name: string,
   description: string,
   duration: number,
+  difficulty: string,
   exercises: Types.ObjectId[]; 
 }
 
@@ -13,6 +14,11 @@ const workoutSchema: Schema<IWorkout> = new Schema({
   name: String,
   description: String,
   duration: Number,
+  difficulty: { 
+    type: String,
+    enum: ['beginner', 'intermediate', 'advanced', 'expert'], 
+    required: true 
+  },
   exercises: [{ type: Schema.Types.ObjectId, ref: 'Exercise' }],
 });
 
