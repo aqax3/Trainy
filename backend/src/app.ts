@@ -11,7 +11,7 @@ import jwt from "jsonwebtoken";
 import User from "./schemas/User";
 import Exercise from "./schemas/Exercise";
 import Workout from "./schemas/Workout";
-import WorkoutCalSchema from "./schemas/Workoutcalendar";
+import WorkoutCalendar from "./schemas/Workoutcalendar";
 import Plan from "./schemas/Plan";
 import authenticateToken from "./middleware/authenticateToken";
 import { getWorkoutRecommendation } from "./services/recommendations";
@@ -121,10 +121,17 @@ app.get("/exercises", authenticateToken, async (req, res) => {
 });
 
 app.post("/workouts", authenticateToken, async (req, res) => {
-  const { date, exerciseIds } = req.body;
+  const { name, description, duration, difficulty, exercises } = req.body;
   const { userId } = req.user;
 
-  const workout = new Workout({ userId, date, exercises: exerciseIds });
+  const workout = new Workout({ 
+    userId, 
+    name, 
+    description, 
+    duration, 
+    difficulty, 
+    exercises
+  });
 
   try {
     await workout.save();
@@ -134,6 +141,7 @@ app.post("/workouts", authenticateToken, async (req, res) => {
     res.status(500).send("Server error");
   }
 });
+
 
 app.get("/workouts", authenticateToken, async (req, res) => {
   const { userId } = req.user;
@@ -152,13 +160,14 @@ app.get("/workouts", authenticateToken, async (req, res) => {
 //shrani workout
 app.post('/workoutcalendar', authenticateToken, async (req, res) => {
   try {
-    const workout = new WorkoutCalSchema({
+    const workoutCalendar = new WorkoutCalendar({
       ...req.body,
       user: req.user._id,
     });
-    await workout.save();
-    res.status(201).send(workout);
+    await workoutCalendar.save();
+    res.status(201).send(workoutCalendar);
   } catch (error) {
+    console.error(error);
     res.status(400).send(error);
   }
 });
@@ -166,9 +175,10 @@ app.post('/workoutcalendar', authenticateToken, async (req, res) => {
 //prikazi workout
 app.get('/workoutcalendar', authenticateToken, async (req, res) => {
   try {
-    const workouts = await WorkoutCalSchema.find({ user: req.user._id });
+    const workouts = await WorkoutCalendar.find({ user: req.user._id });
     res.send(workouts);
   } catch (error) {
+    console.error(error);
     res.status(500).send(error);
   }
 });
@@ -176,10 +186,10 @@ app.get('/workoutcalendar', authenticateToken, async (req, res) => {
 //uredi workout
 app.patch('/workoutcalendar/:id', authenticateToken, async (req, res) => {
   try {
-    const workout = await WorkoutCalSchema.findById(req.params.id);
+    const workout = await WorkoutCalendar.findById(req.params.id);
     if (!workout) return res.status(404).send();
 
-    if(workout.user.toString() !== req.user.userId){
+    if(workout.user.toString() !== req.user._id){
       return res.status(401).send('Unauthorized');
     }
 
@@ -187,6 +197,7 @@ app.patch('/workoutcalendar/:id', authenticateToken, async (req, res) => {
     await workout.save();
     res.send(workout);
   } catch (error) {
+    console.error(error);
     res.status(400).send(error);
   }
 });
@@ -194,15 +205,16 @@ app.patch('/workoutcalendar/:id', authenticateToken, async (req, res) => {
 //izbrisi workout
 app.delete('/workoutcalendar/:id', authenticateToken, async (req, res) => {
   try {
-    const workout = await WorkoutCalSchema.findByIdAndDelete(req.params.id);
+    const workout = await WorkoutCalendar.findByIdAndDelete(req.params.id);
     if (!workout) return res.status(404).send();
 
-    if(workout.user.toString() !== req.user.userId){
+    if(workout.user.toString() !== req.user._id){
       return res.status(401).send('Unauthorized');
     }
-    
+
     res.send(workout);
   } catch (error) {
+    console.error(error);
     res.status(500).send(error);
   }
 });
