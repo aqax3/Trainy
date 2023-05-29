@@ -97,9 +97,9 @@ app.post("/login-user", async (req, res) => {
 });
 
 app.post("/exercises", authenticateToken, async (req, res) => {
-  const { name, description, type } = req.body;
+  const { name, description, type, videoURL } = req.body;
 
-  const exercise = new Exercise({ name, description, type });
+  const exercise = new Exercise({ name, description, type, videoURL });
 
   try {
     await exercise.save();
