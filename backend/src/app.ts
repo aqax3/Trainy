@@ -1,6 +1,7 @@
 import "dotenv/config";
 
 import express from "express";
+import ExpressMongoSanitize from "express-mongo-sanitize";
 import mongoose from "mongoose";
 import cors from "cors";
 import bcrypt from "bcrypt";
@@ -10,10 +11,10 @@ import jwt from "jsonwebtoken";
 import User from "./schemas/User";
 import Exercise from "./schemas/Exercise";
 import Workout from "./schemas/Workout";
-import WorkoutCalSchema from "./schemas/Workoutcalendar";
+import WorkoutCalendar from "./schemas/Workoutcalendar";
 import Plan from "./schemas/Plan";
 import authenticateToken from "./middleware/authenticateToken";
-import WorkoutCalendar from "./schemas/Workoutcalendar";
+import { getWorkoutRecommendation } from "./services/recommendations";
 
 const app = express();
 
@@ -26,6 +27,7 @@ mongoose
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(ExpressMongoSanitize());
 
 // Define your API routes here
 
@@ -94,7 +96,7 @@ app.post("/login-user", async (req, res) => {
   }
 });
 
-app.post("/exercises", async (req, res) => {
+app.post("/exercises", authenticateToken, async (req, res) => {
   const { name, description, type } = req.body;
 
   const exercise = new Exercise({ name, description, type });
@@ -108,7 +110,7 @@ app.post("/exercises", async (req, res) => {
   }
 });
 
-app.get("/exercises", async (req, res) => {
+app.get("/exercises", authenticateToken, async (req, res) => {
   try {
     const exercises = await Exercise.find();
     res.send(exercises);
@@ -237,6 +239,18 @@ app.get('/plans', authenticateToken, async (req, res) => {
     res.send(plans);
   } catch (error) {
     res.status(500).send(error);
+  }
+});
+
+//Recommendations
+
+app.get("/recommendations", authenticateToken, async (req, res) => {
+  try {
+    const recommendation = await getWorkoutRecommendation(req.user._id);
+    res.send(recommendation);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server error");
   }
 });
 

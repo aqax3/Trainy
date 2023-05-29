@@ -1,6 +1,6 @@
 import { Document, Schema, model, Types } from "mongoose";
 
-interface IWorkout extends Document {
+export interface IWorkout extends Document {
   userId: string;
   name: string,
   description: string,
