@@ -1,13 +1,12 @@
-import React, { useState } from "react";
-import { View, TextInput, Button, Platform } from "react-native";
-import DatePicker from "react-native-date-picker";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useEffect, useState } from 'react';
+import { View, Button, Platform, Alert, TextInput } from 'react-native';
+import { Picker } from "@react-native-picker/picker";
+import DateTimePicker from '@react-native-community/datetimepicker';
+import axios from 'axios';
 import { StackNavigationProp } from "@react-navigation/stack";
-
-import DateTimePicker from "@react-native-community/datetimepicker";
-
 import { useLayoutEffect } from "react";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type RootStackParamList = {
   Registration: undefined;
@@ -30,6 +29,8 @@ const AddWorkoutScreen = ({ navigation }: Props) => {
   const [description, setDescription] = useState("");
   const [duration, setDuration] = useState("");
   const [date, setDate] = useState(new Date());
+  const [workout, setWorkout] = useState("");
+  const [workouts, setWorkouts] = useState<any[]>([]);
 
   useLayoutEffect(() => {
     navigation?.setOptions({
@@ -47,6 +48,26 @@ const AddWorkoutScreen = ({ navigation }: Props) => {
     });
   }, [navigation]);
 
+  useEffect(() => {
+    const fetchWorkouts = async () => {
+      try {
+        const userToken = await AsyncStorage.getItem("userToken");
+        const response = await axios.get("http://192.168.1.13:5000/workouts", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${userToken}`,
+          }
+        });
+
+        setWorkouts(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchWorkouts();
+  }, []);
+
   const onChange = (event: any, selectedDate?: Date) => {
     const currentDate = selectedDate || date;
     setDate(currentDate);
@@ -55,16 +76,17 @@ const AddWorkoutScreen = ({ navigation }: Props) => {
   const submitWorkout = async () => {
     try {
       const userToken = await AsyncStorage.getItem("userToken");
-
+      const userId = await AsyncStorage.getItem("userId");
+  
       const response = await fetch(
-        "http://192.168.1.110:5000/workoutcalendar",
+        "http://192.168.1.13:5000/workoutcalendar",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${userToken}`,
           },
-          body: JSON.stringify({ workoutName, description, duration, date }),
+          body: JSON.stringify({ user: userId, date, workout }),
         }
       );
 
@@ -77,22 +99,6 @@ const AddWorkoutScreen = ({ navigation }: Props) => {
 
   return (
     <View>
-      <TextInput
-        placeholder="Workout Name"
-        value={workoutName}
-        onChangeText={setWorkoutName}
-      />
-      <TextInput
-        placeholder="Description"
-        value={description}
-        onChangeText={setDescription}
-      />
-      <TextInput
-        placeholder="Duration"
-        value={duration}
-        onChangeText={setDuration}
-        keyboardType="numeric"
-      />
       <DateTimePicker
         testID="dateTimePicker"
         value={date}
@@ -100,6 +106,16 @@ const AddWorkoutScreen = ({ navigation }: Props) => {
         display="default"
         onChange={onChange}
       />
+      <Picker
+  selectedValue={workout}
+  onValueChange={(itemValue: string | number, itemIndex: number) => 
+    setWorkout(itemValue.toString())
+  }
+>
+  {workouts.map((workout, index) => (
+    <Picker.Item key={index} label={workout.name} value={workout._id} />
+  ))}
+</Picker>
       <Button title="Add Workout" onPress={submitWorkout} />
     </View>
   );
