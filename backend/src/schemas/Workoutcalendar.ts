@@ -1,8 +1,8 @@
-import { Schema } from "mongoose";
+import { Document,Schema } from "mongoose";
 
 const mongoose = require('mongoose');
 
-interface IWorkoutCalendar {
+export interface IWorkoutCalendar extends Document {
   user: Schema.Types.ObjectId,
   date: Date,
   workout: Schema.Types.ObjectId
