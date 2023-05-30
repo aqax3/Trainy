@@ -14,7 +14,8 @@ import Workout from "./schemas/Workout";
 import WorkoutCalendar from "./schemas/Workoutcalendar";
 import Plan from "./schemas/Plan";
 import authenticateToken from "./middleware/authenticateToken";
-import { getWorkoutRecommendation } from "./services/recommendations";
+import { getWorkoutRecommendation, getUserWorkoutHistory } from "./services/recommendations";
+import { getCompletedWorkouts, getExerciseTypeStats } from "./services/statistics";
 
 const app = express();
 
@@ -250,6 +251,37 @@ app.get("/recommendations", authenticateToken, async (req, res) => {
     res.send(recommendation);
   } catch (error) {
     console.error(error);
+    res.status(500).send("Server error");
+  }
+});
+
+app.get('/workoutHistory/:userId/:startDate', authenticateToken, async (req, res) => {
+  try {
+      const startDate = new Date(req.params.startDate);
+      const workouts = await getUserWorkoutHistory(req.user._id, startDate);
+      res.json(workouts);
+  } catch (err) {
+    res.status(500).send("Server error");
+  }
+});
+
+
+//Statsitcs
+
+app.get('/completedWorkouts/:userId', authenticateToken, async (req, res) => {
+  try {
+      const workouts = await getCompletedWorkouts(req.user._id);
+      res.json({ completedWorkouts: workouts });
+  } catch (err) {
+    res.status(500).send("Server error");
+  }
+});
+
+app.get('/exerciseTypeStats/:userId', authenticateToken, async (req, res) => {
+  try {
+      const stats = await getExerciseTypeStats(req.user._id);
+      res.json(stats);
+  } catch (err) {
     res.status(500).send("Server error");
   }
 });

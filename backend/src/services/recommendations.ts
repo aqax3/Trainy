@@ -9,7 +9,7 @@ interface IWorkoutCalendar {
   workout: IWorkout;
 }
 
-async function getUserWorkoutHistory(userId: string, startDate: Date) {
+export async function getUserWorkoutHistory(userId: string, startDate: Date) {
   return await WorkoutCalendar.find({
     user: userId,
     createdAt: { $gte: startDate },
