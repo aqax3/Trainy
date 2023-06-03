@@ -14,8 +14,14 @@ import Workout from "./schemas/Workout";
 import WorkoutCalendar from "./schemas/Workoutcalendar";
 import Plan from "./schemas/Plan";
 import authenticateToken from "./middleware/authenticateToken";
-import { getWorkoutRecommendation, getUserWorkoutHistory } from "./services/recommendations";
-import { getCompletedWorkouts, getExerciseTypeStats } from "./services/statistics";
+import {
+  getWorkoutRecommendation,
+  getUserWorkoutHistory,
+} from "./services/recommendations";
+import {
+  getCompletedWorkouts,
+  getExerciseTypeStats,
+} from "./services/statistics";
 
 const app = express();
 
@@ -97,6 +103,56 @@ app.post("/login-user", async (req, res) => {
   }
 });
 
+// user height
+app.put("/update-height", authenticateToken, async (req, res) => {
+  const { height } = req.body;
+  const { userId } = req.user;
+
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(400).send("User not found");
+    }
+
+    if (height !== undefined) {
+      user.height = height;
+    }
+
+    await user.save();
+
+    res.send(user);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
+});
+
+// user weight
+app.put("/update-weight", authenticateToken, async (req, res) => {
+  const { weight } = req.body;
+  const { userId } = req.user;
+
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(400).send("User not found");
+    }
+
+    if (weight !== undefined) {
+      user.weight = weight;
+    }
+
+    await user.save();
+
+    res.send(user);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
+});
+
 app.post("/exercises", authenticateToken, async (req, res) => {
   const { name, description, type, videoURL } = req.body;
 
@@ -125,13 +181,13 @@ app.post("/workouts", authenticateToken, async (req, res) => {
   const { name, description, duration, difficulty, exercises } = req.body;
   const { userId } = req.user;
 
-  const workout = new Workout({ 
-    userId, 
-    name, 
-    description, 
-    duration, 
-    difficulty, 
-    exercises
+  const workout = new Workout({
+    userId,
+    name,
+    description,
+    duration,
+    difficulty,
+    exercises,
   });
 
   try {
@@ -143,12 +199,11 @@ app.post("/workouts", authenticateToken, async (req, res) => {
   }
 });
 
-
 app.get("/workouts", authenticateToken, async (req, res) => {
   const { userId } = req.user;
 
   try {
-    const workouts = await Workout.find({ userId }).populate('exercises');
+    const workouts = await Workout.find({ userId }).populate("exercises");
     res.send(workouts);
   } catch (err) {
     console.error(err);
@@ -159,7 +214,7 @@ app.get("/workouts", authenticateToken, async (req, res) => {
 //workoutcalendar
 
 //shrani workout
-app.post('/workoutcalendar', authenticateToken, async (req, res) => {
+app.post("/workoutcalendar", authenticateToken, async (req, res) => {
   try {
     const workoutCalendar = new WorkoutCalendar({
       ...req.body,
@@ -174,7 +229,7 @@ app.post('/workoutcalendar', authenticateToken, async (req, res) => {
 });
 
 //prikazi workout
-app.get('/workoutcalendar', authenticateToken, async (req, res) => {
+app.get("/workoutcalendar", authenticateToken, async (req, res) => {
   try {
     const workouts = await WorkoutCalendar.find({ user: req.user._id });
     res.send(workouts);
@@ -185,13 +240,13 @@ app.get('/workoutcalendar', authenticateToken, async (req, res) => {
 });
 
 //uredi workout
-app.patch('/workoutcalendar/:id', authenticateToken, async (req, res) => {
+app.patch("/workoutcalendar/:id", authenticateToken, async (req, res) => {
   try {
     const workout = await WorkoutCalendar.findById(req.params.id);
     if (!workout) return res.status(404).send();
 
-    if(workout.user.toString() !== req.user._id){
-      return res.status(401).send('Unauthorized');
+    if (workout.user.toString() !== req.user._id) {
+      return res.status(401).send("Unauthorized");
     }
 
     Object.assign(workout, req.body);
@@ -204,13 +259,13 @@ app.patch('/workoutcalendar/:id', authenticateToken, async (req, res) => {
 });
 
 //izbrisi workout
-app.delete('/workoutcalendar/:id', authenticateToken, async (req, res) => {
+app.delete("/workoutcalendar/:id", authenticateToken, async (req, res) => {
   try {
     const workout = await WorkoutCalendar.findByIdAndDelete(req.params.id);
     if (!workout) return res.status(404).send();
 
-    if(workout.user.toString() !== req.user._id){
-      return res.status(401).send('Unauthorized');
+    if (workout.user.toString() !== req.user._id) {
+      return res.status(401).send("Unauthorized");
     }
 
     res.send(workout);
@@ -221,7 +276,7 @@ app.delete('/workoutcalendar/:id', authenticateToken, async (req, res) => {
 });
 
 //Plans
-app.post('/plans', authenticateToken, async (req, res) => {
+app.post("/plans", authenticateToken, async (req, res) => {
   try {
     const plan = new Plan({
       ...req.body,
@@ -234,9 +289,9 @@ app.post('/plans', authenticateToken, async (req, res) => {
   }
 });
 
-app.get('/plans', authenticateToken, async (req, res) => {
+app.get("/plans", authenticateToken, async (req, res) => {
   try {
-    const plans = await Plan.find({ user: req.user._id }).populate('workouts');
+    const plans = await Plan.find({ user: req.user._id }).populate("workouts");
     res.send(plans);
   } catch (error) {
     res.status(500).send(error);
@@ -255,32 +310,35 @@ app.get("/recommendations", authenticateToken, async (req, res) => {
   }
 });
 
-app.get('/workoutHistory/:userId/:startDate', authenticateToken, async (req, res) => {
-  try {
+app.get(
+  "/workoutHistory/:userId/:startDate",
+  authenticateToken,
+  async (req, res) => {
+    try {
       const startDate = new Date(req.params.startDate);
       const workouts = await getUserWorkoutHistory(req.user._id, startDate);
       res.json(workouts);
-  } catch (err) {
-    res.status(500).send("Server error");
+    } catch (err) {
+      res.status(500).send("Server error");
+    }
   }
-});
-
+);
 
 //Statsitcs
 
-app.get('/completedWorkouts/:userId', authenticateToken, async (req, res) => {
+app.get("/completedWorkouts/:userId", authenticateToken, async (req, res) => {
   try {
-      const workouts = await getCompletedWorkouts(req.user._id);
-      res.json({ completedWorkouts: workouts });
+    const workouts = await getCompletedWorkouts(req.user._id);
+    res.json({ completedWorkouts: workouts });
   } catch (err) {
     res.status(500).send("Server error");
   }
 });
 
-app.get('/exerciseTypeStats/:userId', authenticateToken, async (req, res) => {
+app.get("/exerciseTypeStats/:userId", authenticateToken, async (req, res) => {
   try {
-      const stats = await getExerciseTypeStats(req.user._id);
-      res.json(stats);
+    const stats = await getExerciseTypeStats(req.user._id);
+    res.json(stats);
   } catch (err) {
     res.status(500).send("Server error");
   }
