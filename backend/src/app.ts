@@ -21,6 +21,10 @@ import {
 import {
   getCompletedWorkouts,
   getExerciseTypeStats,
+  getAverageWorkoutDuration,
+  getLongestAndShortestWorkout,
+  getMostCommonExercise,
+  getWorkoutFrequency
 } from "./services/statistics";
 
 const app = express();
@@ -218,7 +222,7 @@ app.post("/workoutcalendar", authenticateToken, async (req, res) => {
   try {
     const workoutCalendar = new WorkoutCalendar({
       ...req.body,
-      user: req.user._id,
+      user: req.user.userId,
     });
     await workoutCalendar.save();
     res.status(201).send(workoutCalendar);
@@ -231,7 +235,7 @@ app.post("/workoutcalendar", authenticateToken, async (req, res) => {
 //prikazi workout
 app.get("/workoutcalendar", authenticateToken, async (req, res) => {
   try {
-    const workouts = await WorkoutCalendar.find({ user: req.user._id });
+    const workouts = await WorkoutCalendar.find({ user: req.user.userId });
     res.send(workouts);
   } catch (error) {
     console.error(error);
@@ -245,7 +249,7 @@ app.patch("/workoutcalendar/:id", authenticateToken, async (req, res) => {
     const workout = await WorkoutCalendar.findById(req.params.id);
     if (!workout) return res.status(404).send();
 
-    if (workout.user.toString() !== req.user._id) {
+    if (workout.user.toString() !== req.user.userId) {
       return res.status(401).send("Unauthorized");
     }
 
@@ -264,7 +268,7 @@ app.delete("/workoutcalendar/:id", authenticateToken, async (req, res) => {
     const workout = await WorkoutCalendar.findByIdAndDelete(req.params.id);
     if (!workout) return res.status(404).send();
 
-    if (workout.user.toString() !== req.user._id) {
+    if (workout.user.toString() !== req.user.userId) {
       return res.status(401).send("Unauthorized");
     }
 
@@ -280,7 +284,7 @@ app.post("/plans", authenticateToken, async (req, res) => {
   try {
     const plan = new Plan({
       ...req.body,
-      user: req.user._id,
+      user: req.user.userId,
     });
     await plan.save();
     res.status(201).send(plan);
@@ -291,7 +295,7 @@ app.post("/plans", authenticateToken, async (req, res) => {
 
 app.get("/plans", authenticateToken, async (req, res) => {
   try {
-    const plans = await Plan.find({ user: req.user._id }).populate("workouts");
+    const plans = await Plan.find({ user: req.user.userId }).populate("workouts");
     res.send(plans);
   } catch (error) {
     res.status(500).send(error);
@@ -302,7 +306,7 @@ app.get("/plans", authenticateToken, async (req, res) => {
 
 app.get("/recommendations", authenticateToken, async (req, res) => {
   try {
-    const recommendation = await getWorkoutRecommendation(req.user._id);
+    const recommendation = await getWorkoutRecommendation(req.user.userId);
     res.send(recommendation);
   } catch (error) {
     console.error(error);
@@ -316,7 +320,7 @@ app.get(
   async (req, res) => {
     try {
       const startDate = new Date(req.params.startDate);
-      const workouts = await getUserWorkoutHistory(req.user._id, startDate);
+      const workouts = await getUserWorkoutHistory(req.user.userId, startDate);
       res.json(workouts);
     } catch (err) {
       res.status(500).send("Server error");
@@ -326,19 +330,57 @@ app.get(
 
 //Statsitcs
 
-app.get("/completedWorkouts/:userId", authenticateToken, async (req, res) => {
+app.get("/completedWorkouts/", authenticateToken, async (req, res) => {
   try {
-    const workouts = await getCompletedWorkouts(req.user._id);
+    const workouts = await getCompletedWorkouts(req.user.userId);
     res.json({ completedWorkouts: workouts });
   } catch (err) {
     res.status(500).send("Server error");
   }
 });
 
-app.get("/exerciseTypeStats/:userId", authenticateToken, async (req, res) => {
+app.get("/exerciseTypeStats/", authenticateToken, async (req, res) => {
   try {
-    const stats = await getExerciseTypeStats(req.user._id);
+    const stats = await getExerciseTypeStats(req.user.userId);
     res.json(stats);
+  } catch (err) {
+    res.status(500).send("Server error");
+  }
+});
+
+app.get("/averageWorkoutDuration", authenticateToken, async (req, res) => {
+  try {
+    const averageDuration = await getAverageWorkoutDuration(req.user.userId);
+    res.json({ averageDuration });
+  } catch (err) {
+    res.status(500).send("Server error");
+  }
+});
+
+app.get("/workoutLengthStats", authenticateToken, async (req, res) => {
+  try {
+    const { longest, shortest } = await getLongestAndShortestWorkout(req.user.userId);
+    res.json({ longest, shortest });
+  } catch (err) {
+    res.status(500).send("Server error");
+  }
+});
+
+
+app.get("/mostCommonExercise", authenticateToken, async (req, res) => {
+  try {
+    const mostCommonExercise = await getMostCommonExercise(req.user.userId);
+    res.json({ mostCommonExercise });
+  } catch (err) {
+    res.status(500).send("Server error");
+  }
+});
+
+app.get("/workoutFrequency/:period", authenticateToken, async (req, res) => {
+  const period = req.params.period as "week" | "month";
+  try {
+    const frequency = await getWorkoutFrequency(req.user.userId, period);
+    res.json({ frequency });
   } catch (err) {
     res.status(500).send("Server error");
   }

@@ -13,6 +13,7 @@ function authenticateToken(req: Request, res: Response, next: NextFunction) {
     req.user = user;
     next();
   });
+  console.log(req.user);
 }
 
 export default authenticateToken;

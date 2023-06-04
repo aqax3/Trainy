@@ -132,3 +132,4 @@ export async function getWorkoutFrequency(userId: string, period: 'week' | 'mont
 
     return workouts.length;
 }
+
