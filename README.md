@@ -6,7 +6,9 @@ With Trainy, users can create custom workouts from an extensive collection of ex
 
 ## Prerequisites
 
-- Node.js (version v18.14.0)
+- React-Native (version 0.71.8)
+- MongoDB (latest version pulled from Docker Hub)
+- Node.js (version 18.14.0)
 - Docker (version 23.0.5)
 - Expo CLI (installed globally)
 
