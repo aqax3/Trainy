@@ -53,6 +53,7 @@ The Expo development server will start, and you can access your application thro
 ## Demo Account
 
 Username: demouser
+
 Password: demo1234
 
 ## Contacts
@@ -60,5 +61,7 @@ Password: demo1234
 For any queries or feedback, please feel free to reach out to us:
 
 Luka Moleh: luka.moleh@student.um.si
+
 Nik Fišer: nik.fiser@student.um.si
+
 Anej Lah: anej.lah@student.um.si
