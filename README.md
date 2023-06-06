@@ -1,6 +1,8 @@
 # Trainy
 
-Welcome to the repository of Trainy! This application consists of a frontend and a backend, and this README provides instructions on how to clone and run the application locally.
+Welcome to Trainy, a comprehensive fitness application designed to motivate, guide, and track your fitness journey. This README provides instructions on how to clone and run the application locally.
+
+With Trainy, users can create custom workouts from an extensive collection of exercises, each with varying levels of difficulty from beginner to advanced. Each exercise comes equipped with a helpful video and description to ensure correct form and technique. For added convenience and organization, users can schedule their custom workouts on a built-in calendar, enabling easy tracking of fitness progress and routine. Beyond individual workouts, Trainy also houses a smart recommendation system that encourages progress by suggesting harder workouts based on previous difficulties.
 
 ## Prerequisites
 
@@ -47,3 +49,16 @@ If the connection fails, try running Expo in tunnel mode:
 npx expo start --tunnel
 ```
 The Expo development server will start, and you can access your application through the Expo app on your mobile device, which you can download on the iOS App Store, or an emulator.
+
+## Demo Account
+
+Username: demouser
+Password: demo1234
+
+## Contacts
+
+For any queries or feedback, please feel free to reach out to us:
+
+Luka Moleh: luka.moleh@student.um.si
+Nik Fišer: nik.fiser@student.um.si
+Anej Lah: anej.lah@student.um.si
