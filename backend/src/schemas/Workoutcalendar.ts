@@ -1,29 +1,37 @@
-import { Document,Schema } from "mongoose";
+import { Document, Schema } from "mongoose";
 
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 export interface IWorkoutCalendar extends Document {
-  user: Schema.Types.ObjectId,
-  date: Date,
-  workout: Schema.Types.ObjectId
+  user: Schema.Types.ObjectId;
+  date: Date;
+  workout: Schema.Types.ObjectId;
+  completed: boolean;
 }
 
-const WorkoutCalSchema = new Schema<IWorkoutCalendar>({
+const WorkoutCalSchema = new Schema<IWorkoutCalendar>(
+  {
     user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-      },
-  date: {
-    type: Date,
-    required: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+    date: {
+      type: Date,
+      required: true,
+    },
+    workout: {
+      type: Schema.Types.ObjectId,
+      ref: "Workout",
+      required: true,
+    },
+    completed: {
+      type: Boolean,
+      default: false,
+    }
   },
-  workout: {
-    type: Schema.Types.ObjectId,
-    ref: 'Workout',
-    required: true,
-},
-}, { timestamps: true });
+  { timestamps: true }
+);
 
-const WorkoutCalendar = mongoose.model('WorkoutCalendar', WorkoutCalSchema);
+const WorkoutCalendar = mongoose.model("WorkoutCalendar", WorkoutCalSchema);
 
 export default WorkoutCalendar;

@@ -12,6 +12,7 @@ interface IWorkoutCalendar {
 export async function getUserWorkoutHistory(userId: string, startDate: Date) {
   return await WorkoutCalendar.find({
     user: userId,
+    completed: true,
     createdAt: { $gte: startDate },
   })
     .populate("workout")
