@@ -207,7 +207,7 @@ app.get("/workouts", authenticateToken, async (req, res) => {
   const { userId } = req.user;
 
   try {
-    const workouts = await Workout.find({ userId }).populate("exercises");
+    const workouts = await Workout.find({ userId }).populate('exercises.exerciseId');
     res.send(workouts);
   } catch (err) {
     console.error(err);
