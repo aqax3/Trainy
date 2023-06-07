@@ -38,6 +38,7 @@ import {
 } from "react-native";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { transparent } from "react-native-paper/lib/typescript/src/styles/themes/v2/colors";
 
 const Tab = createBottomTabNavigator();
 function BottomTabsRoot({ navigation }: any) {
@@ -66,6 +67,8 @@ function BottomTabsRoot({ navigation }: any) {
               overflow: "hidden",
               maxHeight: "100%",
               flexDirection: "row",
+              justifyContent: "space-between",
+              backgroundColor: "#1a2d3d",
             }}
           >
             {bottomTabItemsNormal.map((item: any, index: any) => {
