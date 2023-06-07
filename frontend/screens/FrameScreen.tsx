@@ -1,21 +1,25 @@
 import React, { useState } from "react";
-import { Pressable, Text, StyleSheet, View, TextInput } from "react-native";
+import { Pressable, StyleSheet, View, Text, TextInput } from "react-native";
 import { Image } from "expo-image";
-import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
+import { useNavigation } from "@react-navigation/native";
+import { Color, FontFamily, Border, FontSize } from "../GlobalStyles";
 
 const FrameScreen = () => {
   const [frameTextInput, setFrameTextInput] = useState("Email");
+  const navigation = useNavigation();
 
   return (
     <View style={styles.forgotPasswordParent}>
       <View style={styles.forgotPassword}>
-        <View style={styles.tryAnotherWayParent}>
-          <Text style={styles.tryAnotherWay}>Try another way</Text>
+        <Pressable
+          style={styles.defaultButtonWrapper}
+          onPress={() => navigation.navigate("Login")}
+        >
           <Pressable style={styles.defaultButton}>
             <View style={styles.rectangle} />
             <Text style={styles.buttonText}>Send</Text>
           </Pressable>
-        </View>
+        </Pressable>
         <TextInput
           style={[styles.forgotPasswordChild, styles.textPosition]}
           placeholder="Email"
@@ -33,7 +37,7 @@ const FrameScreen = () => {
           >{`Enter your informations below or
 login with a other account`}</Text>
         </View>
-        <Pressable style={styles.nav}>
+        <Pressable style={styles.nav} onPress={() => navigation.goBack()}>
           <Image
             style={styles.circleLeftIcon}
             contentFit="cover"
@@ -51,17 +55,9 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   forgotPassword1Typo: {
+    textAlign: "left",
     color: Color.white,
     fontFamily: FontFamily.roboto,
-    textAlign: "left",
-  },
-  tryAnotherWay: {
-    fontSize: FontSize.footnoteRegular_size,
-    color: Color.buttonGreen,
-    textAlign: "left",
-    fontFamily: FontFamily.h5Semibold,
-    fontWeight: "600",
-    lineHeight: 16,
   },
   rectangle: {
     height: "100%",
@@ -70,7 +66,7 @@ const styles = StyleSheet.create({
     bottom: "0%",
     left: "0%",
     borderRadius: Border.br_5xl,
-    backgroundColor: Color.buttonGreen,
+    backgroundColor: Color.mediumseagreen,
     position: "absolute",
     width: "100%",
   },
@@ -79,19 +75,18 @@ const styles = StyleSheet.create({
     marginLeft: -20.5,
     top: "50%",
     left: "50%",
+    fontWeight: "600",
+    fontFamily: FontFamily.subtitleMedium,
     color: Color.black,
     textAlign: "center",
     fontSize: FontSize.subtitleMedium_size,
-    fontFamily: FontFamily.h5Semibold,
-    fontWeight: "600",
     position: "absolute",
   },
   defaultButton: {
     height: 50,
-    marginTop: 32,
     alignSelf: "stretch",
   },
-  tryAnotherWayParent: {
+  defaultButtonWrapper: {
     top: 379,
     left: 120,
     alignItems: "center",
@@ -104,18 +99,16 @@ const styles = StyleSheet.create({
     fontSize: FontSize.subtitleMedium_size,
   },
   forgotPassword1: {
-    fontSize: FontSize.h3Regular_size,
+    fontSize: 24,
     lineHeight: 30,
     fontWeight: "700",
     width: 207,
   },
   enterYourInformations: {
     fontSize: FontSize.size_3xs,
+    lineHeight: 16,
     marginTop: 16,
     alignSelf: "stretch",
-    lineHeight: 16,
-    color: Color.white,
-    fontFamily: FontFamily.roboto,
   },
   text: {
     top: 114,
@@ -131,7 +124,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   forgotPassword: {
-    backgroundColor: Color.bg,
+    backgroundColor: Color.darkslategray_200,
     height: 812,
     overflow: "hidden",
     flex: 1,

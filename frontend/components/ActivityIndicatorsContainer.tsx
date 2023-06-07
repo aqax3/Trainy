@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 
-const GraphicsContainer = () => {
+const ActivityIndicatorsContainer = () => {
   const [
     activeCaloriesActivityIndicatorAnimating,
     setActiveCaloriesActivityIndicatorAnimating,
@@ -72,4 +72,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default GraphicsContainer;
+export default ActivityIndicatorsContainer;

@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
   loremIpsumDolor: {
     lineHeight: 18,
     fontWeight: "600",
-    fontFamily: FontFamily.h5Semibold,
+    fontFamily: FontFamily.subtitleMedium,
     color: Color.white,
   },
   consecteturAdipiscingElit: {
@@ -83,13 +83,13 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.interRegular,
   },
   loremIpsumDolorContainer: {
-    fontSize: FontSize.bodyMedium_size,
+    fontSize: FontSize.bodyRegular_size,
     marginTop: 32,
     textAlign: "center",
     alignSelf: "stretch",
   },
   privacyPolicy: {
-    backgroundColor: Color.bg,
+    backgroundColor: Color.darkslategray_200,
     flex: 1,
     overflow: "hidden",
     paddingLeft: Padding.p_9xl,

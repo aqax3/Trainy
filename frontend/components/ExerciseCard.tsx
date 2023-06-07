@@ -7,11 +7,12 @@ import {
   ImageSourcePropType,
 } from "react-native";
 import { Image } from "expo-image";
+import { useNavigation } from "@react-navigation/native";
 import { Border, Color, FontSize, FontFamily } from "../GlobalStyles";
 
 type ExerciseCardType = {
   exerciseTitle?: string;
-  exerciseId?: ImageSourcePropType;
+  exerciseDescription?: ImageSourcePropType;
 
   /** Style props */
   propTop?: number | string;
@@ -23,7 +24,7 @@ const getStyleValue = (key: string, value: string | number | undefined) => {
 };
 const ExerciseCard = ({
   exerciseTitle,
-  exerciseId,
+  exerciseDescription,
   propTop,
 }: ExerciseCardType) => {
   const smallCardStyle = useMemo(() => {
@@ -32,14 +33,19 @@ const ExerciseCard = ({
     };
   }, [propTop]);
 
+  const navigation = useNavigation();
+
   return (
-    <Pressable style={[styles.smallCard, smallCardStyle]}>
+    <Pressable
+      style={[styles.smallCard, smallCardStyle]}
+      onPress={() => navigation.navigate("Video")}
+    >
       <View style={[styles.rectangle, styles.rectanglePosition]} />
       <Text style={[styles.title, styles.titlePosition]}>{exerciseTitle}</Text>
       <Image
         style={[styles.imageIcon, styles.iconPosition]}
         contentFit="cover"
-        source={exerciseId}
+        source={exerciseDescription}
       />
       <Image
         style={[styles.downIcon, styles.iconPosition]}
@@ -78,10 +84,10 @@ const styles = StyleSheet.create({
     height: "47.37%",
     width: "47.27%",
     top: "13.16%",
-    fontSize: FontSize.bodyMedium_size,
+    fontSize: FontSize.bodyRegular_size,
     lineHeight: 18,
     fontWeight: "600",
-    fontFamily: FontFamily.h5Semibold,
+    fontFamily: FontFamily.subtitleMedium,
     color: Color.white,
   },
   imageIcon: {
@@ -103,10 +109,10 @@ const styles = StyleSheet.create({
   title1: {
     width: "18.01%",
     top: "65.79%",
-    fontSize: FontSize.footnoteRegular_size,
+    fontSize: FontSize.size_smi,
     lineHeight: 16,
     fontFamily: FontFamily.bodyRegular,
-    color: Color.buttonGreen,
+    color: Color.mediumseagreen,
   },
   smallCard: {
     top: 588,

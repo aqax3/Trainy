@@ -1,6 +1,6 @@
 import * as React from "react";
-import { StyleProp, ViewStyle, Text, StyleSheet, View } from "react-native";
-import { FontSize, FontFamily, Color } from "../GlobalStyles";
+import { StyleProp, ViewStyle, StyleSheet, View } from "react-native";
+import { Color, Border } from "../GlobalStyles";
 
 type GroupComponentType = {
   style?: StyleProp<ViewStyle>;
@@ -8,36 +8,51 @@ type GroupComponentType = {
 
 const GroupComponent = ({ style }: GroupComponentType) => {
   return (
-    <View style={[styles.loginParent, style]}>
-      <Text style={[styles.login, styles.loginPosition]}>Login</Text>
-      <View style={[styles.selection, styles.loginPosition]} />
+    <View style={[styles.groupParent, style]}>
+      <View style={[styles.rectangleParent, styles.groupItemPosition]}>
+        <View style={[styles.groupChild, styles.groupLayout]} />
+        <View style={[styles.groupItem, styles.groupLayout]} />
+        <View style={[styles.groupInner, styles.groupLayout]} />
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  loginPosition: {
-    left: 0,
+  groupItemPosition: {
+    top: 0,
+    height: 22,
+  },
+  groupLayout: {
+    width: 5,
+    backgroundColor: Color.white,
+    borderRadius: Border.br_5xl,
     position: "absolute",
   },
-  login: {
+  groupChild: {
+    top: 11,
+    height: 11,
+    left: 0,
+  },
+  groupItem: {
+    left: 8,
     top: 0,
-    fontSize: FontSize.footnoteRegular_size,
-    lineHeight: 16,
-    fontWeight: "600",
-    fontFamily: FontFamily.h5Semibold,
-    color: Color.white,
-    textAlign: "left",
+    height: 22,
   },
-  selection: {
-    top: 23,
-    backgroundColor: Color.buttonGreen,
-    height: 3,
-    width: 35,
+  groupInner: {
+    top: 6,
+    left: 16,
+    height: 16,
   },
-  loginParent: {
-    height: 26,
-    width: 35,
+  rectangleParent: {
+    left: 0,
+    position: "absolute",
+    top: 0,
+    width: 21,
+  },
+  groupParent: {
+    height: 22,
+    width: 21,
   },
 });
 

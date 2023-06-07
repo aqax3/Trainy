@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
+import { useNavigation } from "@react-navigation/native";
 import { Border, Color, FontSize, FontFamily } from "../GlobalStyles";
 
 type Card4Type = {
@@ -16,13 +17,18 @@ type Card4Type = {
 };
 
 const Card4 = ({ style }: Card4Type) => {
+  const navigation = useNavigation();
+
   return (
-    <Pressable style={[styles.card4, style]}>
+    <Pressable
+      style={[styles.card4, style]}
+      onPress={() => navigation.navigate("WorkoutPlanDetail")}
+    >
       <View style={styles.cardPosition}>
         <Image
           style={[styles.imageIcon, styles.imageIconPosition]}
           contentFit="cover"
-          source={require("../assets/image12.png")}
+          source={require("../assets/image5.png")}
         />
         <LinearGradient
           style={[styles.rectangle, styles.imageIconPosition]}
@@ -84,11 +90,11 @@ const styles = StyleSheet.create({
   title1: {
     fontSize: FontSize.subtitleMedium_size,
     fontWeight: "600",
-    fontFamily: FontFamily.h5Semibold,
+    fontFamily: FontFamily.subtitleMedium,
     textAlign: "left",
   },
   vector: {
-    backgroundColor: Color.buttonGreen,
+    backgroundColor: Color.mediumseagreen,
     width: 11,
     height: 2,
     transform: [
@@ -98,10 +104,10 @@ const styles = StyleSheet.create({
     ],
   },
   subtitle1: {
-    fontSize: FontSize.footnoteRegular_size,
+    fontSize: FontSize.size_smi,
     lineHeight: 16,
     fontFamily: FontFamily.bodyRegular,
-    color: Color.buttonGreen,
+    color: Color.mediumseagreen,
     textAlign: "left",
   },
   subtitle: {
@@ -125,7 +131,7 @@ const styles = StyleSheet.create({
     fontSize: FontSize.captionRegular_size,
     lineHeight: 13,
     fontWeight: "700",
-    fontFamily: FontFamily.captionBold,
+    fontFamily: FontFamily.openSansBold,
     textAlign: "left",
     position: "absolute",
     color: Color.white,

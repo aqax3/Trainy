@@ -1,21 +1,31 @@
 import * as React from "react";
 import { Pressable, StyleSheet, View, Text } from "react-native";
 import { Image } from "expo-image";
-import Rectangle from "./Rectangle";
-import { Color, FontFamily, FontSize, Border, Padding } from "../GlobalStyles";
+import { LinearGradient } from "expo-linear-gradient";
+import { useNavigation } from "@react-navigation/native";
+import { Border, Color, FontFamily, FontSize, Padding } from "../GlobalStyles";
 
 const Day01WarmUpSection = () => {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.cardWithTitleWrapper}>
       <View style={styles.cardWithTitle}>
-        <Pressable style={styles.card1}>
+        <Pressable
+          style={styles.card1}
+          onPress={() => navigation.navigate("WorkoutPlanDetail")}
+        >
           <View style={[styles.card, styles.cardPosition]}>
             <Image
-              style={[styles.imageIcon, styles.cardPosition]}
+              style={[styles.imageIcon, styles.imageIconPosition]}
               contentFit="cover"
-              source={require("../assets/image5.png")}
+              source={require("../assets/image2.png")}
             />
-            <Rectangle />
+            <LinearGradient
+              style={[styles.rectangle, styles.imageIconPosition]}
+              locations={[0, 1]}
+              colors={["rgba(17, 17, 18, 0)", "rgba(17, 17, 18, 0.6)"]}
+            />
           </View>
           <View style={[styles.title, styles.titlePosition]}>
             <Text style={[styles.title1, styles.titleClr]}>
@@ -48,6 +58,16 @@ const styles = StyleSheet.create({
     left: "0%",
     position: "absolute",
   },
+  imageIconPosition: {
+    borderRadius: Border.br_base,
+    top: "0%",
+    height: "100%",
+    left: "0%",
+    bottom: "0%",
+    right: "0%",
+    width: "100%",
+    position: "absolute",
+  },
   titlePosition: {
     bottom: 16,
     position: "absolute",
@@ -57,21 +77,18 @@ const styles = StyleSheet.create({
     textAlign: "left",
   },
   textLinkTypo: {
-    color: Color.buttonGreen,
+    color: Color.mediumseagreen,
     fontFamily: FontFamily.bodyRegular,
     lineHeight: 16,
-    fontSize: FontSize.footnoteRegular_size,
+    fontSize: FontSize.size_smi,
   },
   imageIcon: {
-    borderRadius: Border.br_base,
     maxWidth: "100%",
     overflow: "hidden",
     maxHeight: "100%",
-    height: "100%",
-    top: "0%",
-    bottom: "0%",
-    right: "0%",
-    width: "100%",
+  },
+  rectangle: {
+    backgroundColor: "transparent",
   },
   card: {
     height: "100%",
@@ -82,14 +99,14 @@ const styles = StyleSheet.create({
   },
   title1: {
     textAlign: "left",
-    fontFamily: FontFamily.h5Semibold,
+    fontFamily: FontFamily.subtitleMedium,
     fontWeight: "600",
     fontSize: FontSize.subtitleMedium_size,
     color: Color.white,
     alignSelf: "stretch",
   },
   vector: {
-    backgroundColor: Color.buttonGreen,
+    backgroundColor: Color.mediumseagreen,
     width: 11,
     height: 2,
     transform: [
@@ -126,7 +143,7 @@ const styles = StyleSheet.create({
     fontSize: FontSize.captionRegular_size,
     lineHeight: 13,
     fontWeight: "700",
-    fontFamily: FontFamily.captionBold,
+    fontFamily: FontFamily.openSansBold,
     textAlign: "left",
     position: "absolute",
   },
@@ -147,7 +164,7 @@ const styles = StyleSheet.create({
   },
   headline: {
     textAlign: "left",
-    fontFamily: FontFamily.h5Semibold,
+    fontFamily: FontFamily.subtitleMedium,
     fontWeight: "600",
     fontSize: FontSize.subtitleMedium_size,
     color: Color.white,

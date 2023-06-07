@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
   },
   unitsOfMeasure: {
-    backgroundColor: Color.bg,
+    backgroundColor: Color.darkslategray_200,
     flex: 1,
     overflow: "hidden",
     paddingLeft: Padding.p_5xl,

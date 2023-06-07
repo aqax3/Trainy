@@ -33,7 +33,12 @@ const EditProfile = () => {
       </View>
       <View style={[styles.frame1, styles.frameFlexBox]}>
         <View style={[styles.frame2, styles.frame2FlexBox]}>
-          <Pressable style={styles.defaultButton}>
+          <Pressable
+            style={styles.defaultButton}
+            onPress={() =>
+              navigation.navigate("BottomTabsRoot", { screen: "Profile" })
+            }
+          >
             <View style={[styles.rectangle, styles.iconLayout]} />
             <Text style={styles.buttonText}>Save</Text>
           </Pressable>
@@ -89,7 +94,7 @@ const styles = StyleSheet.create({
   },
   inputTypo: {
     height: 60,
-    fontFamily: FontFamily.h5Semibold,
+    fontFamily: FontFamily.subtitleMedium,
     fontWeight: "600",
     fontSize: FontSize.subtitleMedium_size,
     alignSelf: "stretch",
@@ -121,7 +126,7 @@ const styles = StyleSheet.create({
     bottom: "0%",
     left: "0%",
     borderRadius: Border.br_5xl,
-    backgroundColor: Color.buttonGreen,
+    backgroundColor: Color.mediumseagreen,
     position: "absolute",
   },
   buttonText: {
@@ -130,7 +135,7 @@ const styles = StyleSheet.create({
     top: "50%",
     left: "50%",
     color: Color.black,
-    fontFamily: FontFamily.h5Semibold,
+    fontFamily: FontFamily.subtitleMedium,
     fontWeight: "600",
     fontSize: FontSize.subtitleMedium_size,
     position: "absolute",
@@ -176,14 +181,14 @@ const styles = StyleSheet.create({
   frame1: {
     height: 658,
     paddingTop: Padding.p_167xl,
-    paddingRight: Padding.p_2xs,
+    paddingRight: 11,
     paddingBottom: Padding.p_167xl,
     justifyContent: "flex-end",
     marginTop: -246,
     alignSelf: "stretch",
   },
   editProfile: {
-    backgroundColor: Color.bg,
+    backgroundColor: Color.darkslategray_200,
     flex: 1,
     paddingLeft: Padding.p_8xl,
     paddingTop: Padding.p_13xl,

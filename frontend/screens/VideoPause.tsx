@@ -2,9 +2,12 @@ import * as React from "react";
 import { Image } from "expo-image";
 import { StyleSheet, Pressable, View, Text } from "react-native";
 import RecommendedContainer from "../components/RecommendedContainer";
+import { useNavigation } from "@react-navigation/native";
 import { Border, Color, FontFamily, FontSize } from "../GlobalStyles";
 
 const VideoPause = () => {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.videoPause}>
       <Image
@@ -59,11 +62,16 @@ const VideoPause = () => {
           <Text style={[styles.duration, styles.timeTypo]}>15:00</Text>
         </View>
       </View>
-      <Image
-        style={[styles.circleLeftIcon, styles.playerPosition]}
-        contentFit="cover"
-        source={require("../assets/circle-left.png")}
-      />
+      <Pressable
+        style={[styles.circleLeft, styles.playerPosition]}
+        onPress={() => navigation.goBack()}
+      >
+        <Image
+          style={styles.icon}
+          contentFit="cover"
+          source={require("../assets/circle-left2.png")}
+        />
+      </Pressable>
     </View>
   );
 };
@@ -120,7 +128,7 @@ const styles = StyleSheet.create({
   timeTypo: {
     fontFamily: FontFamily.bodyRegular,
     lineHeight: 16,
-    fontSize: FontSize.footnoteRegular_size,
+    fontSize: FontSize.size_smi,
     top: "75.38%",
     textAlign: "left",
     color: Color.white,
@@ -178,7 +186,6 @@ const styles = StyleSheet.create({
   skipBack1: {
     bottom: "0%",
     height: "100%",
-    left: "0%",
   },
   skipBack: {
     right: "69.11%",
@@ -232,17 +239,17 @@ const styles = StyleSheet.create({
     top: "50.77%",
     height: "15.38%",
     width: "100%",
-    backgroundColor: Color.bg,
+    backgroundColor: Color.darkslategray_200,
   },
   rectangle2: {
     width: "33.03%",
     right: "66.97%",
-    backgroundColor: Color.buttonGreen,
+    backgroundColor: Color.mediumseagreen,
   },
   title: {
     fontSize: FontSize.subtitleMedium_size,
     fontWeight: "600",
-    fontFamily: FontFamily.h5Semibold,
+    fontFamily: FontFamily.subtitleMedium,
     textAlign: "left",
     color: Color.white,
     left: "0.31%",
@@ -253,7 +260,7 @@ const styles = StyleSheet.create({
     left: "0.31%",
     fontFamily: FontFamily.bodyRegular,
     lineHeight: 16,
-    fontSize: FontSize.footnoteRegular_size,
+    fontSize: FontSize.size_smi,
     top: "75.38%",
   },
   duration: {
@@ -268,7 +275,11 @@ const styles = StyleSheet.create({
     width: 327,
     height: 125,
   },
-  circleLeftIcon: {
+  icon: {
+    height: "100%",
+    width: "100%",
+  },
+  circleLeft: {
     top: 32,
     width: 32,
     height: 32,
@@ -277,8 +288,8 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 812,
     overflow: "hidden",
+    backgroundColor: Color.darkslategray_200,
     width: "100%",
-    backgroundColor: Color.bg,
   },
 });
 

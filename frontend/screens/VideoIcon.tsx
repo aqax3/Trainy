@@ -9,9 +9,12 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { Image } from "expo-image";
 import { ProgressBar as RNPProgressBar } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
 import { Color, Border, FontFamily, FontSize } from "../GlobalStyles";
 
 const VideoIcon = () => {
+  const navigation = useNavigation();
+
   return (
     <ImageBackground
       style={styles.videoIcon}
@@ -23,11 +26,13 @@ const VideoIcon = () => {
         locations={[0, 1]}
         colors={["rgba(17, 17, 18, 0)", "rgba(17, 17, 18, 0.7)"]}
       />
-      <Image
-        style={styles.circleLeftIcon}
-        contentFit="cover"
-        source={require("../assets/circle-left.png")}
-      />
+      <Pressable style={styles.circleLeft} onPress={() => navigation.goBack()}>
+        <Image
+          style={[styles.icon, styles.iconLayout1]}
+          contentFit="cover"
+          source={require("../assets/circle-left2.png")}
+        />
+      </Pressable>
       <View style={styles.player}>
         <Image
           style={[styles.repeatIcon, styles.iconLayout]}
@@ -61,11 +66,16 @@ const VideoIcon = () => {
           contentFit="cover"
           source={require("../assets/volume-up.png")}
         />
-        <Image
-          style={[styles.pauseIcon, styles.iconLayout]}
-          contentFit="cover"
-          source={require("../assets/pause.png")}
-        />
+        <Pressable
+          style={styles.pause}
+          onPress={() => navigation.navigate("VideoPause")}
+        >
+          <Image
+            style={[styles.icon1, styles.iconLayout]}
+            contentFit="cover"
+            source={require("../assets/pause.png")}
+          />
+        </Pressable>
         <View style={[styles.timeline, styles.timelinePosition]}>
           <View style={[styles.wrapper, styles.wrapperPosition]}>
             <RNPProgressBar
@@ -86,7 +96,7 @@ const VideoIcon = () => {
 
 const styles = StyleSheet.create({
   rnpprogressbar: {
-    backgroundColor: Color.bg,
+    backgroundColor: Color.darkslategray_200,
     height: "15.38%",
     width: "100%",
   },
@@ -97,10 +107,13 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: "100%",
   },
+  iconLayout1: {
+    width: "100%",
+    height: "100%",
+  },
   iconLayout: {
     maxHeight: "100%",
     maxWidth: "100%",
-    position: "absolute",
     overflow: "hidden",
   },
   skipPosition: {
@@ -108,6 +121,7 @@ const styles = StyleSheet.create({
     top: "65.6%",
     width: "7.34%",
     height: "19.2%",
+    position: "absolute",
   },
   groupPosition: {
     bottom: "20.83%",
@@ -137,7 +151,7 @@ const styles = StyleSheet.create({
   timeTypo: {
     fontFamily: FontFamily.bodyRegular,
     lineHeight: 16,
-    fontSize: FontSize.footnoteRegular_size,
+    fontSize: FontSize.size_smi,
     top: "75.38%",
     textAlign: "left",
     color: Color.white,
@@ -147,11 +161,13 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     bottom: "0%",
     height: "100%",
-    left: "0%",
   },
-  circleLeftIcon: {
-    top: 32,
+  icon: {
+    height: "100%",
+  },
+  circleLeft: {
     left: 0,
+    top: 32,
     width: 32,
     height: 32,
     position: "absolute",
@@ -163,6 +179,7 @@ const styles = StyleSheet.create({
     top: "65.6%",
     width: "7.34%",
     height: "19.2%",
+    position: "absolute",
   },
   path2Icon: {
     height: "88.28%",
@@ -200,12 +217,10 @@ const styles = StyleSheet.create({
   skipBack1: {
     bottom: "0%",
     height: "100%",
-    left: "0%",
   },
   skipBack: {
     right: "69.11%",
     left: "23.55%",
-    position: "absolute",
   },
   path2Icon1: {
     height: "51.5%",
@@ -226,7 +241,6 @@ const styles = StyleSheet.create({
   skipFwd: {
     right: "23.85%",
     left: "68.81%",
-    position: "absolute",
   },
   volumeUpIcon: {
     top: "64.8%",
@@ -236,14 +250,20 @@ const styles = StyleSheet.create({
     width: "7.34%",
     height: "19.2%",
     maxWidth: "100%",
+    position: "absolute",
   },
-  pauseIcon: {
-    height: "51.2%",
-    width: "19.57%",
+  icon1: {
+    height: "100%",
+    width: "100%",
+  },
+  pause: {
+    left: "40.06%",
     top: "48.8%",
     right: "40.37%",
-    left: "40.06%",
+    width: "19.57%",
+    height: "51.2%",
     bottom: "0%",
+    position: "absolute",
   },
   wrapper: {
     opacity: 0.5,
@@ -256,12 +276,12 @@ const styles = StyleSheet.create({
   rectangle3: {
     width: "33.03%",
     right: "66.97%",
-    backgroundColor: Color.buttonGreen,
+    backgroundColor: Color.mediumseagreen,
   },
   title: {
     fontSize: FontSize.subtitleMedium_size,
     fontWeight: "600",
-    fontFamily: FontFamily.h5Semibold,
+    fontFamily: FontFamily.subtitleMedium,
     textAlign: "left",
     color: Color.white,
     left: "0.31%",
@@ -272,7 +292,7 @@ const styles = StyleSheet.create({
     left: "0.31%",
     fontFamily: FontFamily.bodyRegular,
     lineHeight: 16,
-    fontSize: FontSize.footnoteRegular_size,
+    fontSize: FontSize.size_smi,
     top: "75.38%",
   },
   duration: {

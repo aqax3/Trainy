@@ -21,11 +21,14 @@ const Profile = () => {
         <ContainerFrame />
         <View style={styles.frame1}>
           <View style={styles.options}>
-            <Pressable style={styles.profileLayout}>
+            <Pressable
+              style={styles.profileLayout}
+              onPress={() => navigation.navigate("EditProfile")}
+            >
               <Image
                 style={styles.rectangleIcon}
                 contentFit="cover"
-                source={require("../assets/rectangle2.png")}
+                source={require("../assets/rectangle1.png")}
               />
               <Text style={[styles.editProfile, styles.signOut1Typo]}>
                 Edit Profile
@@ -36,11 +39,14 @@ const Profile = () => {
                 source={require("../assets/right.png")}
               />
             </Pressable>
-            <Pressable style={[styles.profileList1, styles.profileLayout]}>
+            <Pressable
+              style={[styles.profileList1, styles.profileLayout]}
+              onPress={() => navigation.navigate("PrivacyPolicy")}
+            >
               <Image
                 style={styles.rectangleIcon}
                 contentFit="cover"
-                source={require("../assets/rectangle2.png")}
+                source={require("../assets/rectangle1.png")}
               />
               <Text style={[styles.editProfile, styles.signOut1Typo]}>
                 Privacy Policy
@@ -51,11 +57,14 @@ const Profile = () => {
                 source={require("../assets/right.png")}
               />
             </Pressable>
-            <Pressable style={[styles.profileList1, styles.profileLayout]}>
+            <Pressable
+              style={[styles.profileList1, styles.profileLayout]}
+              onPress={() => navigation.navigate("Settings")}
+            >
               <Image
                 style={styles.rectangleIcon}
                 contentFit="cover"
-                source={require("../assets/rectangle2.png")}
+                source={require("../assets/rectangle1.png")}
               />
               <Text style={[styles.editProfile, styles.signOut1Typo]}>
                 Settings
@@ -69,7 +78,7 @@ const Profile = () => {
           </View>
           <Pressable
             style={styles.signOut}
-            onPress={() => navigation.navigate("SN$93:1113$")}
+            onPress={() => navigation.navigate("Login")}
           >
             <Text style={[styles.signOut1, styles.signOut1Typo]}>Sign Out</Text>
           </Pressable>
@@ -82,7 +91,7 @@ const Profile = () => {
 const styles = StyleSheet.create({
   signOut1Typo: {
     textAlign: "left",
-    fontFamily: FontFamily.h5Semibold,
+    fontFamily: FontFamily.subtitleMedium,
     fontWeight: "600",
   },
   profileLayout: {
@@ -113,7 +122,7 @@ const styles = StyleSheet.create({
   editProfile: {
     top: 3,
     left: 0,
-    fontSize: FontSize.bodyMedium_size,
+    fontSize: FontSize.bodyRegular_size,
     lineHeight: 18,
     color: Color.white,
     position: "absolute",
@@ -155,7 +164,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   profile: {
-    backgroundColor: Color.bg,
+    backgroundColor: Color.darkslategray_200,
     flex: 1,
     paddingHorizontal: Padding.p_5xl,
     paddingTop: Padding.p_37xl,

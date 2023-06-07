@@ -3,13 +3,13 @@ import { Image } from "expo-image";
 import { StyleSheet, Pressable, View, Text } from "react-native";
 import { Border, Color, FontFamily, FontSize } from "../GlobalStyles";
 
-const DateSelectorContainer = () => {
+const DatePickerContainer = () => {
   return (
     <View style={styles.datePicker}>
       <Image
         style={styles.rectangleIcon}
         contentFit="cover"
-        source={require("../assets/rectangle3.png")}
+        source={require("../assets/rectangle.png")}
       />
       <Image
         style={[styles.circleRightIcon, styles.circleIconLayout]}
@@ -19,7 +19,7 @@ const DateSelectorContainer = () => {
       <Image
         style={[styles.circleLeftIcon, styles.circleIconLayout]}
         contentFit="cover"
-        source={require("../assets/circle-left2.png")}
+        source={require("../assets/circle-left.png")}
       />
       <View style={styles.days}>
         <Pressable style={styles.day}>
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   numberTypo: {
-    fontFamily: FontFamily.h5Semibold,
+    fontFamily: FontFamily.subtitleMedium,
     fontWeight: "600",
     fontSize: FontSize.subtitleMedium_size,
   },
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
   day1: {
     fontFamily: FontFamily.bodyRegular,
     lineHeight: 16,
-    fontSize: FontSize.footnoteRegular_size,
+    fontSize: FontSize.size_smi,
     left: "32.5%",
     top: "17.86%",
     width: "33.33%",
@@ -139,19 +139,19 @@ const styles = StyleSheet.create({
     height: 64,
   },
   rectangle2: {
-    backgroundColor: Color.buttonGreen,
+    backgroundColor: Color.mediumseagreen,
   },
   day5: {
     fontFamily: FontFamily.bodyRegular,
     lineHeight: 16,
-    fontSize: FontSize.footnoteRegular_size,
+    fontSize: FontSize.size_smi,
     left: "32.5%",
     top: "17.86%",
     width: "33.33%",
     height: "28.57%",
   },
   number2: {
-    fontFamily: FontFamily.h5Semibold,
+    fontFamily: FontFamily.subtitleMedium,
     fontWeight: "600",
     fontSize: FontSize.subtitleMedium_size,
     left: "22.5%",
@@ -182,4 +182,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DateSelectorContainer;
+export default DatePickerContainer;

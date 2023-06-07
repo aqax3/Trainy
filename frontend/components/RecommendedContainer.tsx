@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: FontSize.subtitleMedium_size,
     fontWeight: "600",
-    fontFamily: FontFamily.h5Semibold,
+    fontFamily: FontFamily.subtitleMedium,
     color: Color.white,
     textAlign: "left",
   },

@@ -7,6 +7,7 @@ import {
   View,
   Text,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { FontSize, FontFamily, Color, Border } from "../GlobalStyles";
 
 type Card1Type = {
@@ -14,23 +15,35 @@ type Card1Type = {
 };
 
 const Card1 = ({ style }: Card1Type) => {
+  const navigation = useNavigation();
+
   return (
-    <Pressable style={[styles.card1, style]}>
-      <View style={styles.title}>
-        <View style={styles.subtitle} />
-      </View>
-      <Text style={[styles.title1, styles.title1FlexBox]}>Wake Up Call</Text>
-      <View style={styles.vector} />
-      <Text style={[styles.subtitle1, styles.title1FlexBox]}>
-        04 Workouts for Beginner
-      </Text>
+    <Pressable
+      style={[styles.card1, style]}
+      onPress={() => navigation.navigate("WorkoutPlanDetail")}
+    >
+      <ImageBackground style={styles.icon}>
+        <View style={[styles.title, styles.titlePosition]}>
+          <View style={styles.subtitle} />
+        </View>
+        <Text style={[styles.title1, styles.title1FlexBox]}>Wake Up Call</Text>
+        <View style={[styles.vector, styles.titlePosition]} />
+        <Text style={[styles.subtitle1, styles.title1FlexBox]}>
+          04 Workouts for Beginner
+        </Text>
+      </ImageBackground>
     </Pressable>
   );
 };
 
 const styles = StyleSheet.create({
+  titlePosition: {
+    opacity: 0,
+    position: "absolute",
+  },
   title1FlexBox: {
     textAlign: "left",
+    opacity: 0,
     position: "absolute",
   },
   subtitle: {
@@ -43,14 +56,13 @@ const styles = StyleSheet.create({
     width: 167,
     alignItems: "center",
     justifyContent: "flex-end",
-    position: "absolute",
   },
   title1: {
     width: "41.54%",
     top: "63.75%",
     fontSize: FontSize.subtitleMedium_size,
     fontWeight: "600",
-    fontFamily: FontFamily.h5Semibold,
+    fontFamily: FontFamily.subtitleMedium,
     color: Color.white,
     left: "8.08%",
   },
@@ -60,26 +72,29 @@ const styles = StyleSheet.create({
     top: "89.06%",
     right: "87.95%",
     bottom: "9.61%",
-    backgroundColor: Color.buttonGreen,
+    backgroundColor: Color.mediumseagreen,
     transform: [
       {
         rotate: "-90deg",
       },
     ],
     left: "8.08%",
-    position: "absolute",
   },
   subtitle1: {
     width: "61.54%",
     top: "80.63%",
     left: "10.77%",
-    fontSize: FontSize.footnoteRegular_size,
+    fontSize: FontSize.size_smi,
     lineHeight: 16,
     fontFamily: FontFamily.bodyRegular,
-    color: Color.buttonGreen,
+    color: Color.mediumseagreen,
+  },
+  icon: {
+    borderRadius: Border.br_base,
+    width: "100%",
+    height: "100%",
   },
   card1: {
-    borderRadius: Border.br_base,
     width: 277,
     height: 160,
   },

@@ -8,9 +8,10 @@ import {
 } from "react-native";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
+import { useNavigation } from "@react-navigation/native";
 import { Border, FontSize, FontFamily, Color } from "../GlobalStyles";
 
-type CardContainerType = {
+type BeginnerWorkoutContainerType = {
   workoutTitle?: ImageSourcePropType;
   workoutSubtitle?: string;
   workoutNumber?: string;
@@ -27,7 +28,7 @@ const getStyleValue = (key: string, value: string | number | undefined) => {
   if (value === undefined) return;
   return { [key]: value === "unset" ? undefined : value };
 };
-const CardContainer = ({
+const BeginnerWorkoutContainer = ({
   workoutTitle,
   workoutSubtitle,
   workoutNumber,
@@ -36,7 +37,7 @@ const CardContainer = ({
   propAlignSelf,
   propBackgroundColor,
   propColor,
-}: CardContainerType) => {
+}: BeginnerWorkoutContainerType) => {
   const card1Style = useMemo(() => {
     return {
       ...getStyleValue("marginTop", propMarginTop),
@@ -67,8 +68,13 @@ const CardContainer = ({
     };
   }, [propColor]);
 
+  const navigation = useNavigation();
+
   return (
-    <Pressable style={[styles.card1, card1Style]}>
+    <Pressable
+      style={[styles.card1, card1Style]}
+      onPress={() => navigation.navigate("WorkoutPlanDetail")}
+    >
       <View style={styles.card}>
         <Image
           style={[styles.imageIcon, styles.imageIconLayout]}
@@ -117,12 +123,12 @@ const styles = StyleSheet.create({
   title1: {
     fontSize: FontSize.subtitleMedium_size,
     fontWeight: "600",
-    fontFamily: FontFamily.h5Semibold,
+    fontFamily: FontFamily.subtitleMedium,
     color: Color.white,
     textAlign: "left",
   },
   vector: {
-    backgroundColor: Color.buttonGreen,
+    backgroundColor: Color.mediumseagreen,
     width: 11,
     height: 2,
     transform: [
@@ -132,10 +138,10 @@ const styles = StyleSheet.create({
     ],
   },
   subtitle1: {
-    fontSize: FontSize.footnoteRegular_size,
+    fontSize: FontSize.size_smi,
     lineHeight: 16,
     fontFamily: FontFamily.bodyRegular,
-    color: Color.buttonGreen,
+    color: Color.mediumseagreen,
     textAlign: "left",
   },
   subtitle: {
@@ -157,4 +163,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CardContainer;
+export default BeginnerWorkoutContainer;

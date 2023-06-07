@@ -62,17 +62,17 @@ const styles = StyleSheet.create({
   subtitle: {
     bottom: 16,
     left: 19,
-    fontSize: FontSize.footnoteRegular_size,
+    fontSize: FontSize.size_smi,
     lineHeight: 16,
     fontFamily: FontFamily.bodyRegular,
-    color: Color.buttonGreen,
+    color: Color.mediumseagreen,
   },
   name: {
     top: 16,
     left: 16,
     fontSize: FontSize.subtitleMedium_size,
     fontWeight: "600",
-    fontFamily: FontFamily.h5Semibold,
+    fontFamily: FontFamily.subtitleMedium,
     color: Color.white,
   },
   tickSquare: {

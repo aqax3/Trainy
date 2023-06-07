@@ -1,78 +1,23 @@
 import React, { useState } from "react";
-import { ScrollView, StyleSheet, View, Text, Pressable } from "react-native";
+import { RadioButton as RNPRadioButton } from "react-native-paper";
+import { View, Text, StyleSheet, Pressable, ScrollView } from "react-native";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
-import { RadioButton as RNPRadioButton } from "react-native-paper";
-import Rectangle2 from "../components/Rectangle2";
 import Day01WarmUpSection from "../components/Day01WarmUpSection";
-import Rectangle1 from "../components/Rectangle1";
+import { useNavigation } from "@react-navigation/native";
+import Card from "../components/Card";
 import { Color, FontFamily, FontSize, Border } from "../GlobalStyles";
 
 const Home = () => {
   const [tabsValue, setTabsValue] = useState("Beginner");
+  const navigation = useNavigation();
 
   return (
     <View style={styles.home}>
-      <ScrollView
-        style={styles.card2Parent}
-        horizontal
-        contentContainerStyle={styles.frameScrollViewContent}
-      >
-        <View style={styles.card2}>
-          <View style={[styles.card, styles.cardPosition]}>
-            <Image
-              style={styles.imageIcon}
-              contentFit="cover"
-              source={require("../assets/image3.png")}
-            />
-            <Rectangle2 />
-          </View>
-          <View style={[styles.title, styles.titleFlexBox]}>
-            <Text style={[styles.title1, styles.titleClr]}>Warm up</Text>
-            <View style={[styles.subtitle, styles.view1FlexBox]}>
-              <View style={styles.vectorLayout} />
-              <Text style={[styles.subtitle1, styles.subtitleTypo]}>
-                01 Workout
-              </Text>
-            </View>
-          </View>
-          <View style={styles.proPosition}>
-            <View style={[styles.proBadgeChild, styles.cardPosition]} />
-            <Text style={[styles.title2, styles.titleClr]}>PRO</Text>
-          </View>
-        </View>
-        <View style={styles.card2}>
-          <View style={[styles.card, styles.cardPosition]}>
-            <Image
-              style={styles.imageIcon}
-              contentFit="cover"
-              source={require("../assets/image4.png")}
-            />
-            <LinearGradient
-              style={styles.rectangle}
-              locations={[0, 1]}
-              colors={["rgba(17, 17, 18, 0)", "rgba(17, 17, 18, 0.6)"]}
-            />
-          </View>
-          <View style={[styles.title, styles.titleFlexBox]}>
-            <Text style={[styles.title1, styles.titleClr]}>Warm up</Text>
-            <View style={[styles.subtitle, styles.view1FlexBox]}>
-              <View style={styles.vectorLayout} />
-              <Text style={[styles.subtitle1, styles.subtitleTypo]}>
-                01 Workout
-              </Text>
-            </View>
-          </View>
-          <View style={styles.proPosition}>
-            <View style={[styles.proBadgeChild, styles.cardPosition]} />
-            <Text style={[styles.title2, styles.titleClr]}>PRO</Text>
-          </View>
-        </View>
-      </ScrollView>
       <View style={[styles.tabs, styles.subtitleFlexBox]}>
         <RNPRadioButton.Group value={tabsValue} onValueChange={setTabsValue}>
           <View>
-            <View style={styles.view1FlexBox}>
+            <View style={styles.view1}>
               <RNPRadioButton
                 color="#6750a4"
                 uncheckedColor="#49454f"
@@ -80,7 +25,7 @@ const Home = () => {
               />
               <Text>Beginner</Text>
             </View>
-            <View style={styles.view1FlexBox}>
+            <View style={styles.view1}>
               <RNPRadioButton
                 color="#6750a4"
                 uncheckedColor="#49454f"
@@ -88,7 +33,7 @@ const Home = () => {
               />
               <Text>Intermediate</Text>
             </View>
-            <View style={styles.view1FlexBox}>
+            <View style={styles.view1}>
               <RNPRadioButton
                 color="#6750a4"
                 uncheckedColor="#49454f"
@@ -100,85 +45,78 @@ const Home = () => {
         </RNPRadioButton.Group>
       </View>
       <Day01WarmUpSection />
-      <View style={[styles.textParent, styles.titleFlexBox]}>
+      <View style={styles.textParent}>
         <View style={styles.text}>
-          <Text style={[styles.workoutCategories, styles.newWorkoutsTypo]}>
+          <Text style={[styles.workoutCategories, styles.titleClr]}>
             Workout Categories
           </Text>
-          <Text style={[styles.newWorkouts, styles.newWorkoutsTypo]}>
+          <Text style={[styles.newWorkouts, styles.titleClr]}>
             New Workouts
           </Text>
-          <Text style={[styles.seeAll, styles.seeAllTypo]}>See All</Text>
+          <Pressable
+            style={styles.seeAll}
+            onPress={() => navigation.navigate("WorkoutCategories")}
+          >
+            <Text style={[styles.seeAll1, styles.seeAll1Typo]}>See All</Text>
+          </Pressable>
         </View>
         <ScrollView
           style={styles.card1Parent}
           horizontal
-          contentContainerStyle={styles.frameScrollView1Content}
+          contentContainerStyle={styles.frameScrollViewContent}
         >
-          <View style={styles.card11}>
-            <View style={[styles.card, styles.cardPosition]}>
-              <Image
-                style={styles.imageIcon}
-                contentFit="cover"
-                source={require("../assets/image6.png")}
-              />
-              <Rectangle1 />
-            </View>
-            <View style={[styles.title6, styles.titleFlexBox]}>
-              <Text style={[styles.title7, styles.titleClr]}>
+          <Pressable
+            style={styles.card1}
+            onPress={() => navigation.navigate("WorkoutPlanDetail")}
+          >
+            <Card image={require("../assets/image3.png")} />
+            <View style={styles.title}>
+              <Text style={[styles.title1, styles.titleClr]}>
                 Learn the Basic of Training
               </Text>
-              <View style={[styles.subtitle4, styles.subtitleFlexBox]}>
+              <View style={[styles.subtitle, styles.subtitleFlexBox]}>
                 <View style={styles.vectorLayout} />
-                <Text style={[styles.subtitle5, styles.seeAllTypo]}>
+                <Text style={[styles.subtitle1, styles.seeAll1Typo]}>
                   06 Workouts for Beginner
                 </Text>
               </View>
             </View>
-            <View style={[styles.proBadge2, styles.proPosition]}>
-              <View style={[styles.proBadgeChild, styles.cardPosition]} />
-              <Text style={[styles.title2, styles.titleClr]}>PRO</Text>
-            </View>
-          </View>
-          <View style={styles.card11}>
-            <View style={[styles.card, styles.cardPosition]}>
+          </Pressable>
+          <Pressable
+            style={styles.card1}
+            onPress={() => navigation.navigate("WorkoutPlanDetail")}
+          >
+            <View style={styles.cardPosition}>
               <Image
-                style={styles.imageIcon}
+                style={[styles.imageIcon, styles.iconLayout]}
                 contentFit="cover"
-                source={require("../assets/image7.png")}
+                source={require("../assets/image4.png")}
               />
               <LinearGradient
-                style={styles.rectangle}
+                style={[styles.rectangle, styles.imageIconPosition]}
                 locations={[0, 1]}
                 colors={["rgba(17, 17, 18, 0)", "rgba(17, 17, 18, 0.6)"]}
               />
             </View>
-            <View style={[styles.title6, styles.titleFlexBox]}>
-              <Text style={[styles.title10, styles.titleClr]}>
+            <View style={styles.title}>
+              <Text style={[styles.title4, styles.titleClr]}>
                 Learn the Basic of Training
               </Text>
-              <View style={[styles.subtitle6, styles.subtitleFlexBox]}>
+              <View style={[styles.subtitle2, styles.subtitleFlexBox]}>
                 <View style={styles.vectorLayout} />
-                <Text style={[styles.subtitle7, styles.subtitleTypo]}>
+                <Text style={[styles.subtitle3, styles.subtitle3Typo]}>
                   06 Workouts for Beginner
                 </Text>
               </View>
             </View>
-            <View style={styles.proPosition}>
-              <View style={[styles.proBadgeChild, styles.cardPosition]} />
-              <Text style={[styles.title2, styles.titleClr]}>PRO</Text>
-            </View>
-          </View>
+          </Pressable>
         </ScrollView>
       </View>
-      <View style={styles.top}>
+      <View style={[styles.top, styles.topPosition]}>
         <Text style={[styles.helloSarah, styles.titleClr]}>
           <Text style={styles.hello}>Hello</Text>
           <Text style={styles.text1}>{` `}</Text>
           <Text style={styles.sarah}>Sarah,</Text>
-        </Text>
-        <Text style={[styles.goodMorning, styles.subtitleTypo]}>
-          Good morning.
         </Text>
       </View>
     </View>
@@ -186,58 +124,29 @@ const Home = () => {
 };
 
 const styles = StyleSheet.create({
-  frameScrollViewContent: {
-    flexDirection: "row",
-  },
   tabsText: {},
   view: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
   },
-  frameScrollView1Content: {
+  frameScrollViewContent: {
     flexDirection: "row",
-  },
-  cardPosition: {
-    left: "0%",
-    top: "0%",
-  },
-  titleFlexBox: {
-    justifyContent: "flex-end",
-    position: "absolute",
-  },
-  titleClr: {
-    color: Color.white,
-    textAlign: "left",
-  },
-  view1FlexBox: {
-    alignItems: "center",
-    flexDirection: "row",
-  },
-  subtitleTypo: {
-    fontFamily: FontFamily.bodyRegular,
-    textAlign: "left",
-    color: Color.white,
   },
   subtitleFlexBox: {
     justifyContent: "space-between",
     alignItems: "center",
     flexDirection: "row",
   },
-  newWorkoutsTypo: {
-    height: "7.82%",
-    textAlign: "left",
+  titleClr: {
     color: Color.white,
-    fontFamily: FontFamily.h5Semibold,
-    fontWeight: "600",
-    fontSize: FontSize.subtitleMedium_size,
-    position: "absolute",
+    textAlign: "left",
   },
-  seeAllTypo: {
-    color: Color.buttonGreen,
+  seeAll1Typo: {
+    color: Color.mediumseagreen,
     fontFamily: FontFamily.bodyRegular,
     lineHeight: 16,
-    fontSize: FontSize.footnoteRegular_size,
+    fontSize: FontSize.size_smi,
   },
   proPosition: {
     height: 16,
@@ -246,101 +155,42 @@ const styles = StyleSheet.create({
     bottom: 16,
     position: "absolute",
   },
-  imageIcon: {
-    maxHeight: "100%",
-    maxWidth: "100%",
-    borderRadius: Border.br_base,
-    left: "0%",
+  cardPosition: {
     bottom: "0%",
     right: "0%",
-    top: "0%",
     height: "100%",
+    left: "0%",
+    top: "0%",
     position: "absolute",
+    width: "100%",
+  },
+  iconLayout: {
+    maxHeight: "100%",
+    maxWidth: "100%",
     overflow: "hidden",
     width: "100%",
   },
-  card: {
+  imageIconPosition: {
+    borderRadius: Border.br_base,
     bottom: "0%",
     right: "0%",
     height: "100%",
     left: "0%",
     top: "0%",
     position: "absolute",
-    width: "100%",
   },
-  title1: {
+  subtitle3Typo: {
+    fontFamily: FontFamily.bodyRegular,
     textAlign: "left",
-    fontFamily: FontFamily.h5Semibold,
-    fontWeight: "600",
-    fontSize: FontSize.subtitleMedium_size,
     color: Color.white,
   },
-  vectorLayout: {
-    transform: [
-      {
-        rotate: "-90deg",
-      },
-    ],
-    height: 2,
-    width: 11,
-    backgroundColor: Color.buttonGreen,
-  },
-  subtitle1: {
-    marginLeft: 5,
-    lineHeight: 16,
-    fontSize: FontSize.footnoteRegular_size,
-    fontFamily: FontFamily.bodyRegular,
-  },
-  subtitle: {
-    marginTop: 4,
-  },
-  title: {
-    height: 41,
-    left: 16,
-    bottom: 16,
-    justifyContent: "flex-end",
-  },
-  proBadgeChild: {
-    borderRadius: Border.br_9xs,
-    backgroundColor: Color.premium,
-    bottom: "0%",
-    right: "0%",
-    height: "100%",
-    left: "0%",
-    top: "0%",
-    position: "absolute",
-    width: "100%",
-  },
-  title2: {
-    top: "6.25%",
-    left: "15.15%",
-    fontSize: FontSize.captionRegular_size,
-    lineHeight: 13,
-    fontFamily: FontFamily.captionBold,
-    fontWeight: "700",
-    textAlign: "left",
-    position: "absolute",
-  },
-  card2: {
-    width: 181,
-    height: 205,
-  },
-  rectangle: {
-    backgroundColor: "transparent",
-    borderRadius: Border.br_base,
-    left: "0%",
-    bottom: "0%",
-    right: "0%",
-    top: "0%",
-    height: "100%",
-    position: "absolute",
-    width: "100%",
-  },
-  card2Parent: {
-    top: 697,
+  topPosition: {
     left: 14,
     position: "absolute",
-    width: "100%",
+  },
+  view1: {
+    alignItems: "center",
+    flexDirection: "row",
   },
   tabs: {
     height: "5.17%",
@@ -353,68 +203,121 @@ const styles = StyleSheet.create({
   },
   workoutCategories: {
     width: "49.85%",
+    textAlign: "left",
+    fontFamily: FontFamily.subtitleMedium,
+    fontWeight: "600",
+    fontSize: FontSize.subtitleMedium_size,
+    color: Color.white,
     left: "0%",
     top: "0%",
     height: "7.82%",
+    position: "absolute",
   },
   newWorkouts: {
     width: "37.31%",
     top: "33.67%",
     left: "3.03%",
+    textAlign: "left",
+    fontFamily: FontFamily.subtitleMedium,
+    fontWeight: "600",
+    fontSize: FontSize.subtitleMedium_size,
+    color: Color.white,
+    height: "7.82%",
+    position: "absolute",
   },
-  seeAll: {
+  seeAll1: {
     height: "5.44%",
     width: "12.23%",
-    top: "1.36%",
-    left: "87.77%",
     textAlign: "right",
+  },
+  seeAll: {
+    left: "87.77%",
+    top: "1.36%",
     position: "absolute",
   },
   text: {
     width: 330,
     height: 294,
   },
-  title7: {
+  title1: {
     width: 147,
     textAlign: "left",
-    fontFamily: FontFamily.h5Semibold,
+    fontFamily: FontFamily.subtitleMedium,
     fontWeight: "600",
     fontSize: FontSize.subtitleMedium_size,
     color: Color.white,
   },
-  subtitle5: {
+  vectorLayout: {
+    transform: [
+      {
+        rotate: "-90deg",
+      },
+    ],
+    height: 2,
+    width: 11,
+    backgroundColor: Color.mediumseagreen,
+  },
+  subtitle1: {
     textAlign: "left",
   },
-  subtitle4: {
-    alignSelf: "stretch",
+  subtitle: {
     marginTop: 4,
+    alignSelf: "stretch",
   },
-  title6: {
+  title: {
     left: 16,
     bottom: 16,
     justifyContent: "flex-end",
+    position: "absolute",
   },
-  proBadge2: {
+  proBadgeChild: {
+    borderRadius: Border.br_9xs,
+    backgroundColor: Color.premium,
+  },
+  title2: {
+    top: "6.25%",
+    left: "15.15%",
+    fontSize: FontSize.captionRegular_size,
+    lineHeight: 13,
+    fontFamily: FontFamily.openSansBold,
+    fontWeight: "700",
+    textAlign: "left",
+    position: "absolute",
+  },
+  proBadge: {
     display: "none",
   },
-  card11: {
+  card1: {
     width: 322,
     height: 160,
   },
-  title10: {
+  imageIcon: {
+    borderRadius: Border.br_base,
+    bottom: "0%",
+    right: "0%",
+    height: "100%",
+    left: "0%",
+    top: "0%",
+    position: "absolute",
+  },
+  rectangle: {
+    backgroundColor: "transparent",
+    width: "100%",
+  },
+  title4: {
     alignSelf: "stretch",
     textAlign: "left",
-    fontFamily: FontFamily.h5Semibold,
+    fontFamily: FontFamily.subtitleMedium,
     fontWeight: "600",
     fontSize: FontSize.subtitleMedium_size,
     color: Color.white,
   },
-  subtitle7: {
+  subtitle3: {
     lineHeight: 16,
-    fontSize: FontSize.footnoteRegular_size,
+    fontSize: FontSize.size_smi,
     fontFamily: FontFamily.bodyRegular,
   },
-  subtitle6: {
+  subtitle2: {
     marginTop: 4,
   },
   card1Parent: {
@@ -425,7 +328,9 @@ const styles = StyleSheet.create({
   textParent: {
     top: 389,
     width: 659,
+    justifyContent: "flex-end",
     left: 14,
+    position: "absolute",
   },
   hello: {
     fontFamily: FontFamily.roboto,
@@ -446,7 +351,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
   },
   goodMorning: {
-    fontSize: FontSize.bodyMedium_size,
+    fontSize: FontSize.bodyRegular_size,
     lineHeight: 21,
     width: 107,
     height: 21,
@@ -455,11 +360,9 @@ const styles = StyleSheet.create({
   top: {
     top: 60,
     width: 259,
-    left: 14,
-    position: "absolute",
   },
   home: {
-    backgroundColor: Color.bg,
+    backgroundColor: Color.darkslategray_200,
     flex: 1,
     height: 812,
     overflow: "hidden",

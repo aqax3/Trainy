@@ -30,7 +30,7 @@ const Settings = () => {
           <Image
             style={[styles.rectangleIcon, styles.settingsLayout]}
             contentFit="cover"
-            source={require("../assets/rectangle5.png")}
+            source={require("../assets/rectangle4.png")}
           />
           <Text style={styles.editProfile}>Units of Measure</Text>
           <Image
@@ -46,7 +46,7 @@ const Settings = () => {
           <Image
             style={[styles.rectangleIcon, styles.settingsLayout]}
             contentFit="cover"
-            source={require("../assets/rectangle5.png")}
+            source={require("../assets/rectangle4.png")}
           />
           <Text style={styles.editProfile}>Notifications</Text>
           <Image
@@ -62,7 +62,7 @@ const Settings = () => {
           <Image
             style={[styles.rectangleIcon, styles.settingsLayout]}
             contentFit="cover"
-            source={require("../assets/rectangle5.png")}
+            source={require("../assets/rectangle4.png")}
           />
           <Text style={styles.editProfile}>Language</Text>
           <Image
@@ -78,7 +78,7 @@ const Settings = () => {
           <Image
             style={[styles.rectangleIcon, styles.settingsLayout]}
             contentFit="cover"
-            source={require("../assets/rectangle5.png")}
+            source={require("../assets/rectangle4.png")}
           />
           <Text style={styles.editProfile}>Contact Us</Text>
           <Image
@@ -137,10 +137,10 @@ const styles = StyleSheet.create({
   editProfile: {
     top: 3,
     left: 0,
-    fontSize: FontSize.bodyMedium_size,
+    fontSize: FontSize.bodyRegular_size,
     lineHeight: 18,
     fontWeight: "600",
-    fontFamily: FontFamily.h5Semibold,
+    fontFamily: FontFamily.subtitleMedium,
     textAlign: "left",
     position: "absolute",
     color: Color.white,
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
   },
   settings: {
-    backgroundColor: Color.bg,
+    backgroundColor: Color.darkslategray_200,
     flex: 1,
     paddingLeft: Padding.p_5xl,
     paddingTop: Padding.p_37xl,

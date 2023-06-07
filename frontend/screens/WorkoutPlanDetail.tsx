@@ -11,19 +11,19 @@ const WorkoutPlanDetail = () => {
         <Image
           style={[styles.imageIcon, styles.iconLayout]}
           contentFit="cover"
-          source={require("../assets/image.png")}
+          source={require("../assets/image6.png")}
         />
         <Image
           style={[styles.rectangleIcon, styles.iconLayout]}
           contentFit="cover"
-          source={require("../assets/rectangle.png")}
+          source={require("../assets/rectangle2.png")}
         />
       </View>
       <View style={[styles.button, styles.buttonPosition]}>
         <Image
           style={[styles.rectangleIcon1, styles.iconLayout]}
           contentFit="cover"
-          source={require("../assets/rectangle1.png")}
+          source={require("../assets/rectangle3.png")}
         />
         <Pressable style={styles.defaultButton}>
           <View style={styles.rectangle} />
@@ -33,12 +33,12 @@ const WorkoutPlanDetail = () => {
       <ExerciseCard
         exerciseTitle={`Simple Warm-Up
 Exercises`}
-        exerciseId={require("../assets/image1.png")}
+        exerciseDescription={{ uri: "82.01x76x-1869091721" }}
         propTop={588}
       />
       <ExerciseCard
         exerciseTitle="Stability Training Basics"
-        exerciseId={require("../assets/image2.png")}
+        exerciseDescription={require("../assets/image8.png")}
         propTop={680}
       />
       <View style={styles.text}>
@@ -55,7 +55,7 @@ Exercises`}
       <Image
         style={styles.circleLeftIcon}
         contentFit="cover"
-        source={require("../assets/circle-left.png")}
+        source={require("../assets/circle-left2.png")}
       />
       <View style={styles.info}>
         <View style={styles.calorieSpaceBlock}>
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     bottom: "0%",
     left: "0%",
     borderRadius: Border.br_5xl,
-    backgroundColor: Color.buttonGreen,
+    backgroundColor: Color.mediumseagreen,
     position: "absolute",
     width: "100%",
   },
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     fontSize: FontSize.subtitleMedium_size,
     color: Color.black,
     textAlign: "center",
-    fontFamily: FontFamily.h5Semibold,
+    fontFamily: FontFamily.subtitleMedium,
     fontWeight: "600",
     position: "absolute",
   },
@@ -157,15 +157,15 @@ const styles = StyleSheet.create({
     lineHeight: 25,
     textAlign: "left",
     color: Color.white,
-    fontFamily: FontFamily.h5Semibold,
+    fontFamily: FontFamily.subtitleMedium,
     fontWeight: "600",
     alignSelf: "stretch",
   },
   subtitle: {
-    color: Color.buttonGreen,
+    color: Color.mediumseagreen,
     marginTop: 8,
     lineHeight: 16,
-    fontSize: FontSize.footnoteRegular_size,
+    fontSize: FontSize.size_smi,
     fontFamily: FontFamily.bodyRegular,
     alignSelf: "stretch",
   },
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   description: {
-    fontSize: FontSize.bodyMedium_size,
+    fontSize: FontSize.bodyRegular_size,
     lineHeight: 21,
     marginTop: 93,
     color: Color.white,
@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
   min: {
     marginLeft: 6,
     lineHeight: 16,
-    fontSize: FontSize.footnoteRegular_size,
+    fontSize: FontSize.size_smi,
     fontFamily: FontFamily.bodyRegular,
     color: Color.white,
   },
@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   workoutPlanDetail: {
-    backgroundColor: Color.bg,
+    backgroundColor: Color.darkslategray_200,
     height: 812,
     overflow: "hidden",
     width: "100%",

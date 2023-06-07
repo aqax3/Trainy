@@ -1,20 +1,17 @@
 import React, { useState } from "react";
-import { Image } from "expo-image";
-import { StyleSheet, View, Text } from "react-native";
 import { RadioButton as RNPRadioButton } from "react-native-paper";
-import CardContainer from "../components/CardContainer";
+import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
+import { Image } from "expo-image";
+import BeginnerWorkoutContainer from "../components/BeginnerWorkoutContainer";
+import { useNavigation } from "@react-navigation/native";
 import { Border, FontSize, FontFamily, Color } from "../GlobalStyles";
 
 const WorkoutCategories = () => {
   const [tabsValue, setTabsValue] = useState("Beginner");
+  const navigation = useNavigation();
 
   return (
     <View style={styles.workoutCategories}>
-      <Image
-        style={styles.navigationBarIcon}
-        contentFit="cover"
-        source={require("../assets/navigation-bar2.png")}
-      />
       <View style={[styles.tabs, styles.tabsFlexBox]}>
         <RNPRadioButton.Group value={tabsValue} onValueChange={setTabsValue}>
           <View>
@@ -45,16 +42,18 @@ const WorkoutCategories = () => {
           </View>
         </RNPRadioButton.Group>
       </View>
-      <Text style={styles.title}>Workout Categories</Text>
-      <View style={[styles.cardsWrapper, styles.cardsLayout]}>
-        <View style={[styles.cards, styles.cardsLayout]}>
-          <CardContainer
-            workoutTitle={require("../assets/image8.png")}
+      <ScrollView
+        style={styles.cardsWrapper}
+        contentContainerStyle={styles.frameScrollViewContent}
+      >
+        <View style={styles.cards}>
+          <BeginnerWorkoutContainer
+            workoutTitle={require("../assets/image9.png")}
             workoutSubtitle="Wake Up Call"
             workoutNumber="04 Workouts  for Beginner"
           />
-          <CardContainer
-            workoutTitle={require("../assets/image9.png")}
+          <BeginnerWorkoutContainer
+            workoutTitle={require("../assets/image10.png")}
             workoutSubtitle="Full Body Goal Crusher"
             workoutNumber="07 Workouts  for Beginner"
             propMarginTop={16}
@@ -63,8 +62,8 @@ const WorkoutCategories = () => {
             propBackgroundColor="#ff2424"
             propColor="#7ace88"
           />
-          <CardContainer
-            workoutTitle={require("../assets/image10.png")}
+          <BeginnerWorkoutContainer
+            workoutTitle={require("../assets/image11.png")}
             workoutSubtitle="Lower Body Strength"
             workoutNumber="05 Workouts  for Beginner"
             propMarginTop={16}
@@ -73,8 +72,8 @@ const WorkoutCategories = () => {
             propBackgroundColor="#ff2424"
             propColor="#7ace88"
           />
-          <CardContainer
-            workoutTitle={require("../assets/image11.png")}
+          <BeginnerWorkoutContainer
+            workoutTitle={require("../assets/image12.png")}
             workoutSubtitle="Drill Essentials"
             workoutNumber="06 Workouts  for Beginner"
             propMarginTop={16}
@@ -84,6 +83,19 @@ const WorkoutCategories = () => {
             propColor="#fff"
           />
         </View>
+      </ScrollView>
+      <View style={[styles.titleParent, styles.circleLeftLayout]}>
+        <Text style={styles.title}>Workout Categories</Text>
+        <Pressable
+          style={[styles.circleLeft, styles.circleLeftLayout]}
+          onPress={() => navigation.goBack()}
+        >
+          <Image
+            style={styles.icon}
+            contentFit="cover"
+            source={require("../assets/circle-left2.png")}
+          />
+        </Pressable>
       </View>
     </View>
   );
@@ -96,22 +108,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
   },
+  frameScrollViewContent: {
+    flexDirection: "column",
+  },
   tabsFlexBox: {
     flexDirection: "row",
     alignItems: "center",
   },
-  cardsLayout: {
-    width: 327,
-    position: "absolute",
-  },
-  navigationBarIcon: {
-    height: "11.33%",
-    marginLeft: -187.5,
-    top: "88.67%",
-    bottom: "0%",
-    left: "50%",
-    maxHeight: "100%",
-    width: 375,
+  circleLeftLayout: {
+    height: 32,
     position: "absolute",
   },
   view1: {
@@ -128,33 +133,47 @@ const styles = StyleSheet.create({
     alignItems: "center",
     position: "absolute",
   },
-  title: {
-    top: "7.39%",
-    left: "24%",
-    fontSize: FontSize.h5Semibold_size,
-    lineHeight: 25,
-    fontWeight: "600",
-    fontFamily: FontFamily.h5Semibold,
-    color: Color.white,
-    textAlign: "left",
-    position: "absolute",
-  },
   cards: {
-    top: -177,
-    left: -24,
+    width: 327,
     alignItems: "center",
   },
   cardsWrapper: {
     top: 177,
     left: 24,
-    height: 688,
+    position: "absolute",
+    flex: 1,
+  },
+  title: {
+    top: "9.38%",
+    left: "27.55%",
+    fontSize: FontSize.h5Semibold_size,
+    lineHeight: 25,
+    fontWeight: "600",
+    fontFamily: FontFamily.subtitleMedium,
+    color: Color.white,
+    textAlign: "left",
+    position: "absolute",
+  },
+  icon: {
+    height: "100%",
+    width: "100%",
+  },
+  circleLeft: {
+    left: 0,
+    top: 0,
+    width: 32,
+  },
+  titleParent: {
+    top: 57,
+    left: 17,
+    width: 265,
   },
   workoutCategories: {
-    backgroundColor: Color.bg,
-    flex: 1,
-    width: "100%",
+    backgroundColor: Color.darkslategray_200,
     height: 812,
     overflow: "hidden",
+    width: "100%",
+    flex: 1,
   },
 });
 

@@ -69,14 +69,14 @@ const styles = StyleSheet.create({
   search: {
     height: 40,
     fontFamily: FontFamily.bodyRegular,
-    fontSize: FontSize.bodyMedium_size,
+    fontSize: FontSize.bodyRegular_size,
   },
   languages: {
     paddingTop: Padding.p_lg,
     alignItems: "center",
   },
   language: {
-    backgroundColor: Color.bg,
+    backgroundColor: Color.darkslategray_200,
     flex: 1,
     overflow: "hidden",
     paddingHorizontal: Padding.p_9xl,

@@ -2,11 +2,11 @@ import * as React from "react";
 import { StyleProp, ViewStyle, StyleSheet } from "react-native";
 import { Image } from "expo-image";
 
-type ProfilePictureIconType = {
+type ProfilePictureIcon1Type = {
   style?: StyleProp<ViewStyle>;
 };
 
-const ProfilePictureIcon = ({ style }: ProfilePictureIconType) => {
+const ProfilePictureIcon1 = ({ style }: ProfilePictureIcon1Type) => {
   return (
     <Image
       style={[styles.profilePictureIcon, style]}
@@ -23,4 +23,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProfilePictureIcon;
+export default ProfilePictureIcon1;

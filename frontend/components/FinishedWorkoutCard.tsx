@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   headline: {
     fontSize: FontSize.subtitleMedium_size,
     fontWeight: "600",
-    fontFamily: FontFamily.h5Semibold,
+    fontFamily: FontFamily.subtitleMedium,
     color: Color.white,
     textAlign: "left",
     width: 155,

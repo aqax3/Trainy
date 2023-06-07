@@ -30,7 +30,7 @@ const Notifications = () => {
             <Image
               style={[styles.rectangleIcon, styles.rectangleIconLayout]}
               contentFit="cover"
-              source={require("../assets/rectangle4.png")}
+              source={require("../assets/rectangle5.png")}
             />
             <Switch
               style={[styles.switch, styles.switchPosition]}
@@ -45,7 +45,7 @@ const Notifications = () => {
             <Image
               style={[styles.rectangleIcon1, styles.rectangleIconLayout]}
               contentFit="cover"
-              source={require("../assets/rectangle4.png")}
+              source={require("../assets/rectangle5.png")}
             />
             <Switch
               style={[styles.switch1, styles.switchPosition]}
@@ -132,10 +132,10 @@ const styles = StyleSheet.create({
   editProfile: {
     top: 1,
     left: 0,
-    fontSize: FontSize.bodyMedium_size,
+    fontSize: FontSize.bodyRegular_size,
     lineHeight: 18,
     fontWeight: "600",
-    fontFamily: FontFamily.h5Semibold,
+    fontFamily: FontFamily.subtitleMedium,
     textAlign: "left",
     width: 263,
     height: 20,
@@ -167,10 +167,10 @@ const styles = StyleSheet.create({
     color: Color.white,
   },
   phoneSettings: {
-    color: Color.buttonGreen,
+    color: Color.mediumseagreen,
   },
   youCanManageContainer: {
-    fontSize: FontSize.footnoteRegular_size,
+    fontSize: FontSize.size_smi,
     lineHeight: 16,
     fontFamily: FontFamily.bodyRegular,
     marginTop: 494,
@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
   },
   notifications: {
-    backgroundColor: Color.bg,
+    backgroundColor: Color.darkslategray_200,
     flex: 1,
     paddingLeft: 29,
     paddingTop: Padding.p_25xl,

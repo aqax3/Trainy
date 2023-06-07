@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Image } from "expo-image";
 import { StyleSheet, Text, View } from "react-native";
-import { FontSize, FontFamily, Color } from "../GlobalStyles";
+import { FontFamily, Color } from "../GlobalStyles";
 
 const Splash = () => {
   return (
@@ -29,10 +29,10 @@ const styles = StyleSheet.create({
     height: 500,
   },
   trainy: {
-    fontSize: FontSize.size_45xl,
+    fontSize: 64,
     letterSpacing: -2.6,
     fontFamily: FontFamily.openSans,
-    color: Color.buttonGreen,
+    color: Color.mediumseagreen,
     textAlign: "center",
     display: "flex",
     justifyContent: "center",
@@ -45,9 +45,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   splash: {
-    backgroundColor: Color.bg,
+    backgroundColor: Color.darkslategray_200,
     flex: 1,
-    height: 860,
+    height: 768,
     flexDirection: "row",
     paddingHorizontal: 36,
     paddingVertical: 83,

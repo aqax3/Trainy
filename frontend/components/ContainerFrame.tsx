@@ -46,10 +46,10 @@ const styles = StyleSheet.create({
     textAlign: "left",
   },
   headline: {
-    fontSize: FontSize.bodyMedium_size,
+    fontSize: FontSize.bodyRegular_size,
     lineHeight: 18,
     fontWeight: "600",
-    fontFamily: FontFamily.h5Semibold,
+    fontFamily: FontFamily.subtitleMedium,
     marginTop: 4,
     color: Color.white,
     textAlign: "left",

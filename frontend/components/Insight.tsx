@@ -2,11 +2,11 @@ import * as React from "react";
 import { StyleProp, ViewStyle, StyleSheet, View } from "react-native";
 import { Color, Border } from "../GlobalStyles";
 
-type Insight1Type = {
+type InsightType = {
   style?: StyleProp<ViewStyle>;
 };
 
-const Insight1 = ({ style }: Insight1Type) => {
+const Insight = ({ style }: InsightType) => {
   return (
     <View style={[styles.insight, style]}>
       <View style={styles.insightInner}>
@@ -65,4 +65,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Insight1;
+export default Insight;

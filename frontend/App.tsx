@@ -4,24 +4,27 @@ import { NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import Home from "./screens/Home";
 import WorkoutPlanDetail from "./screens/WorkoutPlanDetail";
-import Profile from "./screens/Profile";
-import Insight from "./screens/Insight";
-import VideoPause from "./screens/VideoPause";
 import WorkoutCategories from "./screens/WorkoutCategories";
-import Language from "./screens/Language";
-import Notifications from "./screens/Notifications";
-import UnitsOfMeasure from "./screens/UnitsOfMeasure";
-import Settings from "./screens/Settings";
-import PrivacyPolicy from "./screens/PrivacyPolicy";
-import EditProfile from "./screens/EditProfile";
 import VideoIcon from "./screens/VideoIcon";
-import Splash from "./screens/Splash";
+import VideoPause from "./screens/VideoPause";
+import Login from "./screens/Login";
+import SignUp from "./screens/SignUp";
 import FrameScreen from "./screens/FrameScreen";
-import HomeIcon from "./components/HomeIcon";
+import Insight1 from "./screens/Insight1";
+import Profile from "./screens/Profile";
+import EditProfile from "./screens/EditProfile";
+import PrivacyPolicy from "./screens/PrivacyPolicy";
+import Settings from "./screens/Settings";
+import UnitsOfMeasure from "./screens/UnitsOfMeasure";
+import Notifications from "./screens/Notifications";
+import Language from "./screens/Language";
+import Splash from "./screens/Splash";
 import HomeIcon1 from "./components/HomeIcon1";
-import GroupComponent2 from "./components/GroupComponent2";
-import Insight1 from "./components/Insight1";
+import HomeIcon from "./components/HomeIcon";
+import Insight2 from "./components/Insight2";
+import Insight from "./components/Insight";
 import ProfilePictureIcon from "./components/ProfilePictureIcon";
+import MIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import { IconRegistry, ApplicationProvider } from "@ui-kitten/components";
 import * as eva from "@eva-design/eva";
 
@@ -35,18 +38,17 @@ import {
 } from "react-native";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import AddWorkoutScreen from "./components old/Calendar/addWorkout";
 
 const Tab = createBottomTabNavigator();
 function BottomTabsRoot({ navigation }: any) {
   const [bottomTabItemsNormal] = React.useState([
-    <HomeIcon1 />,
-    <Insight1 />,
+    <HomeIcon />,
+    <Insight />,
     <ProfilePictureIcon />,
   ]);
   const [bottomTabItemsActive] = React.useState([
-    <HomeIcon />,
-    <GroupComponent2 />,
+    <HomeIcon1 />,
+    <Insight2 />,
     <ProfilePictureIcon />,
   ]);
   return (
@@ -58,14 +60,12 @@ function BottomTabsRoot({ navigation }: any) {
         return (
           <View
             style={{
-              height: 92.5,
-              backgroundColor: "#1A2D3D",
+              height: 92,
               width: "100%",
               maxWidth: "100%",
               overflow: "hidden",
               maxHeight: "100%",
               flexDirection: "row",
-              justifyContent: "space-between",
             }}
           >
             {bottomTabItemsNormal.map((item: any, index: any) => {
@@ -97,7 +97,7 @@ function BottomTabsRoot({ navigation }: any) {
       />
       <Tab.Screen
         name="Insight"
-        component={Insight}
+        component={Insight1}
         options={{ headerShown: false }}
       />
       <Tab.Screen
@@ -127,6 +127,31 @@ const App = () => {
     }, 2000);
   }, []);
 
+  function MaterialIcon({ name, style }) {
+    const { height, tintColor, ...iconStyle } = StyleSheet.flatten(style);
+    return (
+      <MIcon name={name} size={height} color={tintColor} style={iconStyle} />
+    );
+  }
+
+  const IconProvider = (name) => ({
+    toReactElement: (props) => MaterialIcon({ name, ...props }),
+  });
+
+  function createIconsMap() {
+    return new Proxy(
+      {},
+      {
+        get(target, name) {
+          return IconProvider(name);
+        },
+      }
+    );
+  }
+  const MaterialIconsPack = {
+    name: "material",
+    icons: createIconsMap(),
+  };
 
   if (!fontsLoaded && !error) {
     return null;
@@ -134,9 +159,9 @@ const App = () => {
 
   return (
     <>
-    
+      <IconRegistry icons={[MaterialIconsPack]} />
       <ApplicationProvider {...eva} theme={eva.light}>
-      <NavigationContainer>
+        <NavigationContainer>
           {hideSplashScreen ? (
             <Stack.Navigator screenOptions={{ headerShown: false }}>
               <Stack.Screen name="BottomTabsRoot" component={BottomTabsRoot} />
@@ -146,43 +171,8 @@ const App = () => {
                 options={{ headerShown: false }}
               />
               <Stack.Screen
-                name="VideoPause"
-                component={VideoPause}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
                 name="WorkoutCategories"
                 component={WorkoutCategories}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                name="Language"
-                component={Language}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                name="Notifications"
-                component={Notifications}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                name="UnitsOfMeasure"
-                component={UnitsOfMeasure}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                name="Settings"
-                component={Settings}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                name="PrivacyPolicy"
-                component={PrivacyPolicy}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                name="EditProfile"
-                component={EditProfile}
                 options={{ headerShown: false }}
               />
               <Stack.Screen
@@ -191,8 +181,18 @@ const App = () => {
                 options={{ headerShown: false }}
               />
               <Stack.Screen
-                name="Splash"
-                component={Splash}
+                name="VideoPause"
+                component={VideoPause}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Login"
+                component={Login}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="SignUp"
+                component={SignUp}
                 options={{ headerShown: false }}
               />
               <Stack.Screen
@@ -200,12 +200,47 @@ const App = () => {
                 component={FrameScreen}
                 options={{ headerShown: false }}
               />
+              <Stack.Screen
+                name="EditProfile"
+                component={EditProfile}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="PrivacyPolicy"
+                component={PrivacyPolicy}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Settings"
+                component={Settings}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="UnitsOfMeasure"
+                component={UnitsOfMeasure}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Notifications"
+                component={Notifications}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Language"
+                component={Language}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Splash"
+                component={Splash}
+                options={{ headerShown: false }}
+              />
             </Stack.Navigator>
           ) : (
             <Splash />
           )}
         </NavigationContainer>
-        </ApplicationProvider>
+      </ApplicationProvider>
     </>
   );
 };

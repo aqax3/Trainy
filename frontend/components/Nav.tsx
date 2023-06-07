@@ -6,18 +6,12 @@ type NavType = {
 };
 
 const Nav = ({ style }: NavType) => {
-  return (
-    <View>
-      <View style={styles.nav1} />
-    </View>
-  );
+  return <View style={[styles.nav, style]} />;
 };
 
 const styles = StyleSheet.create({
-  nav1: {
-    position: "relative",
-    width: 114,
-    height: 26,
+  nav: {
+    alignSelf: "stretch",
   },
 });
 
