@@ -58,12 +58,7 @@ export async function getWorkoutRecommendation(userId: string) {
     difficultyCounts["intermediate"] >= 20
   ) {
     recommendedDifficulty = "advanced";
-  } else if (
-    mostFrequentDifficulty === "advanced" &&
-    difficultyCounts["advanced"] >= 20
-  ) {
-    recommendedDifficulty = "expert";
-  } else {
+  }  else {
     recommendedDifficulty = mostFrequentDifficulty;
   }
 
