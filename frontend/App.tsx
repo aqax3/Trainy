@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const Stack = createNativeStackNavigator();
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
@@ -27,16 +28,16 @@ import ProfilePictureIcon from "./components/ProfilePictureIcon";
 import MIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import { IconRegistry, ApplicationProvider } from "@ui-kitten/components";
 import * as eva from "@eva-design/eva";
+=======
+import { StatusBar } from "expo-status-bar";
+import { Button, StyleSheet, Text, TextInput, View } from "react-native";
+import React, { useState } from "react";
+import NavigationRegLog from "./components/NavigationRegLog/NavigationRegLog";
+>>>>>>> parent of 9998372 (Design)
 
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import {
-  View,
-  Text,
-  Pressable,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
+export default function App() {
 
+<<<<<<< HEAD
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { transparent } from "react-native-paper/lib/typescript/src/styles/themes/v2/colors";
 
@@ -248,3 +249,19 @@ const App = () => {
   );
 };
 export default App;
+=======
+  return (
+    <View style={styles.container}>
+      <NavigationRegLog />
+      <StatusBar style="auto" />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+  }
+});
+>>>>>>> parent of 9998372 (Design)
