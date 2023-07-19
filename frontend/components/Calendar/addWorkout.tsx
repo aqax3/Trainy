@@ -52,7 +52,7 @@ const AddWorkoutScreen = ({ navigation }: Props) => {
     const fetchWorkouts = async () => {
       try {
         const userToken = await AsyncStorage.getItem("userToken");
-        const response = await axios.get("http://192.168.1.13:5000/workouts", {
+        const response = await axios.get("http://192.168.1.13:5001/workouts", {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${userToken}`,
@@ -79,7 +79,7 @@ const AddWorkoutScreen = ({ navigation }: Props) => {
       const userId = await AsyncStorage.getItem("userId");
   
       const response = await fetch(
-        "http://192.168.1.13:5000/workoutcalendar",
+        "http://192.168.1.13:5001/workoutcalendar",
         {
           method: "POST",
           headers: {

@@ -2,6 +2,7 @@ import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 import React, { useState } from "react";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Input, YStack, XStack } from "tamagui";
 
 import { StackNavigationProp } from '@react-navigation/stack';
 
@@ -28,7 +29,7 @@ export default function LoginForm({navigation}: Props) {
   const loginUser = async () => {
     try {
       const response = await axios.post(
-        "http://192.168.1.110:5000/login-user",
+        "http://192.168.1.110:5001/login-user",
         {
           username,
           password,
@@ -54,20 +55,10 @@ export default function LoginForm({navigation}: Props) {
 
   return (
     <View style={styles.container}>
-      <Text>{loginStatus}</Text>
-      <TextInput
-        style={styles.input}
-        value={username}
-        onChangeText={setUsername}
-        placeholder="Enter username"
-      />
-      <TextInput
-        style={styles.input}
-        value={password}
-        onChangeText={setPassword}
-        placeholder="Enter password"
-        secureTextEntry={true}
-      />
+      <XStack alignItems="center" >
+      <Input size="$4" borderWidth={2} placeholder="Username" />
+      </XStack>
+      <Input size="$4" borderWidth={2} placeholder="Password"/>
       <Button title="Login" onPress={loginUser} />
     </View>
   );

@@ -20,7 +20,7 @@ COPY src/ src/
 RUN npm run build
 
 # Expose the port the app will run on
-EXPOSE 5000
+EXPOSE 5001
 
 # Start the application
 CMD ["node", "dist/app.js"]
