@@ -11,14 +11,6 @@ module.exports = function(api) {
           include: "TAMAGUI_TARGET",
         },
       ],
-      [
-        "@tamagui/babel-plugin",
-        {
-          components: ["tamagui"],
-          config: "./tamagui.config.ts",
-          logTimings: true,
-        },
-      ],
       "react-native-reanimated/plugin",
     ],
   };
