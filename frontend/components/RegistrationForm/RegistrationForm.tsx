@@ -1,17 +1,21 @@
-import { Button, StyleSheet, Text, TextInput, View } from "react-native";
+import { StyleSheet, Text, TextInput, View } from "react-native";
 import React, { useState } from "react";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Platform } from "react-native";
+import { Button, lightColors, createTheme, ThemeProvider, Input, Icon } from '@rneui/themed';
+import { AntDesign, Ionicons } from "@expo/vector-icons";
 
 import { StackNavigationProp } from '@react-navigation/stack';
 
 type RootStackParamList = {
-    Registration: undefined;
+    Register: undefined;
     Login: undefined;
   };
   
   type RegistrationScreenNavigationProp = StackNavigationProp<
     RootStackParamList,
-    'Registration'
+    'Register'
   >;
   
   type Props = {
@@ -21,7 +25,6 @@ type RootStackParamList = {
 
 export default function RegistrationForm({ navigation }: Props) {
   const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [registrationStatus, setRegistrationStatus] = useState("");
@@ -37,7 +40,6 @@ export default function RegistrationForm({ navigation }: Props) {
         "http://192.168.1.104:5001/register-user",
         {
           username,
-          email,
           password,
         }
       );
@@ -45,7 +47,6 @@ export default function RegistrationForm({ navigation }: Props) {
       if (response.status === 200) {
         console.log(response.data);
         setUsername("");
-        setEmail("");
         setPassword("");
         setRegistrationStatus("Registration successful!");
 
@@ -58,39 +59,63 @@ export default function RegistrationForm({ navigation }: Props) {
   };
 
   return (
-    <View style={styles.container}>
+    <ThemeProvider theme={theme}>
       <Text>{registrationStatus}</Text>
-      <TextInput
+      <Input
         style={styles.input}
         value={username}
         onChangeText={setUsername}
         placeholder="Enter username"
+        leftIcon={
+          <AntDesign
+            name="user"
+            size={24}
+            color='black' 
+          />
+        }
       />
-      <TextInput
-        style={styles.input}
-        value={email}
-        onChangeText={setEmail}
-        placeholder="Enter email"
-      />
-      <TextInput
+      <Input
         style={styles.input}
         value={password}
         onChangeText={setPassword}
         placeholder="Enter password"
         secureTextEntry={true}
+        leftIcon={
+          <Ionicons
+            name="lock-closed-outline"
+            size={24}
+            color='black' 
+          />
+        }
       />
-      <TextInput
+      <Input
         style={styles.input}
         value={confirmPassword}
         onChangeText={setConfirmPassword}
         placeholder="Confirm password"
         secureTextEntry={true}
+        leftIcon={
+          <Ionicons
+            name="lock-closed-outline"
+            size={24}
+            color='black' 
+          />
+        }
       />
       <Button title="Register" onPress={registerUser} />
-      <Button title="Go to Login" onPress={() => navigation.navigate('Login')} />
-    </View>
+      <Button title="Go to Login" type="clear" size="sm" onPress={() => navigation.navigate('Login')} />
+    </ThemeProvider>
   );
 }
+
+const theme = createTheme({
+  lightColors: {
+    ...Platform.select({
+      default: lightColors.platform.android,
+      ios: lightColors.platform.ios,
+    }),
+  },
+})
 
 const styles = StyleSheet.create({
   container: {
@@ -101,8 +126,6 @@ const styles = StyleSheet.create({
   input: {
     height: 40,
     width: "80%",
-    borderColor: "gray",
-    borderWidth: 1,
     marginTop: 10,
     marginBottom: 10,
     padding: 10,

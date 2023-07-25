@@ -1,12 +1,15 @@
-import { Button, StyleSheet, Text, TextInput, View } from "react-native";
+import { StyleSheet, Text, TextInput } from "react-native";
 import React, { useState } from "react";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Platform } from "react-native";
+import { Button, lightColors, createTheme, ThemeProvider, Input, Icon } from '@rneui/themed';
+import { AntDesign, Ionicons } from "@expo/vector-icons";
 
 import { StackNavigationProp } from '@react-navigation/stack';
 
 type RootStackParamList = {
-    Registration: undefined;
+    Register: undefined;
     Login: undefined;
     Home: {username: string};
   };
@@ -53,25 +56,49 @@ export default function LoginForm({navigation}: Props) {
   };
 
   return (
-    <View style={styles.container}>
+    <ThemeProvider theme={theme}>
       <Text>{loginStatus}</Text>
-      <TextInput
+      <Input
         style={styles.input}
         value={username}
         onChangeText={setUsername}
         placeholder="Username"
+        leftIcon={
+          <AntDesign
+            name="user"
+            size={24}
+            color='black' 
+          />
+        }
       />
-      <TextInput
+      <Input
         style={styles.input}
         value={password}
         onChangeText={setPassword}
         placeholder="Password"
         secureTextEntry={true}
+        leftIcon={
+          <Ionicons
+            name="lock-closed-outline"
+            size={24}
+            color='black' 
+          />
+        }
       />
       <Button title="Login" onPress={loginUser} />
-    </View>
+      <Button title="Don't have an account yet? Click here to register." type="clear" size="sm" onPress={() => navigation.navigate('Register')} />
+    </ThemeProvider>
   );
 }
+
+const theme = createTheme({
+  lightColors: {
+    ...Platform.select({
+      default: lightColors.platform.android,
+      ios: lightColors.platform.ios,
+    }),
+  },
+})
 
 const styles = StyleSheet.create({
   container: {
@@ -82,8 +109,6 @@ const styles = StyleSheet.create({
   input: {
     height: 40,
     width: "80%",
-    borderColor: "gray",
-    borderWidth: 1,
     marginTop: 10,
     marginBottom: 10,
     padding: 10,
