@@ -1,7 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 import React, { useState, useEffect } from "react";
-import NavigationStack from "./components/NavigationStack/NavigationStack";
+import NavigationRegLog from "./components/NavigationRegLog/NavigationRegLog";
 import * as Font from 'expo-font';
 import { MaterialIcons } from '@expo/vector-icons';
 import * as SplashScreen from 'expo-splash-screen';
@@ -41,7 +41,7 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <NavigationStack initialRouteName={initialRoute}/>
+      <NavigationRegLog initialRouteName={initialRoute}/>
       <StatusBar style="auto" />
     </View>
   );

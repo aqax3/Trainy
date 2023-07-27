@@ -13,6 +13,10 @@ import { Ionicons } from '@expo/vector-icons';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
+interface NavigationStackProps {
+  initialRouteName: string;
+}
+
 function HomeTabs() {
   return (
     <Tab.Navigator>
@@ -23,13 +27,13 @@ function HomeTabs() {
   );
 }
 
-export default function NavigationRegLog() {
+export default function NavigationRegLog({initialRouteName}: NavigationStackProps ) {
   return(
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='Login'>
-        <Stack.Screen name="Register" component={RegistrationForm} />
-        <Stack.Screen name="Login" component={LoginForm} />
+      <Stack.Navigator initialRouteName={initialRouteName}>
         <Stack.Screen name="App" component={HomeTabs} />
+        <Stack.Screen name="Login" component={LoginForm} />
+        <Stack.Screen name="Register" component={RegistrationForm} />
       </Stack.Navigator>
     </NavigationContainer>
   )
