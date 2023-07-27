@@ -3,14 +3,18 @@ import { Document, Schema, model } from "mongoose";
 export interface IExercise extends Document {
   name: string;
   description: string;
-  type: string;
+  muscleGroup: string;
   videoURL: string;
 }
 
 const exerciseSchema: Schema<IExercise> = new Schema({
   name: String,
   description: String,
-  type: String,
+  muscleGroup: {
+    type: String,
+    enum: ['chest', 'back', 'arms', 'abdominals', 'legs', 'shoulders'],
+    required: true
+  },
   videoURL: String,
 });
 

@@ -40,21 +40,23 @@ export async function getExerciseTypeStats(userId: string) {
     })
     .exec();
 
-  const typeCounts: { [key: string]: number } = {};
+  const muscleGroupCounts: { [key: string]: number } = {};
 
   workoutCalendars.forEach((workoutCalendar: IWorkoutCalendarPopulated) => {
     const workout = workoutCalendar.workout;
     workout.exercises.forEach((exercise: IExercise) => {
-      if (typeCounts[exercise.type] !== undefined) {
-        typeCounts[exercise.type]++;
+      if (muscleGroupCounts[exercise.muscleGroup] !== undefined) {
+        muscleGroupCounts[exercise.muscleGroup]++;
       } else {
-        typeCounts[exercise.type] = 1;
+        muscleGroupCounts[exercise.muscleGroup] = 1;
       }
     });
   });
 
-  return typeCounts;
+  return muscleGroupCounts;
 }
+
+
 //  Average Workout Duration
 export async function getAverageWorkoutDuration(userId: string) {
   const workoutCalendars = await WorkoutCalendar.find({
@@ -111,17 +113,17 @@ export async function getMostCommonExercise(userId: string) {
     })
     .exec();
 
-  const typeCounts: { [key: string]: number } = {};
+  const muscleGroupCounts: { [key: string]: number } = {};
 
   workoutCalendars.forEach((workoutCalendar: IWorkoutCalendarPopulated) => {
     const workout: IWorkout = workoutCalendar.workout as unknown as IWorkout;
     if (workout.exercises) {
       (workout.exercises as unknown as IExercise[]).forEach(
         (exercise: IExercise) => {
-          if (typeCounts[exercise.type] !== undefined) {
-            typeCounts[exercise.type]++;
+          if (muscleGroupCounts[exercise.muscleGroup] !== undefined) {
+            muscleGroupCounts[exercise.muscleGroup]++;
           } else {
-            typeCounts[exercise.type] = 1;
+            muscleGroupCounts[exercise.muscleGroup] = 1;
           }
         }
       );
@@ -131,10 +133,10 @@ export async function getMostCommonExercise(userId: string) {
   let maxCount = 0;
   let mostCommonExercise = null;
 
-  for (let exerciseType in typeCounts) {
-    if (typeCounts[exerciseType] > maxCount) {
-      maxCount = typeCounts[exerciseType];
-      mostCommonExercise = exerciseType;
+  for (let muscleGroup in muscleGroupCounts) {
+    if (muscleGroupCounts[muscleGroup] > maxCount) {
+      maxCount = muscleGroupCounts[muscleGroup];
+      mostCommonExercise = muscleGroup;
     }
   }
 
