@@ -27,7 +27,7 @@ const WorkoutCalSchema = new Schema<IWorkoutCalendar>(
     completed: {
       type: Boolean,
       default: false,
-    }
+    },
   },
   { timestamps: true }
 );

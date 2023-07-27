@@ -48,9 +48,9 @@ app.get("/", (req, res) => {
 
 //REGISTER USER
 app.post("/register-user", async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, password } = req.body;
 
-  if (!username || !email || !password) {
+  if (!username || !password) {
     return res.status(400).send("Missing user data");
   }
 
@@ -60,7 +60,7 @@ app.post("/register-user", async (req, res) => {
     return res.status(400).send("Username already taken!");
   }
 
-  const user = new User({ username, email, password });
+  const user = new User({ username, password });
 
   try {
     await user.save();

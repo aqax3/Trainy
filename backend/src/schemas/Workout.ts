@@ -8,7 +8,7 @@ interface IExerciseDetails {
 }
 
 export interface IWorkout extends Document {
-  userId: string;
+  userId: Types.ObjectId;
   name: string,
   description: string,
   duration: number,
@@ -24,7 +24,7 @@ const exerciseDetailsSchema: Schema<IExerciseDetails> = new Schema({
 });
 
 const workoutSchema: Schema<IWorkout> = new Schema({
-  userId: String,
+  userId: { type: Schema.Types.ObjectId, ref: 'User' },
   name: String,
   description: String,
   duration: Number,
