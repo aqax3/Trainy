@@ -1,15 +1,16 @@
 import { StatusBar } from "expo-status-bar";
 import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 import React, { useState, useEffect } from "react";
-import NavigationRegLog from "./components/NavigationRegLog/NavigationRegLog";
+import NavigationStack from "./components/NavigationStack/NavigationStack";
 import * as Font from 'expo-font';
 import { MaterialIcons } from '@expo/vector-icons';
 import * as SplashScreen from 'expo-splash-screen';
 
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function App() {
   const [isFontLoaded, setFontLoaded] = useState(false);
+  const [initialRoute, setInitialRoute] = useState("Login");
 
   useEffect(() => {
     const prepare = async () => {
@@ -19,6 +20,9 @@ export default function App() {
         await Font.loadAsync({
           ...MaterialIcons.font,
         });
+
+        const userToken = await AsyncStorage.getItem("userToken");
+        setInitialRoute(userToken ? "Home" : "Login");
 
         setFontLoaded(true);
       } catch (e) {
@@ -37,7 +41,7 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <NavigationRegLog />
+      <NavigationStack initialRouteName={initialRoute}/>
       <StatusBar style="auto" />
     </View>
   );

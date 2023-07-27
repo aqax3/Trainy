@@ -10,10 +10,14 @@ import WorkoutScreen from '../Calendar/Calendar';
 
 const Stack = createStackNavigator();
 
-export default function NavigationRegLog() {
+interface NavigationStackProps {
+    initialRouteName: string;
+  }
+
+export default function NavigationStack( {initialRouteName}: NavigationStackProps ) {
     return(
         <NavigationContainer>
-            <Stack.Navigator initialRouteName='Login'>
+            <Stack.Navigator initialRouteName={initialRouteName} >
                 <Stack.Screen name="Register" component={RegistrationForm} />
                 <Stack.Screen name="Login" component={LoginForm} />
                 <Stack.Screen name="Home" component={HomePage} />
