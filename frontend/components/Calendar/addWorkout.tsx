@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { View, Button, Platform, Alert, TextInput } from 'react-native';
-import { Picker } from "@react-native-picker/picker";
-import DateTimePicker from '@react-native-community/datetimepicker';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import { View, Button, Platform, Alert, TextInput } from "react-native";
+import RNPickerSelect from "react-native-picker-select";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import axios from "axios";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useLayoutEffect } from "react";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type RootStackParamList = {
   Registration: undefined;
@@ -56,7 +56,7 @@ const AddWorkoutScreen = ({ navigation }: Props) => {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${userToken}`,
-          }
+          },
         });
 
         setWorkouts(response.data);
@@ -77,7 +77,7 @@ const AddWorkoutScreen = ({ navigation }: Props) => {
     try {
       const userToken = await AsyncStorage.getItem("userToken");
       const userId = await AsyncStorage.getItem("userId");
-  
+
       const response = await fetch(
         "http://192.168.1.104:5001/workoutcalendar",
         {
@@ -106,16 +106,13 @@ const AddWorkoutScreen = ({ navigation }: Props) => {
         display="default"
         onChange={onChange}
       />
-      <Picker
-  selectedValue={workout}
-  onValueChange={(itemValue: string | number, itemIndex: number) => 
-    setWorkout(itemValue.toString())
-  }
->
-  {workouts.map((workout, index) => (
-    <Picker.Item key={index} label={workout.name} value={workout._id} />
-  ))}
-</Picker>
+      <RNPickerSelect
+        onValueChange={(value) => setWorkout(value)}
+        items={workouts.map((workout) => ({
+          label: workout.name,
+          value: workout._id,
+        }))}
+      />
       <Button title="Add Workout" onPress={submitWorkout} />
     </View>
   );

@@ -10,6 +10,8 @@ import CookieManager from "@react-native-cookies/cookies";
 import { useLayoutEffect } from 'react';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 
+import { Header } from "@rneui/base";
+
 type RootStackParamList = {
   Registration: undefined;
   Login: undefined;
@@ -43,18 +45,13 @@ export default function HomePage({
     await AsyncStorage.removeItem('userToken');
     await AsyncStorage.removeItem('username');
 
-    navigation?.navigate("Login");
-  };
+    setUsername("");
 
-  useLayoutEffect(() => {
-    navigation?.setOptions({
-      headerRight: () => (
-        <HeaderButtons>
-          <Item title="Add Workout" onPress={() => navigation.navigate('AddWorkoutScreen')} />
-        </HeaderButtons>
-      ),
+    navigation?.reset({
+      index: 0,
+      routes: [{ name: "Login" }],
     });
-  }, [navigation]);
+  };
 
   return (
     <View style={styles.container}>

@@ -40,7 +40,7 @@ export default function LoginForm({navigation}: Props) {
     try {
       // Sends a POST request to log in the user
       const response = await axios.post(
-        "http://localhost:5001/login-user",
+        "http://192.168.1.104:5001/login-user",
         {
           username,
           password,
@@ -57,7 +57,10 @@ export default function LoginForm({navigation}: Props) {
       await AsyncStorage.setItem('username', response.data.user.username);
 
       // Navigates to the 'Home' screen with the 'username' parameter
-      navigation.navigate('App', { screen: 'Home', params: { username: response.data.user.username } });
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'App', params: { screen: 'Home', params: { username: response.data.user.username } } }],
+      });
     } catch (error) {
       console.error(error);
       setLoginStatus("Login failed!");

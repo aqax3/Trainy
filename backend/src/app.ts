@@ -158,9 +158,9 @@ app.put("/update-weight", authenticateToken, async (req, res) => {
 });
 
 app.post("/exercises", authenticateToken, async (req, res) => {
-  const { name, description, type, videoURL } = req.body;
+  const { name, description, muscleGroup, videoURL } = req.body;
 
-  const exercise = new Exercise({ name, description, type, videoURL });
+  const exercise = new Exercise({ name, description, muscleGroup, videoURL });
 
   try {
     await exercise.save();
@@ -174,6 +174,17 @@ app.post("/exercises", authenticateToken, async (req, res) => {
 app.get("/exercises", authenticateToken, async (req, res) => {
   try {
     const exercises = await Exercise.find();
+    res.send(exercises);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
+});
+
+app.get("/exercises/muscle-group/:muscleGroup", authenticateToken, async (req, res) => {
+  try {
+    const { muscleGroup } = req.params;
+    const exercises = await Exercise.find({ muscleGroup });
     res.send(exercises);
   } catch (err) {
     console.error(err);
