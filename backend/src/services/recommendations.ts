@@ -32,7 +32,6 @@ export async function getWorkoutRecommendation(userId: string) {
     beginner: 0,
     intermediate: 0,
     advanced: 0,
-    expert: 0,
   };
 
   userWorkouts.forEach((workoutCalendar) => {

@@ -5,6 +5,7 @@ export interface IExercise extends Document {
   description: string;
   muscleGroup: string;
   videoURL: string;
+  imageURL: string;
 }
 
 const exerciseSchema: Schema<IExercise> = new Schema({
@@ -16,6 +17,7 @@ const exerciseSchema: Schema<IExercise> = new Schema({
     required: true
   },
   videoURL: String,
+  imageURL: String
 });
 
 const Exercise = model<IExercise>('Exercise', exerciseSchema);

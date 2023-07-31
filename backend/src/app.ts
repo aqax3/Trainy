@@ -158,9 +158,9 @@ app.put("/update-weight", authenticateToken, async (req, res) => {
 });
 
 app.post("/exercises", authenticateToken, async (req, res) => {
-  const { name, description, muscleGroup, videoURL } = req.body;
+  const { name, description, muscleGroup, videoURL, imageURL } = req.body;
 
-  const exercise = new Exercise({ name, description, muscleGroup, videoURL });
+  const exercise = new Exercise({ name, description, muscleGroup, videoURL, imageURL });
 
   try {
     await exercise.save();

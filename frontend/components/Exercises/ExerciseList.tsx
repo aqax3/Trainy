@@ -3,13 +3,17 @@ import RNPickerSelect from "react-native-picker-select";
 import { useEffect } from "react";
 
 import axios from "axios";
-import { ActivityIndicator, Text } from "react-native";
+import { ActivityIndicator, Text, TouchableOpacity } from "react-native";
 import { Card } from "@rneui/base";
 import { ScrollView } from "react-native";
+
+import { useNavigation } from "@react-navigation/native";
 
 import { View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import YoutubePlayer from "react-native-youtube-iframe";
+import { Image } from "react-native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 interface Exercise {
   _id: string;
@@ -17,12 +21,23 @@ interface Exercise {
   description: string;
   muscleGroup: "chest" | "back" | "arms" | "abdominals" | "legs" | "shoulders";
   videoURL: string;
+  imageURL: string;
 }
+
+type StackParamList = {
+  ExerciseList: undefined;
+  ExerciseDetails: { exercise: Exercise };
+};
 
 export default function ExerciseList() {
   const [selectedMuscleGroup, setSelectedMuscleGroup] = useState("arms");
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [isLoadingImage, setIsLoadingImage] = useState(false);
+
+  const navigation =
+    useNavigation<StackNavigationProp<StackParamList, "ExerciseList">>();
 
   useEffect(() => {
     getExerciseByMuscleGroup(selectedMuscleGroup);
@@ -83,18 +98,25 @@ export default function ExerciseList() {
 
       <ScrollView>
         {exercises.map((exercise, index) => (
-          <Card key={index}>
-            <Card.Title>{exercise.name}</Card.Title>
-            <Card.Divider />
-            <YoutubePlayer
-              height={200}
-              play={false}
-              videoId={exercise.videoURL}
-            />
-            <Text style={{ marginBottom: 10, marginTop: 10 }}>
-              {exercise.description}
-            </Text>
-          </Card>
+          <TouchableOpacity
+            key={index}
+            onPress={() => navigation.navigate("ExerciseDetails", { exercise })}
+          >
+            <Card key={index}>
+              <Card.Title>{exercise.name}</Card.Title>
+              <Card.Divider />
+              {isLoadingImage && (
+                <ActivityIndicator size="large" color="#0000ff" />
+              )}
+              <Image
+                source={{ uri: exercise.imageURL }}
+                style={{ height: 200, width: "100%" }}
+                resizeMode="cover"
+                onLoadStart={() => setIsLoadingImage(true)}
+                onLoadEnd={() => setIsLoadingImage(false)}
+              />
+            </Card>
+          </TouchableOpacity>
         ))}
       </ScrollView>
     </View>
