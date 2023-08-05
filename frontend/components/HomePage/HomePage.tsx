@@ -19,7 +19,7 @@ type RootStackParamList = {
   Registration: undefined;
   Login: undefined;
   Home: { username: string };
-  AddWorkoutScreen: undefined;
+  MyWorkoutScreen: undefined;
 };
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "Home">;
@@ -43,7 +43,7 @@ export default function HomePage({ navigation }: Props) {
 
       const userToken = await AsyncStorage.getItem("userToken");
       const response = await axios.get(
-        "http://192.168.1.104:5001/recommendations",
+        "http://localhost:5001/recommendations",
         {
           headers: {
             "Content-Type": "application/json",

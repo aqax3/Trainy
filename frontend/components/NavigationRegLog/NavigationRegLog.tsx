@@ -5,12 +5,13 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import RegistrationForm from '../RegistrationForm/RegistrationForm';
 import LoginForm from '../LoginForm/LoginForm';
 import HomePage from '../HomePage/HomePage';
-import AddWorkoutScreen from '../Calendar/addWorkout';
+import MyWorkoutScreen from '../Workouts/myWorkout';
 import WorkoutScreen from '../Calendar/Calendar';
 import ExerciseList from '../Exercises/ExerciseList';
 import { Fontisto } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import ExerciseDetails from '../Exercises/ExerciseDetails';
+import CreateWorkoutScreen from '../Workouts/createWorkout';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -35,9 +36,9 @@ function HomeTabs() {
   return (
     <Tab.Navigator>
       <Tab.Screen name="Home" component={HomePage} options={{tabBarIcon: ({size, color}) => (<Fontisto name="home" size={24} color="black" />),}}/>
-      <Tab.Screen name="AddWorkout" component={AddWorkoutScreen} options={{tabBarIcon: ({size, color}) => (<Ionicons name="ios-stats-chart-sharp" size={24} color="black" />)}}/>
+      <Tab.Screen name="Workout" component={WorkoutStack} options={{tabBarIcon: ({size, color}) => (<Ionicons name="ios-stats-chart-sharp" size={24} color="black" />)}}/>
       <Tab.Screen name="Exercises" component={ExerciseStack} options={{tabBarIcon: ({size, color}) => (<Ionicons name="ios-barbell-sharp" size={24} color="black" />)}} />
-      <Tab.Screen name="Workout" component={WorkoutScreen} />
+      <Tab.Screen name="Calendar" component={WorkoutScreen} />
     </Tab.Navigator>
   );
 }
@@ -47,6 +48,15 @@ function ExerciseStack() {
     <Stack.Navigator>
       <Stack.Screen name="ExerciseList" component={ExerciseList} options={{ headerShown: false }}/>
       <Stack.Screen name="ExerciseDetails" component={ExerciseDetails} options={{ headerTitle: "" }}/>
+    </Stack.Navigator>
+  )
+}
+
+function WorkoutStack(){
+  return(
+    <Stack.Navigator>
+      <Stack.Screen name="MyWorkout" component={MyWorkoutScreen} options={{ headerShown: false }}/>
+      <Stack.Screen name="CreateWorkoutScreen" component={CreateWorkoutScreen} options={{ headerTitle: "Create Workout" }}/>
     </Stack.Navigator>
   )
 }

@@ -158,9 +158,9 @@ app.put("/update-weight", authenticateToken, async (req, res) => {
 });
 
 app.post("/exercises", authenticateToken, async (req, res) => {
-  const { name, description, muscleGroup, videoURL, imageURL } = req.body;
+  const { name, description, muscleGroup, videoURL, imageURL, weight } = req.body;
 
-  const exercise = new Exercise({ name, description, muscleGroup, videoURL, imageURL });
+  const exercise = new Exercise({ name, description, muscleGroup, videoURL, imageURL, weight });
 
   try {
     await exercise.save();
@@ -181,6 +181,40 @@ app.get("/exercises", authenticateToken, async (req, res) => {
   }
 });
 
+app.get("/exercises/:name", authenticateToken, async (req, res) => {
+  const exerciseName = req.params.name;
+
+  try {
+      const exercise = await Exercise.findOne({ name: exerciseName });
+      
+      if (!exercise) {
+          return res.status(404).send("Exercise not found");
+      }
+
+      res.send(exercise);
+  } catch (err) {
+      console.error(err);
+      res.status(500).send("Server error");
+  }
+});
+
+
+app.delete("/exercises/:id", authenticateToken, async (req, res) => {
+  try {
+    const exercise = await Exercise.findByIdAndDelete(req.params.id);
+
+    if (!exercise) {
+      return res.status(404).send('Exercise not found');
+    }
+
+    res.send(exercise);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
+});
+
+
 app.get("/exercises/muscle-group/:muscleGroup", authenticateToken, async (req, res) => {
   try {
     const { muscleGroup } = req.params;
@@ -191,6 +225,26 @@ app.get("/exercises/muscle-group/:muscleGroup", authenticateToken, async (req, r
     res.status(500).send("Server error");
   }
 });
+
+
+app.put("/exercises/weight/:id", authenticateToken, async (req, res) => {
+  const { weight } = req.body;
+
+  try {
+
+    const exercise = await Exercise.findByIdAndUpdate(req.params.id, { weight }, { new: true });
+
+    if (!exercise) {
+      return res.status(404).send('Exercise not found');
+    }
+
+    res.send(exercise);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
+});
+
 
 app.post("/workouts", authenticateToken, async (req, res) => {
   const { name, description, duration, difficulty, exercises } = req.body;
