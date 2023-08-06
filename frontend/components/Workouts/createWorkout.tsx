@@ -21,7 +21,7 @@ const CreateWorkoutScreen = () => {
             const userId = await AsyncStorage.getItem("userId");
 
             const response = await axios.post(
-                "http://localhost:5001/workouts",
+                "http://192.168.1.106:5001/workouts",
                 {
                     userId,
                     name: workoutName,
@@ -49,7 +49,7 @@ const CreateWorkoutScreen = () => {
         try {
             const userToken = await AsyncStorage.getItem("userToken");
             
-            const response = await axios.get(`http://localhost:5001/exercises/${searchInput}`, {
+            const response = await axios.get(`http://192.168.1.106:5001/exercises/${searchInput}`, {
                 params: {
                     query: searchInput
                 },

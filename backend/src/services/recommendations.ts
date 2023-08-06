@@ -28,6 +28,14 @@ export async function getWorkoutRecommendation(userId: string) {
     oneMonthAgo
   )) as IWorkoutCalendar[];
 
+  console.log(userWorkouts.length);
+
+  if (userWorkouts.length === 0) {
+    return {
+      recommendedDifficulty: "none",
+    };
+  }
+
   let difficultyCounts: { [key: string]: number } = {
     beginner: 0,
     intermediate: 0,

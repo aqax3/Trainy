@@ -48,7 +48,7 @@ export default function ExerciseList() {
     try {
       const userToken = await AsyncStorage.getItem("userToken");
       const response = await axios.get(
-        `http://localhost:5001/exercises/muscle-group/${muscleGroup}`,
+        `http://192.168.1.106:5001/exercises/muscle-group/${muscleGroup}`,
         {
           headers: {
             "Content-Type": "application/json",

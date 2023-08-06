@@ -31,7 +31,7 @@ const workoutSchema: Schema<IWorkout> = new Schema({
   difficulty: { 
     type: String,
     enum: ['beginner', 'intermediate', 'advanced'], 
-    required: true 
+    required: false 
   },
   exercises: [exerciseDetailsSchema],
 });
