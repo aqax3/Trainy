@@ -6,6 +6,7 @@ interface IUser extends Document {
   password: string;
   height: number;
   weight: number;
+  isAdmin: boolean;
 }
 
 const userSchema: Schema<IUser> = new Schema({
@@ -13,6 +14,7 @@ const userSchema: Schema<IUser> = new Schema({
   password: String,
   height: Number,
   weight: Number,
+  isAdmin: { type: Boolean, default: false },
 });
 
 userSchema.pre<IUser>("save", async function (next) {

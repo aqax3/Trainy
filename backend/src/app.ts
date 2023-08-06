@@ -14,6 +14,7 @@ import Workout from "./schemas/Workout";
 import WorkoutCalendar from "./schemas/Workoutcalendar";
 import Plan from "./schemas/Plan";
 import authenticateToken from "./middleware/authenticateToken";
+import authenticateAdminToken from "./middleware/authenticateAdminToken";
 import {
   getWorkoutRecommendation,
   getUserWorkoutHistory,
@@ -48,7 +49,7 @@ app.get("/", (req, res) => {
 
 //REGISTER USER
 app.post("/register-user", async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, adminCode } = req.body;
 
   if (!username || !password) {
     return res.status(400).send("Missing user data");
@@ -60,7 +61,17 @@ app.post("/register-user", async (req, res) => {
     return res.status(400).send("Username already taken!");
   }
 
-  const user = new User({ username, password });
+  let isAdmin = false;
+
+  if (adminCode) {
+    if (adminCode === process.env.ADMIN_CODE) {
+      isAdmin = true;
+    } else {
+      return res.status(403).send("Invalid admin code.");
+    }
+  }
+
+  const user = new User({ username, password, isAdmin });
 
   try {
     await user.save();
@@ -95,7 +106,7 @@ app.post("/login-user", async (req, res) => {
     console.log(process.env.JWT_SECRET);
 
     const userToken = jwt.sign(
-      { userId: user._id, username: user.username },
+      { userId: user._id, username: user.username, isAdmin: user.isAdmin },
       process.env.JWT_SECRET as string,
       { expiresIn: "1h" }
     );
@@ -157,7 +168,7 @@ app.put("/update-weight", authenticateToken, async (req, res) => {
   }
 });
 
-app.post("/exercises", authenticateToken, async (req, res) => {
+app.post("/exercises", authenticateAdminToken, async (req, res) => {
   const { name, description, muscleGroup, videoURL, imageURL, weight } = req.body;
 
   const exercise = new Exercise({ name, description, muscleGroup, videoURL, imageURL, weight });
