@@ -6,6 +6,7 @@ import axios from "axios";
 import { ActivityIndicator, Text, TouchableOpacity } from "react-native";
 import { Card } from "@rneui/base";
 import { ScrollView } from "react-native";
+import { TextInput } from "react-native";
 
 import { useNavigation } from "@react-navigation/native";
 
@@ -36,26 +37,23 @@ export default function ExerciseList() {
 
   const [isLoadingImage, setIsLoadingImage] = useState(false);
 
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredExercises, setFilteredExercises] = useState<Exercise[]>([]);
+
   const navigation =
     useNavigation<StackNavigationProp<StackParamList, "ExerciseList">>();
 
-  useEffect(() => {
-    getExerciseByMuscleGroup(selectedMuscleGroup);
-  }, [selectedMuscleGroup]);
-
-  const getExerciseByMuscleGroup = async (muscleGroup: string) => {
+  // Function to fetch all exercises
+  const getAllExercises = async () => {
     setIsLoading(true);
     try {
       const userToken = await AsyncStorage.getItem("userToken");
-      const response = await axios.get(
-        `http://192.168.1.106:5001/exercises/muscle-group/${muscleGroup}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${userToken}`,
-          },
-        }
-      );
+      const response = await axios.get(`http://192.168.1.106:5001/exercises`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userToken}`,
+        },
+      });
       setExercises(response.data);
     } catch (error) {
       console.error(error);
@@ -64,12 +62,64 @@ export default function ExerciseList() {
     }
   };
 
+  // run function to get all exercises
+  useEffect(() => {
+    getAllExercises();
+  }, []);
+
+  // When muscle group dropdown is changed or exercises state updates,
+  // update filteredExercises to show exercises of selected muscle group
+  useEffect(() => {
+    if (selectedMuscleGroup) {
+      const filtered = exercises.filter(
+        (exercise) => exercise.muscleGroup === selectedMuscleGroup
+      );
+      setFilteredExercises(filtered);
+    } else {
+      setFilteredExercises(exercises);
+    }
+  }, [selectedMuscleGroup, exercises]);
+
+  // When the search query is changed,
+  // filter exercises based on the text and set them to filteredExercises
+  useEffect(() => {
+    const query = searchQuery.toLowerCase();
+
+    const filtered = exercises.filter((exercise) => {
+      if (selectedMuscleGroup && exercise.muscleGroup !== selectedMuscleGroup) {
+        return false;
+      }
+      return exercise.name.toLowerCase().includes(query);
+    });
+
+    setFilteredExercises(filtered);
+  }, [searchQuery]);
+
+  //loading indicator for exercises
   if (isLoading) {
     return <ActivityIndicator size="large" color="#0000ff" />;
   }
 
   return (
     <View style={{ flex: 1, justifyContent: "flex-start", padding: 20 }}>
+      {
+        //SEARCH BAR
+      }
+      <TextInput
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+        placeholder="Search for exercises..."
+        style={{
+          padding: 10,
+          borderWidth: 1,
+          borderColor: "#e0e0e0",
+          borderRadius: 5,
+          marginBottom: 10,
+        }}
+      />
+      {
+        //DROP DOWN MENU
+      }
       <RNPickerSelect
         onValueChange={(value) => setSelectedMuscleGroup(value)}
         items={[
@@ -81,7 +131,6 @@ export default function ExerciseList() {
           { label: "ABDOMINALS", value: "abdominals" },
         ]}
         style={{
-          // Here you can apply your custom styles
           inputIOS: {
             color: "black",
             paddingTop: 13,
@@ -97,7 +146,7 @@ export default function ExerciseList() {
       />
 
       <ScrollView>
-        {exercises.map((exercise, index) => (
+        {filteredExercises.map((exercise, index) => (
           <TouchableOpacity
             key={index}
             onPress={() => navigation.navigate("ExerciseDetails", { exercise })}
