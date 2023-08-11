@@ -26,8 +26,14 @@ const exerciseDetailsSchema: Schema<IExerciseDetails> = new Schema({
 const workoutSchema: Schema<IWorkout> = new Schema({
   userId: { type: Schema.Types.ObjectId, ref: 'User' },
   name: String,
-  description: String,
-  duration: Number,
+  description: {
+    type: String,
+    required: false
+  },
+  duration: {
+    type: Number,
+    required: false,
+  },
   difficulty: { 
     type: String,
     enum: ['beginner', 'intermediate', 'advanced'], 

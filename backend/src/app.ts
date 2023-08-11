@@ -209,6 +209,17 @@ app.get("/exercises/:name", authenticateToken, async (req, res) => {
   }
 });
 
+app.get('/exercise', async (req, res) => {
+  const { name } = req.query;
+  try {
+      // Use a regex search to find exercises containing the letters in the name
+      const exercises = await Exercise.find({ name: new RegExp(name as string, 'i') });
+      res.json(exercises);
+  } catch (error) {
+      res.status(500).json({ error: "Failed to fetch exercises." });
+  }
+});
+
 
 app.delete("/exercises/:id", authenticateToken, async (req, res) => {
   try {

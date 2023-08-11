@@ -20,7 +20,7 @@ const WorkoutScreen = () => {
     const fetchWorkouts = async () => {
       const userToken = await AsyncStorage.getItem("userToken");
 
-      fetch("http://192.168.1.106:5001/workoutcalendar", {
+      fetch("http://localhost:5001/workoutcalendar", {
         headers: {
           Authorization: `Bearer ${userToken}`,
         },

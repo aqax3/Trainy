@@ -13,7 +13,7 @@ const MyWorkoutScreen = () => {
     const fetchWorkouts = async () => {
       try {
         const userToken = await AsyncStorage.getItem("userToken");
-        const response = await axios.get("http://192.168.1.106:5001/workouts", {
+        const response = await axios.get("http://localhost:5001/workouts", {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${userToken}`,
