@@ -39,6 +39,7 @@ const CalendarScreen: React.FC = () => {
   const [markedDates, setMarkedDates] = useState<MarkedDates>({});
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [workoutsForDate, setWorkoutsForDate] = useState<Workout[]>([]);
+  const [completed, setCompleted] = useState<boolean>(false);
 
   // sets the currentWorkoutId state to the route param (this is needed so the state can get set to undefined after a workout has been added to the calendar)
   const initialSelectedWorkoutId = route.params?.selectedWorkoutId;
@@ -78,7 +79,7 @@ const CalendarScreen: React.FC = () => {
     const userToken = await AsyncStorage.getItem("userToken");
     try {
       const response = await axios.get(
-        "http://192.168.1.106:5001/workoutcalendar",
+        "http://localhost:5001/workoutcalendar",
         {
           headers: {
             Authorization: `Bearer ${userToken}`,
@@ -139,6 +140,14 @@ const CalendarScreen: React.FC = () => {
           new Date(workout.date).toISOString().split("T")[0] === day.dateString
       );
       setWorkoutsForDate(workoutsForSelectedDate);
+      console.log(workoutsForSelectedDate)
+      if(workoutsForSelectedDate[0].completed === true){
+        setCompleted(true)
+        console.log(completed)
+      } else {
+        setCompleted(false)
+        console.log(completed)
+      }
       return; // Add an explicit return here
     }
 
@@ -164,7 +173,7 @@ const CalendarScreen: React.FC = () => {
         workout: currentWorkoutId,
       };
       const response = await axios.post(
-        "http://192.168.1.106:5001/workoutcalendar",
+        "http://localhost:5001/workoutcalendar",
         workoutData,
         {
           headers: {
@@ -222,12 +231,13 @@ const CalendarScreen: React.FC = () => {
                   <Text onPress={() => deleteWorkout(workout._id)}>
                     {new Date(workout.date).toLocaleDateString()}
                   </Text>
+                  <Text>{String(completed)}</Text>
                   <FontAwesome
                     name={
-                      workout.completedStatus ? "check-circle" : "times-circle"
+                      completed ? "check-circle" : "times-circle"
                     }
                     size={30}
-                    color={workout.completedStatus ? "green" : "red"}
+                    color={completed ? "green" : "red"}
                     onPress={() =>
                       optimisticToggleCompleted(
                         workout._id,
@@ -252,7 +262,7 @@ const CalendarScreen: React.FC = () => {
 
     try {
       const response = await axios.patch(
-        `http://192.168.1.106:5001/workoutcalendar/${id}/completed`,
+        `http://localhost:5001/workoutcalendar/${id}/completed`,
         { completed: completedStatus },
         {
           headers: {
@@ -266,7 +276,7 @@ const CalendarScreen: React.FC = () => {
         // Update the local state to reflect the change
         const updatedWorkouts = workouts.map((workout) =>
           workout._id === id
-            ? { ...workout, completed: completedStatus }
+            ? { ...workout, completed: completed }
             : workout
         );
 
@@ -275,7 +285,7 @@ const CalendarScreen: React.FC = () => {
         // You can also update `workoutsForDate` if necessary
         const updatedWorkoutsForDate = workoutsForDate.map((workout) =>
           workout._id === id
-            ? { ...workout, completed: completedStatus }
+            ? { ...workout, completed: completed }
             : workout
         );
 
@@ -305,6 +315,8 @@ const CalendarScreen: React.FC = () => {
             : workout
         );
       });
+      setCompleted(newStatus);
+
       fetchWorkouts();
     } else {
       // If not, show an error or handle as needed
@@ -322,7 +334,7 @@ const CalendarScreen: React.FC = () => {
 
     try {
       const response = await axios.delete(
-        `http://192.168.1.106:5001/workoutcalendar/${id}`,
+        `http://localhost:5001/workoutcalendar/${id}`,
         {
           headers: {
             Authorization: `Bearer ${userToken}`,
