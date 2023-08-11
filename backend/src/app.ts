@@ -349,17 +349,39 @@ app.patch("/workoutcalendar/:id", authenticateToken, async (req, res) => {
   }
 });
 
+// update completed boolean on workoutcalendar
+app.patch('/workoutcalendar/:id/completed', async (req, res) => {
+  const { id } = req.params;
+  const { completed } = req.body;
+
+  try {
+    const updatedWorkout = await WorkoutCalendar.findByIdAndUpdate(id, { completed }, { new: true });
+
+    if (!updatedWorkout) {
+      return res.status(404).json({ message: "Workout not found" });
+    }
+
+    return res.status(200).json(updatedWorkout);
+  } catch (error) {
+    console.error("Error updating workout completion:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
 //izbrisi workout
 app.delete("/workoutcalendar/:id", authenticateToken, async (req, res) => {
   try {
-    const workout = await WorkoutCalendar.findByIdAndDelete(req.params.id);
-    if (!workout) return res.status(404).send();
+    const workout = await WorkoutCalendar.findById(req.params.id); 
+    
+    if (!workout) return res.status(404).send("Workout not found");
 
     if (workout.user.toString() !== req.user.userId) {
       return res.status(401).send("Unauthorized");
     }
 
-    res.send(workout);
+    const deletedWorkout = await WorkoutCalendar.findByIdAndDelete(req.params.id);
+
+    res.send(deletedWorkout);
   } catch (error) {
     console.error(error);
     res.status(500).send(error);

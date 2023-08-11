@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { View, Button, Text } from "react-native";
 import axios from "axios";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 
 const MyWorkoutScreen = () => {
   const navigation = useNavigation<any>();
@@ -32,14 +31,38 @@ const MyWorkoutScreen = () => {
   return (
     <View>
       {workouts.map((workout, index) => (
-        <Text key={index}>{workout.name}</Text>
+        <View
+          key={index}
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: 10,
+          }}
+        >
+          <Text>{workout.name}</Text>
+          <Button
+            title="Add to Calendar"
+            onPress={() => {
+              // Navigate to Calendar tab
+              navigation.navigate("App", {
+                screen: "Calendar",
+                params: {
+                  screen: "CalendarScreen",
+                  params: {
+                    selectedWorkoutId: workout._id,
+                    selectedWorkoutName: workout.name
+                  },
+                },
+              });
+            }}
+          />
+        </View>
       ))}
       <Button
         title="Create New Workout"
         onPress={() => navigation.navigate("CreateWorkoutScreen")}
       />
-
-
     </View>
   );
 };
