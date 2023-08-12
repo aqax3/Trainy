@@ -1,7 +1,9 @@
 import { Document, Schema, model, Types } from "mongoose";
+import Exercise from "./Exercise";
 
 interface IExerciseDetails {
   exerciseId: Types.ObjectId;
+  name: string,
   sets: number;
   reps: number;
   weight: number;
@@ -18,6 +20,7 @@ export interface IWorkout extends Document {
 
 const exerciseDetailsSchema: Schema<IExerciseDetails> = new Schema({
   exerciseId: { type: Schema.Types.ObjectId, ref: 'Exercise' },
+  name: String,
   sets: Number,
   reps: Number,
   weight: Number,

@@ -302,6 +302,80 @@ app.get("/workouts", authenticateToken, async (req, res) => {
   }
 });
 
+app.get("/workouts/:workoutId", authenticateToken, async (req, res) => {
+  const { workoutId } = req.params;
+  const { userId } = req.user;
+
+  try {
+    const workout = await Workout.findOne({ _id: workoutId, userId: userId });
+
+    if (!workout) {
+      return res.status(404).send("Workout not found");
+    }
+
+    res.send(workout);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
+});
+
+
+app.put("/workouts/:workoutId", authenticateToken, async (req, res) => {
+  const { workoutId } = req.params;
+  const { name, description, exercises } = req.body;
+
+  try {
+    const workout = await Workout.findById(workoutId);
+
+    if (!workout) {
+      return res.status(404).send("Workout not found");
+    }
+
+    // Ensure the user updating the workout is the owner
+    if (workout.userId.toString() !== req.user.userId) {
+      return res.status(403).send("User not authorized");
+    }
+
+    workout.name = name;
+    workout.description = description;
+    workout.exercises = exercises;
+
+    await workout.save();
+
+    res.send(workout);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
+});
+
+app.delete("/workouts/:workoutId", authenticateToken, async (req, res) => {
+  const { workoutId } = req.params;
+
+  try {
+    const workout = await Workout.findById(workoutId);
+
+    if (!workout) {
+      return res.status(404).send("Workout not found");
+    }
+
+    // Ensure the user deleting the workout is the owner
+    if (workout.userId.toString() !== req.user.userId) {
+      return res.status(403).send("User not authorized");
+    }
+
+    await workout.deleteOne();
+
+    res.send({ message: "Workout deleted successfully!" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
+});
+
+
+
 //workoutcalendar
 
 //shrani workout
@@ -368,7 +442,7 @@ app.patch('/workoutcalendar/:id/completed', async (req, res) => {
   }
 });
 
-//izbrisi workout
+//izbrisi workout iz calendar
 app.delete("/workoutcalendar/:id", authenticateToken, async (req, res) => {
   try {
     const workout = await WorkoutCalendar.findById(req.params.id); 

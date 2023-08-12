@@ -5,14 +5,15 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import RegistrationForm from '../RegistrationForm/RegistrationForm';
 import LoginForm from '../LoginForm/LoginForm';
 import HomePage from '../HomePage/HomePage';
-import MyWorkoutScreen from '../Workouts/myWorkout';
+import MyWorkoutScreen from'../Workouts/MyWorkout'
 import WorkoutScreen from '../Calendar/Calendar';
 import ExerciseList from '../Exercises/ExerciseList';
 import { Fontisto } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import ExerciseDetails from '../Exercises/ExerciseDetails';
-import CreateWorkoutScreen from '../Workouts/createWorkout';
+import CreateWorkoutScreen from '../Workouts/CreateWorkout';
 import CalendarScreen from '../Calendar/Calendar';
+import EditWorkout from '../Workouts/EditWorkout';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -58,6 +59,7 @@ function WorkoutStack(){
     <Stack.Navigator>
       <Stack.Screen name="MyWorkout" component={MyWorkoutScreen} options={{ headerShown: false }}/>
       <Stack.Screen name="CreateWorkoutScreen" component={CreateWorkoutScreen} options={{ headerTitle: "Create Workout" }}/>
+      <Stack.Screen name="EditWorkout" component={EditWorkout} options={{ headerShown: true }}/>
     </Stack.Navigator>
   )
 }

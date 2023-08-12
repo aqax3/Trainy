@@ -1,32 +1,39 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useCallback } from "react";
 import { View, Button, Text } from "react-native";
 import axios from "axios";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const MyWorkoutScreen = () => {
   const navigation = useNavigation<any>();
   const [workouts, setWorkouts] = useState<any[]>([]);
 
-  useEffect(() => {
-    const fetchWorkouts = async () => {
-      try {
-        const userToken = await AsyncStorage.getItem("userToken");
-        const response = await axios.get("http://localhost:5001/workouts", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${userToken}`,
-          },
-        });
+  useFocusEffect(
+    useCallback(() => {
+      const fetchWorkouts = async () => {
+        try {
+          const userToken = await AsyncStorage.getItem("userToken");
+          const response = await axios.get("http://localhost:5001/workouts", {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${userToken}`,
+            },
+          });
 
-        setWorkouts(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+          setWorkouts(response.data);
+        } catch (error) {
+          console.error(error);
+        }
+      };
 
-    fetchWorkouts();
-  }, []);
+      fetchWorkouts();
+
+      // Optional: Return a cleanup function if needed
+      return () => {
+        // Cleanup tasks if any
+      };
+    }, [])
+  );
 
   return (
     <View>
@@ -41,6 +48,7 @@ const MyWorkoutScreen = () => {
           }}
         >
           <Text>{workout.name}</Text>
+          <Button title="Edit" onPress={() => {navigation.navigate("EditWorkout", {workoutId: workout._id})}} />
           <Button
             title="Add to Calendar"
             onPress={() => {
