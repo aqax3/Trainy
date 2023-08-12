@@ -10,10 +10,13 @@ interface IWorkoutCalendar {
 }
 
 export async function getUserWorkoutHistory(userId: string, startDate: Date) {
+  const today = new Date();
+  today.setHours(23, 59, 59, 999); // Set time to end of day
+
   return await WorkoutCalendar.find({
     user: userId,
     completed: true,
-    createdAt: { $gte: startDate },
+    date: { $gte: startDate, $lte: today }, // both after startDate and on or before today
   })
     .populate("workout")
     .exec();
@@ -40,18 +43,19 @@ export async function getWorkoutRecommendation(userId: string) {
     beginner: 0,
     intermediate: 0,
     advanced: 0,
+    none: 0,
   };
 
   userWorkouts.forEach((workoutCalendar) => {
-    const difficulty = workoutCalendar.workout.difficulty;
-
-    if (difficultyCounts[difficulty] !== undefined) {
-      difficultyCounts[difficulty]++;
-    }
+    const difficulty = workoutCalendar.workout.difficulty || "none";
+    difficultyCounts[difficulty]++;
   });
 
-  let mostFrequentDifficulty = Object.keys(difficultyCounts).reduce((a, b) =>
-    difficultyCounts[a] > difficultyCounts[b] ? a : b
+  // Remove the none difficulty from consideration for mostFrequent
+  const { none, ...validDifficulties } = difficultyCounts;
+
+  let mostFrequentDifficulty = Object.keys(validDifficulties).reduce((a, b) =>
+    validDifficulties[a] > validDifficulties[b] ? a : b
   );
 
   let recommendedDifficulty;
@@ -65,10 +69,17 @@ export async function getWorkoutRecommendation(userId: string) {
     difficultyCounts["intermediate"] >= 20
   ) {
     recommendedDifficulty = "advanced";
-  }  else {
+  } else if (
+    none >= userWorkouts.length / 2 ||
+    (mostFrequentDifficulty !== "advanced" &&
+      difficultyCounts[mostFrequentDifficulty] < 20)
+  ) {
+    recommendedDifficulty = "none";
+  } else {
     recommendedDifficulty = mostFrequentDifficulty;
   }
 
+  console.log(recommendedDifficulty);
   return {
     recommendedDifficulty: recommendedDifficulty,
   };

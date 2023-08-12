@@ -272,6 +272,20 @@ app.post("/workouts", authenticateToken, async (req, res) => {
   const { name, description, duration, difficulty, exercises } = req.body;
   const { userId } = req.user;
 
+  let user;
+  try {
+    user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send("Server error");
+  }
+
+  //checks if the user that's creating the workout is an admin account
+  const createdByAdmin = user.isAdmin;
+
   const workout = new Workout({
     userId,
     name,
@@ -279,6 +293,7 @@ app.post("/workouts", authenticateToken, async (req, res) => {
     duration,
     difficulty,
     exercises,
+    createdByAdmin,
   });
 
   try {
@@ -299,6 +314,17 @@ app.get("/workouts", authenticateToken, async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).send("Server error");
+  }
+});
+
+// admin dodani workouti
+app.get('/adminWorkouts', authenticateToken, async (req, res) => {
+  try {
+      const adminWorkouts = await Workout.find({ createdByAdmin: true });
+      res.json(adminWorkouts);
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server Error' });
   }
 });
 

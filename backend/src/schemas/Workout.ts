@@ -14,6 +14,7 @@ export interface IWorkout extends Document {
   duration: number,
   difficulty: string,
   exercises: IExerciseDetails[];
+  createdByAdmin: boolean;
 }
 
 const exerciseDetailsSchema: Schema<IExerciseDetails> = new Schema({
@@ -40,6 +41,10 @@ const workoutSchema: Schema<IWorkout> = new Schema({
     required: false 
   },
   exercises: [exerciseDetailsSchema],
+  createdByAdmin: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const Workout = model<IWorkout>('Workout', workoutSchema);
