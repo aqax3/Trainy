@@ -43,7 +43,7 @@ export default function HomePage({ navigation }: Props) {
 
       const userToken = await AsyncStorage.getItem("userToken");
       const response = await axios.get(
-        "http://localhost:5001/recommendations",
+        "http://192.168.1.106:5001/recommendations",
         {
           headers: {
             "Content-Type": "application/json",

@@ -7,6 +7,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const MyWorkoutScreen = () => {
   const navigation = useNavigation<any>();
   const [workouts, setWorkouts] = useState<any[]>([]);
+  const [adminWorkouts, setAdminWorkouts] = useState<any[]>([]);
 
   useFocusEffect(
     useCallback(() => {
@@ -63,14 +64,99 @@ const MyWorkoutScreen = () => {
                   },
                 },
               });
+    const fetchAdminWorkouts = async () => {
+      try {
+        const userToken = await AsyncStorage.getItem("userToken");
+        const response = await axios.get(
+          "http://192.168.1.106:5001/adminWorkouts",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${userToken}`,
+            },
+          }
+        );
+
+        setAdminWorkouts(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchAdminWorkouts();
+    fetchWorkouts();
+  }, []);
+
+  return (
+    <View>
+      <View>
+        <Text>MY WORKOUTS</Text>
+        {workouts.map((workout, index) => (
+          <View
+            key={index}
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: 10,
             }}
-          />
-        </View>
-      ))}
-      <Button
-        title="Create New Workout"
-        onPress={() => navigation.navigate("CreateWorkoutScreen")}
-      />
+          >
+            <Text>{workout.name}</Text>
+            <Button
+              title="Add to Calendar"
+              onPress={() => {
+                // Navigate to Calendar tab
+                navigation.navigate("App", {
+                  screen: "Calendar",
+                  params: {
+                    screen: "CalendarScreen",
+                    params: {
+                      selectedWorkoutId: workout._id,
+                      selectedWorkoutName: workout.name,
+                    },
+                  },
+                });
+              }}
+            />
+          </View>
+        ))}
+        <Button
+          title="Create New Workout"
+          onPress={() => navigation.navigate("CreateWorkoutScreen")}
+        />
+      </View>
+      <View>
+        <Text>COMMUNITY WORKOUTS</Text>
+        {adminWorkouts.map((workout, index) => (
+          <View
+            key={index}
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: 10,
+            }}
+          >
+            <Text>{workout.name}</Text>
+            <Button
+              title="Add to Calendar"
+              onPress={() => {
+                // Navigate to Calendar tab
+                navigation.navigate("App", {
+                  screen: "Calendar",
+                  params: {
+                    screen: "CalendarScreen",
+                    params: {
+                      selectedWorkoutId: workout._id,
+                      selectedWorkoutName: workout.name,
+                    },
+                  },
+                });
+              }}
+            />
+          </View>
+        ))}
+      </View>
     </View>
   );
 };
