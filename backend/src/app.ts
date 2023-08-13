@@ -450,7 +450,7 @@ app.patch("/workoutcalendar/:id", authenticateToken, async (req, res) => {
 });
 
 // update completed boolean on workoutcalendar
-app.patch('/workoutcalendar/:id/completed', async (req, res) => {
+app.patch('/workoutcalendar/:id/completed', authenticateToken, async (req, res) => {
   const { id } = req.params;
   const { completed } = req.body;
 

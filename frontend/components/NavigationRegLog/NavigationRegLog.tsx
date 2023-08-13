@@ -10,10 +10,12 @@ import WorkoutScreen from '../Calendar/Calendar';
 import ExerciseList from '../Exercises/ExerciseList';
 import { Fontisto } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
 import ExerciseDetails from '../Exercises/ExerciseDetails';
 import createWorkoutScreen from '../Workouts/createWorkout';
 import CalendarScreen from '../Calendar/Calendar';
 import EditWorkout from '../Workouts/EditWorkout';
+import WorkoutStatistics from '../Statistics/Statstics';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -41,6 +43,7 @@ function HomeTabs() {
       <Tab.Screen name="Workout" component={WorkoutStack} options={{tabBarIcon: ({size, color}) => (<Ionicons name="ios-stats-chart-sharp" size={24} color="black" />)}}/>
       <Tab.Screen name="Exercises" component={ExerciseStack} options={{tabBarIcon: ({size, color}) => (<Ionicons name="ios-barbell-sharp" size={24} color="black" />)}} />
       <Tab.Screen name="Calendar" component={CalendarStack} options={{tabBarIcon: ({size, color}) => (<Ionicons name="ios-calendar" size={24} color="black" />)}}/>
+      <Tab.Screen name="Statistics" component={StatisticsStack} options={{tabBarIcon: ({size, color}) => (<FontAwesome name="bar-chart" size={24} color="black" />)}}/>
     </Tab.Navigator>
   );
 }
@@ -68,6 +71,14 @@ function CalendarStack() {
   return(
     <Stack.Navigator>
       <Stack.Screen name="CalendarScreen" component={CalendarScreen} options={{ headerShown: false }}></Stack.Screen>
+    </Stack.Navigator>
+  )
+}
+
+function StatisticsStack() {
+  return(
+    <Stack.Navigator>
+      <Stack.Screen name="StatisticsScreen" component={WorkoutStatistics} options={{ headerShown: false }}></Stack.Screen>
     </Stack.Navigator>
   )
 }
