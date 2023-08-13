@@ -58,22 +58,9 @@ export default function HomePage({ navigation }: Props) {
     })();
   }, []);
 
-  const logoutUser = async () => {
-    await AsyncStorage.removeItem("userToken");
-    await AsyncStorage.removeItem("username");
-
-    setUsername("");
-
-    navigation?.reset({
-      index: 0,
-      routes: [{ name: "Login" }],
-    });
-  };
-
   return (
     <View style={styles.container}>
       <Text>Welcome {username}</Text>
-      <Button title="Logout" onPress={logoutUser} />
       <Modal animationType="slide" transparent={true} visible={modalVisible}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
