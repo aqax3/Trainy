@@ -13,7 +13,7 @@ function CompletedWorkouts() {
     const [completedWorkouts, setCompletedWorkouts] = useState(0);
 
     useEffect(() => {
-        fetch('http://192.168.1.9:5001/completedWorkouts')
+        fetch('http://192.168.1.106:5001/completedWorkouts')
             .then(response => response.json())
             .then(data => setCompletedWorkouts(data.count));
     }, []);
@@ -32,7 +32,7 @@ function ExerciseTypeStats() {
     const [exerciseLabels, setExerciseLabels] = useState<string[]>([]);
 
     useEffect(() => {
-        fetch('http://192.168.1.9:5001/exerciseTypeStats')
+        fetch('http://192.168.1.106:5001/exerciseTypeStats')
             .then(response => response.json())
             .then((data: ExerciseStat[]) => {
                 const dataValues = data.map(item => item.value);  // Assuming each item has a 'value' property
@@ -68,7 +68,7 @@ function AverageWorkoutDuration() {
     const [averageDuration, setAverageDuration] = useState(0);
 
     useEffect(() => {
-        fetch('http://192.168.1.9:5001/averageWorkoutDuration')
+        fetch('http://192.168.1.106:5001/averageWorkoutDuration')
             .then(response => response.json())
             .then(data => setAverageDuration(data.duration));
     }, []);
@@ -87,7 +87,7 @@ function LongestShortestWorkout() {
     const [shortestWorkout, setShortestWorkout] = useState(0);
 
     useEffect(() => {
-        fetch('http://192.168.1.9:5001/longestAndShortestWorkout')
+        fetch('http://192.168.1.106:5001/longestAndShortestWorkout')
             .then(response => response.json())
             .then(data => {
                 setLongestWorkout(data.longest);
@@ -109,7 +109,7 @@ function MostCommonExercise() {
     const [mostCommonExercise, setMostCommonExercise] = useState('');
 
     useEffect(() => {
-        fetch('http://192.168.1.9:5001/mostCommonExercise')
+        fetch('http://192.168.1.106:5001/mostCommonExercise')
             .then(response => response.json())
             .then(data => setMostCommonExercise(data.exercise));
     }, []);
@@ -127,7 +127,7 @@ function WorkoutFrequency() {
     const [frequencyData, setFrequencyData] = useState([]);
 
     useEffect(() => {
-        fetch('http://192.168.1.9:5001/workoutFrequency')
+        fetch('http://192.168.1.106:5001/workoutFrequency')
             .then(response => response.json())
             .then(data => setFrequencyData(data.frequency));
     }, []);

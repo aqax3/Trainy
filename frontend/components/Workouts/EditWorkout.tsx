@@ -21,7 +21,7 @@ const EditWorkout = ({ route, navigation }) => {
     const fetchWorkoutDetails = async () => {
       try {
         const userToken = await AsyncStorage.getItem("userToken");
-        const response = await axios.get(`http://localhost:5001/workouts/${workoutId}`, {
+        const response = await axios.get(`http://192.168.1.106:5001/workouts/${workoutId}`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${userToken}`,
@@ -59,7 +59,7 @@ const EditWorkout = ({ route, navigation }) => {
   const updateWorkout = async () => {
     try {
       const userToken = await AsyncStorage.getItem("userToken");
-      await axios.put(`http://localhost:5001/workouts/${workoutId}`, {
+      await axios.put(`http://192.168.1.106:5001/workouts/${workoutId}`, {
         name: workoutName,
         description,
         exercises: exerciseDetails,
@@ -81,7 +81,7 @@ const EditWorkout = ({ route, navigation }) => {
   const deleteWorkout = async () => {
     try {
       const userToken = await AsyncStorage.getItem("userToken");
-      await axios.delete(`http://localhost:5001/workouts/${workoutId}`, {
+      await axios.delete(`http://192.168.1.106:5001/workouts/${workoutId}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${userToken}`,
