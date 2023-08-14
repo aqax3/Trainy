@@ -20,11 +20,13 @@ import { Fontisto } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialIcons } from '@expo/vector-icons';
 import ExerciseDetails from "../Exercises/ExerciseDetails";
 import createWorkoutScreen from "../Workouts/createWorkout";
 import CalendarScreen from "../Calendar/Calendar";
 import EditWorkout from "../Workouts/EditWorkout";
 import WorkoutStatistics from "../Statistics/Statstics";
+import ProfileScreen from "../Profile/Profile";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -77,6 +79,15 @@ function AppDrawer() {
         options={{
           drawerIcon: ({ size, color }) => (
             <FontAwesome name="bar-chart" size={24} color="black" />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="Profile"
+        component={ProfileStack}
+        options={{
+          drawerIcon: ({ size, color }) => (
+            <MaterialIcons name="account-circle" size={24} color="black" />
           ),
         }}
       />
@@ -188,6 +199,17 @@ function StatisticsStack() {
       ></Stack.Screen>
     </Stack.Navigator>
   );
+}
+
+function ProfileStack() {
+  return(
+    <Stack.Navigator>
+      <Stack.Screen
+      name="ProfileScreen"
+      component={ProfileScreen}
+      options={{headerShown: false}}></Stack.Screen>
+    </Stack.Navigator>
+  )
 }
 
 // log out button

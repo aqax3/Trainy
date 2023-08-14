@@ -6,7 +6,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Modal, TouchableHighlight } from "react-native";
-import DropdownAlert from 'react-native-dropdownalert'
+import DropdownAlert from "react-native-dropdownalert";
+import { useIsFocused } from "@react-navigation/native";
 
 import CookieManager from "@react-native-cookies/cookies";
 
@@ -34,29 +35,36 @@ export default function HomePage({ navigation }: Props) {
   const [modalVisible, setModalVisible] = useState(false);
   const [recommendedDifficulty, setRecommendedDifficulty] = useState("");
 
-  useEffect(() => {
-    (async () => {
-      const storedUsername = await AsyncStorage.getItem("username");
-      if (storedUsername !== null) {
-        setUsername(storedUsername);
-      }
+  const isFocused = useIsFocused();
 
-      const userToken = await AsyncStorage.getItem("userToken");
-      const response = await axios.get(
-        "http://192.168.1.106:5001/recommendations",
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${userToken}`,
-          },
+  useEffect(() => {
+    if (isFocused) {
+      (async () => {
+        const storedUsername = await AsyncStorage.getItem("username");
+        if (storedUsername !== null) {
+          setUsername(storedUsername);
         }
-      );
-      setRecommendedDifficulty(response.data.recommendedDifficulty);
-      if (response.data.recommendedDifficulty !== "beginner" && response.data.recommendedDifficulty !== "none") {
-        setModalVisible(true);
-      }
-    })();
-  }, []);
+
+        const userToken = await AsyncStorage.getItem("userToken");
+        const response = await axios.get(
+          "http://192.168.1.106:5001/recommendations",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${userToken}`,
+            },
+          }
+        );
+        setRecommendedDifficulty(response.data.recommendedDifficulty);
+        if (
+          response.data.recommendedDifficulty !== "beginner" &&
+          response.data.recommendedDifficulty !== "none"
+        ) {
+          setModalVisible(true);
+        }
+      })();
+    }
+  }, [isFocused]);
 
   return (
     <View style={styles.container}>

@@ -25,7 +25,7 @@ import {
   getAverageWorkoutDuration,
   getLongestAndShortestWorkout,
   getMostCommonExercise,
-  getWorkoutFrequency
+  getWorkoutFrequency,
 } from "./services/statistics";
 
 const app = express();
@@ -118,6 +118,58 @@ app.post("/login-user", async (req, res) => {
   }
 });
 
+app.patch("/user-update", authenticateToken, async (req, res) => {
+  const { userId } = req.user;
+  const { username, password, height, weight } = req.body;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).send({ message: "User not found" });
+    }
+
+    // Update the fields if provided
+    if (username) {
+      user.username = username;
+    }
+    if (password) {
+      user.password = password;
+    }
+    if (typeof height !== "undefined") {
+      // Check for undefined because height can be 0
+      user.height = height;
+    }
+    if (typeof weight !== "undefined") {
+      // Check for undefined because weight can be 0
+      user.weight = weight;
+    }
+
+    await user.save();
+
+    res.status(200).send({ message: "User updated successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server error");
+  }
+});
+
+app.get("/user-info", authenticateToken, async (req, res) => {
+  const { userId } = req.user;
+
+  try {
+    const userInfo = await User.findById(userId, '-password');
+
+    if (!userInfo) {
+      return res.status(404).send({ message: "User not found" })
+    }
+
+    res.status(200).send(userInfo);
+  } catch(error) {
+    console.error(error);
+    res.status(500).send("Server error");
+  }
+})
+
 // user height
 app.put("/update-height", authenticateToken, async (req, res) => {
   const { height } = req.body;
@@ -169,9 +221,17 @@ app.put("/update-weight", authenticateToken, async (req, res) => {
 });
 
 app.post("/exercises", authenticateAdminToken, async (req, res) => {
-  const { name, description, muscleGroup, videoURL, imageURL, weight } = req.body;
+  const { name, description, muscleGroup, videoURL, imageURL, weight } =
+    req.body;
 
-  const exercise = new Exercise({ name, description, muscleGroup, videoURL, imageURL, weight });
+  const exercise = new Exercise({
+    name,
+    description,
+    muscleGroup,
+    videoURL,
+    imageURL,
+    weight,
+  });
 
   try {
     await exercise.save();
@@ -196,37 +256,38 @@ app.get("/exercises/:name", authenticateToken, async (req, res) => {
   const exerciseName = req.params.name;
 
   try {
-      const exercise = await Exercise.findOne({ name: exerciseName });
-      
-      if (!exercise) {
-          return res.status(404).send("Exercise not found");
-      }
+    const exercise = await Exercise.findOne({ name: exerciseName });
 
-      res.send(exercise);
+    if (!exercise) {
+      return res.status(404).send("Exercise not found");
+    }
+
+    res.send(exercise);
   } catch (err) {
-      console.error(err);
-      res.status(500).send("Server error");
+    console.error(err);
+    res.status(500).send("Server error");
   }
 });
 
-app.get('/exercise', async (req, res) => {
+app.get("/exercise", async (req, res) => {
   const { name } = req.query;
   try {
-      // Use a regex search to find exercises containing the letters in the name
-      const exercises = await Exercise.find({ name: new RegExp(name as string, 'i') });
-      res.json(exercises);
+    // Use a regex search to find exercises containing the letters in the name
+    const exercises = await Exercise.find({
+      name: new RegExp(name as string, "i"),
+    });
+    res.json(exercises);
   } catch (error) {
-      res.status(500).json({ error: "Failed to fetch exercises." });
+    res.status(500).json({ error: "Failed to fetch exercises." });
   }
 });
-
 
 app.delete("/exercises/:id", authenticateToken, async (req, res) => {
   try {
     const exercise = await Exercise.findByIdAndDelete(req.params.id);
 
     if (!exercise) {
-      return res.status(404).send('Exercise not found');
+      return res.status(404).send("Exercise not found");
     }
 
     res.send(exercise);
@@ -236,28 +297,33 @@ app.delete("/exercises/:id", authenticateToken, async (req, res) => {
   }
 });
 
-
-app.get("/exercises/muscle-group/:muscleGroup", authenticateToken, async (req, res) => {
-  try {
-    const { muscleGroup } = req.params;
-    const exercises = await Exercise.find({ muscleGroup });
-    res.send(exercises);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Server error");
+app.get(
+  "/exercises/muscle-group/:muscleGroup",
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const { muscleGroup } = req.params;
+      const exercises = await Exercise.find({ muscleGroup });
+      res.send(exercises);
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Server error");
+    }
   }
-});
-
+);
 
 app.put("/exercises/weight/:id", authenticateToken, async (req, res) => {
   const { weight } = req.body;
 
   try {
-
-    const exercise = await Exercise.findByIdAndUpdate(req.params.id, { weight }, { new: true });
+    const exercise = await Exercise.findByIdAndUpdate(
+      req.params.id,
+      { weight },
+      { new: true }
+    );
 
     if (!exercise) {
-      return res.status(404).send('Exercise not found');
+      return res.status(404).send("Exercise not found");
     }
 
     res.send(exercise);
@@ -266,7 +332,6 @@ app.put("/exercises/weight/:id", authenticateToken, async (req, res) => {
     res.status(500).send("Server error");
   }
 });
-
 
 app.post("/workouts", authenticateToken, async (req, res) => {
   const { name, description, duration, difficulty, exercises } = req.body;
@@ -309,7 +374,9 @@ app.get("/workouts", authenticateToken, async (req, res) => {
   const { userId } = req.user;
 
   try {
-    const workouts = await Workout.find({ userId }).populate('exercises.exerciseId');
+    const workouts = await Workout.find({ userId }).populate(
+      "exercises.exerciseId"
+    );
     res.send(workouts);
   } catch (err) {
     console.error(err);
@@ -334,7 +401,6 @@ app.get("/workouts/:workoutId", authenticateToken, async (req, res) => {
     res.status(500).send("Server error");
   }
 });
-
 
 app.put("/workouts/:workoutId", authenticateToken, async (req, res) => {
   const { workoutId } = req.params;
@@ -389,16 +455,14 @@ app.delete("/workouts/:workoutId", authenticateToken, async (req, res) => {
   }
 });
 
-
-
 // admin dodani workouti
-app.get('/adminWorkouts', authenticateToken, async (req, res) => {
+app.get("/adminWorkouts", authenticateToken, async (req, res) => {
   try {
-      const adminWorkouts = await Workout.find({ createdByAdmin: true });
-      res.json(adminWorkouts);
+    const adminWorkouts = await Workout.find({ createdByAdmin: true });
+    res.json(adminWorkouts);
   } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Server Error' });
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
   }
 });
 
@@ -450,36 +514,46 @@ app.patch("/workoutcalendar/:id", authenticateToken, async (req, res) => {
 });
 
 // update completed boolean on workoutcalendar
-app.patch('/workoutcalendar/:id/completed', authenticateToken, async (req, res) => {
-  const { id } = req.params;
-  const { completed } = req.body;
+app.patch(
+  "/workoutcalendar/:id/completed",
+  authenticateToken,
+  async (req, res) => {
+    const { id } = req.params;
+    const { completed } = req.body;
 
-  try {
-    const updatedWorkout = await WorkoutCalendar.findByIdAndUpdate(id, { completed }, { new: true });
+    try {
+      const updatedWorkout = await WorkoutCalendar.findByIdAndUpdate(
+        id,
+        { completed },
+        { new: true }
+      );
 
-    if (!updatedWorkout) {
-      return res.status(404).json({ message: "Workout not found" });
+      if (!updatedWorkout) {
+        return res.status(404).json({ message: "Workout not found" });
+      }
+
+      return res.status(200).json(updatedWorkout);
+    } catch (error) {
+      console.error("Error updating workout completion:", error);
+      return res.status(500).json({ message: "Internal Server Error" });
     }
-
-    return res.status(200).json(updatedWorkout);
-  } catch (error) {
-    console.error("Error updating workout completion:", error);
-    return res.status(500).json({ message: "Internal Server Error" });
   }
-});
+);
 
 //izbrisi workout iz calendar
 app.delete("/workoutcalendar/:id", authenticateToken, async (req, res) => {
   try {
-    const workout = await WorkoutCalendar.findById(req.params.id); 
-    
+    const workout = await WorkoutCalendar.findById(req.params.id);
+
     if (!workout) return res.status(404).send("Workout not found");
 
     if (workout.user.toString() !== req.user.userId) {
       return res.status(401).send("Unauthorized");
     }
 
-    const deletedWorkout = await WorkoutCalendar.findByIdAndDelete(req.params.id);
+    const deletedWorkout = await WorkoutCalendar.findByIdAndDelete(
+      req.params.id
+    );
 
     res.send(deletedWorkout);
   } catch (error) {
@@ -504,7 +578,9 @@ app.post("/plans", authenticateToken, async (req, res) => {
 
 app.get("/plans", authenticateToken, async (req, res) => {
   try {
-    const plans = await Plan.find({ user: req.user.userId }).populate("workouts");
+    const plans = await Plan.find({ user: req.user.userId }).populate(
+      "workouts"
+    );
     res.send(plans);
   } catch (error) {
     res.status(500).send(error);
@@ -568,13 +644,14 @@ app.get("/averageWorkoutDuration", authenticateToken, async (req, res) => {
 
 app.get("/workoutLengthStats", authenticateToken, async (req, res) => {
   try {
-    const { longest, shortest } = await getLongestAndShortestWorkout(req.user.userId);
+    const { longest, shortest } = await getLongestAndShortestWorkout(
+      req.user.userId
+    );
     res.json({ longest, shortest });
   } catch (err) {
     res.status(500).send("Server error");
   }
 });
-
 
 app.get("/mostCommonExercise", authenticateToken, async (req, res) => {
   try {
