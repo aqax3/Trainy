@@ -26,7 +26,7 @@ export default function ProfileScreen() {
       const userToken = await AsyncStorage.getItem("userToken");
       setToken(userToken);
 
-      const response = await axios.get(`http://192.168.1.106:5001/user-info`, {
+      const response = await axios.get(`http://localhost:5001/user-info`, {
         headers: { Authorization: `Bearer ${userToken}` },
       });
 
@@ -41,7 +41,7 @@ export default function ProfileScreen() {
 
   const updateUserInfo = async () => {
     try {
-      await axios.patch(`http://192.168.1.106:5001/user-update`, user, {
+      await axios.patch(`http://localhost:5001/user-update`, user, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

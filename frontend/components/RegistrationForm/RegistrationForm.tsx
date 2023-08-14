@@ -37,7 +37,7 @@ export default function RegistrationForm({ navigation }: Props) {
 
     try {
       const response = await axios.post(
-        "http://192.168.1.106:5001/register-user",
+        "http://localhost:5001/register-user",
         {
           username,
           password,

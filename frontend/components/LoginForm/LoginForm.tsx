@@ -40,7 +40,7 @@ export default function LoginForm({navigation}: Props) {
     try {
       // Sends a POST request to log in the user
       const response = await axios.post(
-        "http://192.168.1.106:5001/login-user",
+        "http://localhost:5001/login-user",
         {
           username,
           password,

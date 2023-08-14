@@ -7,7 +7,7 @@ import {
   DrawerContentScrollView,
   DrawerItemList,
   DrawerItem,
-  DrawerContentComponentProps
+  DrawerContentComponentProps,
 } from "@react-navigation/drawer";
 import { View } from "react-native";
 import RegistrationForm from "../RegistrationForm/RegistrationForm";
@@ -20,7 +20,7 @@ import { Fontisto } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons } from "@expo/vector-icons";
 import ExerciseDetails from "../Exercises/ExerciseDetails";
 import createWorkoutScreen from "../Workouts/createWorkout";
 import CalendarScreen from "../Calendar/Calendar";
@@ -61,16 +61,26 @@ function AppDrawer() {
     <Drawer.Navigator
       initialRouteName="HomeDrawer"
       drawerContent={(props) => <CustomDrawerContent {...props} />}
+      screenOptions={{
+        drawerStyle: { backgroundColor: "#1a2d3d" },
+        drawerLabelStyle: { color: '#e5f4e3' },
+        drawerActiveBackgroundColor: '#2e4e6f',
+        drawerActiveTintColor: '#92b4f4'
+
+      }}
     >
       <Drawer.Screen
         name="HomeDrawer"
         component={HomeTabs}
         options={{
+          headerTintColor: "#e5f4e3",
           drawerIcon: ({ size, color }) => (
-            <Fontisto name="home" size={24} color="black" />
+            <Fontisto name="home" size={24} color="white"/>
           ),
           title: "Home",
           headerTitle: "",
+          headerStyle: { backgroundColor: '#1a2d3d', borderBottomWidth: 0, shadowOpacity: 0,  shadowRadius: 0, elevation: 0},
+          
         }}
       />
       <Drawer.Screen
@@ -78,7 +88,7 @@ function AppDrawer() {
         component={StatisticsStack}
         options={{
           drawerIcon: ({ size, color }) => (
-            <FontAwesome name="bar-chart" size={24} color="black" />
+            <FontAwesome name="bar-chart" size={24} color="#E5F4E3" />
           ),
         }}
       />
@@ -87,7 +97,7 @@ function AppDrawer() {
         component={ProfileStack}
         options={{
           drawerIcon: ({ size, color }) => (
-            <MaterialIcons name="account-circle" size={24} color="black" />
+            <MaterialIcons name="account-circle" size={24} color="#E5F4E3" />
           ),
         }}
       />
@@ -97,13 +107,20 @@ function AppDrawer() {
 
 function HomeTabs() {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={{
+        tabBarActiveTintColor: "#1a2d3d",
+        tabBarInactiveTintColor: "#1a2d3d",
+        tabBarStyle: { backgroundColor: "#1a2d3d", borderTopWidth: 0 },
+      }}
+    >
       <Tab.Screen
         name="Home"
         component={HomePage}
         options={{
+          headerShown: false,
           tabBarIcon: ({ size, color }) => (
-            <Fontisto name="home" size={24} color="black" />
+            <Fontisto name="home" size={24} color="#E5F4E3" />
           ),
         }}
       />
@@ -112,7 +129,7 @@ function HomeTabs() {
         component={WorkoutStack}
         options={{
           tabBarIcon: ({ size, color }) => (
-            <Ionicons name="ios-stats-chart-sharp" size={24} color="black" />
+            <Ionicons name="ios-stats-chart-sharp" size={24} color="#E5F4E3" />
           ),
         }}
       />
@@ -121,7 +138,7 @@ function HomeTabs() {
         component={ExerciseStack}
         options={{
           tabBarIcon: ({ size, color }) => (
-            <Ionicons name="ios-barbell-sharp" size={24} color="black" />
+            <Ionicons name="ios-barbell-sharp" size={24} color="#E5F4E3" />
           ),
         }}
       />
@@ -130,7 +147,7 @@ function HomeTabs() {
         component={CalendarStack}
         options={{
           tabBarIcon: ({ size, color }) => (
-            <Ionicons name="ios-calendar" size={24} color="black" />
+            <Ionicons name="ios-calendar" size={24} color="#E5F4E3" />
           ),
         }}
       />
@@ -202,14 +219,15 @@ function StatisticsStack() {
 }
 
 function ProfileStack() {
-  return(
+  return (
     <Stack.Navigator>
       <Stack.Screen
-      name="ProfileScreen"
-      component={ProfileScreen}
-      options={{headerShown: false}}></Stack.Screen>
+        name="ProfileScreen"
+        component={ProfileScreen}
+        options={{ headerShown: false }}
+      ></Stack.Screen>
     </Stack.Navigator>
-  )
+  );
 }
 
 // log out button
@@ -228,12 +246,13 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
       <DrawerContentScrollView {...props}>
         <DrawerItemList {...props} />
       </DrawerContentScrollView>
-      <View style={{ position: 'absolute', bottom: 30, width: '100%' }}>
+      <View style={{ position: "absolute", bottom: 30, width: "100%" }}>
         <DrawerItem
           label="Logout"
           onPress={logoutUser}
+          labelStyle={{color: '#e5f4e3'}}
           icon={({ color, size }) => (
-            <MaterialCommunityIcons name="logout" size={24} color="black" />
+            <MaterialCommunityIcons name="logout" size={24} color="#e5f4e3" />
           )}
         />
       </View>

@@ -39,7 +39,7 @@ function CompletedWorkouts() {
       try {
         const config = await getAxiosConfig();
         const response = await axios.get(
-          "http://192.168.1.106:5001/completedWorkouts",
+          "http://localhost:5001/completedWorkouts",
           config
         );
         console.log('Completed Workouts Response:', response.data);
@@ -69,7 +69,7 @@ function ExerciseTypeStats() {
       try {
         const config = await getAxiosConfig();
         const response = await axios.get(
-          "http://192.168.1.106:5001/exerciseTypeStats",
+          "http://localhost:5001/exerciseTypeStats",
           config
         );
         const dataValues = response.data.map((item: { value: any; }) => item.value);
@@ -113,7 +113,7 @@ function AverageWorkoutDuration() {
       try {
         const config = await getAxiosConfig();
         const response = await axios.get(
-          "http://192.168.1.106:5001/averageWorkoutDuration",
+          "http://localhost:5001/averageWorkoutDuration",
           config
         );
         setAverageDuration(response.data.duration);
@@ -142,7 +142,7 @@ function LongestShortestWorkout() {
       try {
         const config = await getAxiosConfig();
         const response = await axios.get(
-          "http://192.168.1.106:5001/longestAndShortestWorkout",
+          "http://localhost:5001/longestAndShortestWorkout",
           config
         );
         setLongestWorkout(response.data.longest);
@@ -173,7 +173,7 @@ function MostCommonExercise() {
       try {
         const config = await getAxiosConfig();
         const response = await axios.get(
-          "http://192.168.1.106:5001/mostCommonExercise",
+          "http://localhost:5001/mostCommonExercise",
           config
         );
         setMostCommonExercise(response.data.exercise);
@@ -201,7 +201,7 @@ function WorkoutFrequency() {
       try {
         const config = await getAxiosConfig();
         const response = await axios.get(
-          "http://192.168.1.106:5001/workoutFrequency",
+          "http://localhost:5001/workoutFrequency",
           config
         );
         setFrequencyData(response.data.frequency);
@@ -233,7 +233,7 @@ function ExerciseFrequency() {
     const fetchData = async () => {
       try {
         const config = await getAxiosConfig();
-        const response = await axios.get("http://192.168.1.106:5001/statistics/exercise-frequency", config);
+        const response = await axios.get("http://localhost:5001/statistics/exercise-frequency", config);
         setExerciseFrequency(response.data);
       } catch (error) {
         console.error('Axios Error:', error);
@@ -259,7 +259,7 @@ function AverageSetsAndReps() {
     const fetchData = async () => {
       try {
         const config = await getAxiosConfig();
-        const response = await axios.get("http://192.168.1.106:5001/statistics/average-sets-reps", config);
+        const response = await axios.get("http://localhost:5001/statistics/average-sets-reps", config);
         console.log('Average Sets and Reps Response:', response.data);
       setAverageData(response.data);
       } catch (error) {
@@ -289,7 +289,7 @@ function WorkoutStreak() {
     const fetchData = async () => {
       try {
         const config = await getAxiosConfig();
-        const response = await axios.get("http://192.168.1.106:5001/statistics/workout-streak", config);
+        const response = await axios.get("http://localhost:5001/statistics/workout-streak", config);
         console.log('Workout Streak Response:', response.data);
       setStreak(response.data);
       } catch (error) {

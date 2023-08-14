@@ -498,6 +498,28 @@ app.get("/workoutcalendar", authenticateToken, async (req, res) => {
   }
 });
 
+app.get("/workoutcalendar/today", authenticateToken, async (req, res) => {
+  try {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // set the time to the start of the day
+
+    const workoutForToday = await WorkoutCalendar.findOne({
+      user: req.user.userId,
+      date: today
+    }).populate('workout'); // assuming the workout field in WorkoutCalendar references the Workout schema
+
+    if (!workoutForToday) {
+      return res.status(404).send("No workout planned for today");
+    }
+
+    res.send(workoutForToday);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(error);
+  }
+});
+
+
 //uredi workout
 app.patch("/workoutcalendar/:id", authenticateToken, async (req, res) => {
   try {

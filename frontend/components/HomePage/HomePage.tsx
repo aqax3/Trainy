@@ -1,4 +1,4 @@
-import { Button, StyleSheet, Text, View } from "react-native";
+import { Button, ImageBackground, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { StackNavigationProp } from "@react-navigation/stack";
 import * as SecureStore from "expo-secure-store";
@@ -29,11 +29,17 @@ type Props = {
   navigation?: HomeScreenNavigationProp;
   route?: { params: { username: string } };
 };
+type Workout = {
+  workout: {
+    name: string;
+  };
+};
 
 export default function HomePage({ navigation }: Props) {
   const [username, setUsername] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [recommendedDifficulty, setRecommendedDifficulty] = useState("");
+  const [todayWorkout, setTodayWorkout] = useState<Workout | null>(null);
 
   const isFocused = useIsFocused();
 
@@ -47,7 +53,7 @@ export default function HomePage({ navigation }: Props) {
 
         const userToken = await AsyncStorage.getItem("userToken");
         const response = await axios.get(
-          "http://192.168.1.106:5001/recommendations",
+          "http://localhost:5001/recommendations",
           {
             headers: {
               "Content-Type": "application/json",
@@ -62,13 +68,92 @@ export default function HomePage({ navigation }: Props) {
         ) {
           setModalVisible(true);
         }
+        try {
+          const response = await axios.get("http://localhost:5001/workoutcalendar/today", {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${userToken}`,
+            },
+          });
+
+          if (response.data && response.data.workout) {
+            setTodayWorkout(response.data);
+          } else {
+            setTodayWorkout({
+              workout: {
+                name: "Rest Day",
+              },
+            });
+          }
+        } catch (error) {
+          if (error.response && error.response.status === 404) {
+            // Handle 404 error
+            setTodayWorkout({
+              workout: {
+                name: "Rest Day",
+              },
+            });
+          } else {
+            console.error("Error fetching today's workout:", error);
+          }
+        }
       })();
     }
   }, [isFocused]);
 
+  function WorkoutPlan() {
+    const today = new Date();
+    const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    const formattedDate = `${days[today.getDay()]} ${today.getDate()} ${
+      months[today.getMonth()]
+    }`;
+    const restDayImageUrl =
+      "https://images.squarespace-cdn.com/content/v1/57a1427c46c3c493fb92dfde/1598847784198-AFFUOU3YA8JK3ZZRLL3Z/Day+of+rest.PNG";
+
+    return (
+      <View style={styles.workoutPlanContainer}>
+        <View style={styles.headerContainer}>
+          <Text style={styles.workoutPlanText}>Today's Workout Plan</Text>
+          <Text style={styles.dateText}>{formattedDate}</Text>
+        </View>
+
+        <View style={styles.workoutCardContainer}>
+        <View style={styles.workoutCard}>
+          {todayWorkout?.workout?.name === "Rest day" ? (
+            <ImageBackground source={{ uri: "https://images.pexels.com/photos/2261482/pexels-photo-2261482.jpeg?auto=compress&cs=tinysrgb&w=1600" }} style={styles.imageBackground}>
+              <Text style={styles.workoutNameText}>{todayWorkout?.workout?.name}</Text>
+            </ImageBackground>
+          ) : (
+            <ImageBackground source={{ uri: restDayImageUrl }} style={styles.imageBackground}>
+              <Text style={styles.noWorkoutText}>Enjoy your rest day!</Text>
+            </ImageBackground>
+          )}
+        </View>
+      </View>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
-      <Text>Welcome {username}</Text>
+      <Text style={styles.welcomeText}>
+        Welcome <Text style={styles.boldText}>{username}</Text>
+      </Text>
+      <WorkoutPlan />
       <Modal animationType="slide" transparent={true} visible={modalVisible}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
@@ -93,9 +178,10 @@ export default function HomePage({ navigation }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#1a2d3d",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start",
+    paddingTop: 50,
   },
   centeredView: {
     flex: 1,
@@ -134,4 +220,69 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: "center",
   },
+  welcomeText: {
+    fontSize: 30,
+    color: "#e5f4e3",
+    position: "absolute",
+    top: 20,
+    left: 30,
+  },
+  boldText: {
+    fontWeight: "bold",
+  },
+  workoutPlanContainer: {
+    marginTop: 30,
+    width: "100%",
+    alignItems: "center",
+  },
+  headerContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    paddingHorizontal: 20,
+  },
+  workoutPlanText: {
+    fontSize: 20,
+    color: "#e5f4e3",
+  },
+  dateText: {
+    fontSize: 18,
+    color: "#5e7ce2",
+  },
+  workoutCardContainer: {
+    marginTop: 10,
+    borderRadius: 10,
+    width: "95%",
+    height: 150,
+    overflow: "hidden",
+  },
+  workoutCard: {
+    flex: 1,
+    padding: 15,
+  },
+  imageBackground: {
+    flex: 1,
+    justifyContent: "flex-end",
+    alignItems: "flex-start",
+    padding: 10,
+    overflow: "hidden",
+  },
+  workoutNameText: {
+    fontSize: 20,
+    color: "white",
+    fontWeight: "bold",
+    textShadowColor: "rgba(0, 0, 0, 0.75)",
+    textShadowOffset: { width: -1, height: 1 },
+    textShadowRadius: 10,
+  },
+  noWorkoutText: {
+    fontSize: 20,
+    color: '#e5f4e3',
+    fontWeight: 'bold',
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: { width: -1, height: 1 },
+    textShadowRadius: 10,
+    padding: 5,
+},
+
 });
