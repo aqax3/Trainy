@@ -26,6 +26,10 @@ import {
   getLongestAndShortestWorkout,
   getMostCommonExercise,
   getWorkoutFrequency,
+  getAverageSetsAndReps,
+  getWorkoutStreak,
+  getExerciseFrequency,
+  getTotalWorkoutsByDifficulty
 } from "./services/statistics";
 
 const app = express();
@@ -670,6 +674,30 @@ app.get("/workoutFrequency/:period", authenticateToken, async (req, res) => {
   } catch (err) {
     res.status(500).send("Server error");
   }
+});
+
+app.get('/statistics/workouts-by-difficulty', authenticateToken, async (req, res) => {
+  const userId = req.user.userId; 
+  const data = await getTotalWorkoutsByDifficulty(userId);
+  res.json(data);
+});
+
+app.get('/statistics/exercise-frequency', authenticateToken, async (req, res) => {
+  const userId = req.user.userId; 
+  const data = await getExerciseFrequency(userId);
+  res.json(data);
+});
+
+app.get('/statistics/average-sets-reps', authenticateToken, async (req, res) => {
+  const userId = req.user.userId; 
+  const data = await getAverageSetsAndReps(userId);
+  res.json(data);
+});
+
+app.get('/statistics/workout-streak', authenticateToken, async (req, res) => {
+  const userId = req.user.userId; 
+  const data = await getWorkoutStreak(userId);
+  res.json(data);
 });
 
 // Start the server
