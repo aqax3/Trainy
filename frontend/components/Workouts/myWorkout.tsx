@@ -74,6 +74,7 @@ const MyWorkoutScreen = () => {
             }}
           >
             <Text>{workout.name}</Text>
+            <Button title="Edit" onPress={() => {navigation.navigate("EditWorkout", {workoutId: workout._id})}} /> 
             <Button
               title="Add to Calendar"
               onPress={() => {

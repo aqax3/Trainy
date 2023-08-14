@@ -620,8 +620,10 @@ app.get(
 //Statsitcs
 
 app.get("/completedWorkouts/", authenticateToken, async (req, res) => {
+  const { userId } = req.user;
+
   try {
-    const workouts = await getCompletedWorkouts(req.user.userId);
+    const workouts = await getCompletedWorkouts(userId);
     res.json({ completedWorkouts: workouts });
   } catch (err) {
     res.status(500).send("Server error");
