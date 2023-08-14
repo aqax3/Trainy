@@ -1,7 +1,8 @@
 import WorkoutCalendar, { IWorkoutCalendar } from "../schemas/Workoutcalendar";
 import { Document, Schema } from "mongoose";
 import { IExercise } from "../schemas/Exercise";
-import Workout, { IWorkout } from "../schemas/Workout";
+import Workout, { IWorkout} from "../schemas/Workout";
+import { IExerciseDetails } from '../schemas/Workout';
 
 interface IWorkoutCalendarPopulated extends Document {
   user: Schema.Types.ObjectId;
@@ -18,6 +19,7 @@ interface IWorkoutPopulated extends Document {
   difficulty: string;
   exercises: IExercise[];
 }
+
 
 export async function getCompletedWorkouts(userId: string) {
   const workouts = await WorkoutCalendar.find({
@@ -59,6 +61,8 @@ export async function getExerciseTypeStats(userId: string) {
 
 //  Average Workout Duration
 export async function getAverageWorkoutDuration(userId: string) {
+  console.log("Fetching completed workout calendars for user:", userId);
+
   const workoutCalendars = await WorkoutCalendar.find({
     user: userId,
     completed: true,
@@ -66,13 +70,23 @@ export async function getAverageWorkoutDuration(userId: string) {
     .populate("workout")
     .exec();
 
-  let totalDuration = 0;
+  console.log("Fetched workout calendars:", workoutCalendars);
 
+  let totalDuration = 0;
   workoutCalendars.forEach((workoutCalendar: IWorkoutCalendarPopulated) => {
     totalDuration += workoutCalendar.workout.duration;
   });
 
-  return workoutCalendars.length ? totalDuration / workoutCalendars.length : 0;
+  console.log("Total duration of all workouts:", totalDuration);
+
+  if (workoutCalendars.length) {
+    const averageDuration = totalDuration / workoutCalendars.length;
+    console.log("Calculated average duration:", averageDuration);
+    return averageDuration;
+  } else {
+    console.log("No completed workouts found for user.");
+    return 0;
+  }
 }
 
 //  Longest/Shortest Workout
@@ -101,6 +115,8 @@ export async function getLongestAndShortestWorkout(userId: string) {
 
 // Most Common Exercise
 export async function getMostCommonExercise(userId: string) {
+  console.log("Fetching completed workout calendars for user:", userId);
+
   const workoutCalendars = await WorkoutCalendar.find({
     user: userId,
     completed: true,
@@ -113,34 +129,39 @@ export async function getMostCommonExercise(userId: string) {
     })
     .exec();
 
-  const muscleGroupCounts: { [key: string]: number } = {};
+  console.log("Fetched workout calendars:", workoutCalendars);
+
+  const exerciseCounts: { [key: string]: number } = {};
 
   workoutCalendars.forEach((workoutCalendar: IWorkoutCalendarPopulated) => {
     const workout: IWorkout = workoutCalendar.workout as unknown as IWorkout;
     if (workout.exercises) {
       (workout.exercises as unknown as IExercise[]).forEach(
         (exercise: IExercise) => {
-          if (muscleGroupCounts[exercise.muscleGroup] !== undefined) {
-            muscleGroupCounts[exercise.muscleGroup]++;
+          if (exerciseCounts[exercise.name] !== undefined) {
+            exerciseCounts[exercise.name]++;
           } else {
-            muscleGroupCounts[exercise.muscleGroup] = 1;
+            exerciseCounts[exercise.name] = 1;
           }
         }
       );
     }
   });
 
-  let maxCount = 0;
-  let mostCommonExercise = null;
+  console.log("Exercise counts:", exerciseCounts);
 
-  for (let muscleGroup in muscleGroupCounts) {
-    if (muscleGroupCounts[muscleGroup] > maxCount) {
-      maxCount = muscleGroupCounts[muscleGroup];
-      mostCommonExercise = muscleGroup;
+  let maxCount = 0;
+  let mostCommonExerciseName = null;
+
+  for (let exerciseName in exerciseCounts) {
+    if (exerciseCounts[exerciseName] > maxCount) {
+      maxCount = exerciseCounts[exerciseName];
+      mostCommonExerciseName = exerciseName;
     }
   }
 
-  return mostCommonExercise;
+  console.log("Most common exercise:", mostCommonExerciseName);
+  return mostCommonExerciseName;
 }
 
 // Workouts Per Week/Month
@@ -167,3 +188,138 @@ export async function getWorkoutFrequency(
 
   return workouts.length;
 }
+
+
+//workouti po difficulty
+
+export async function getTotalWorkoutsByDifficulty(userId: string) {
+  const workoutCalendars = await WorkoutCalendar.find({
+    user: userId,
+    completed: true,
+  })
+  .populate("workout")
+  .exec();
+
+  const difficultyCounts: { [key: string]: number } = {
+    beginner: 0,
+    intermediate: 0,
+    advanced: 0
+  };
+
+  workoutCalendars.forEach((workoutCalendar: IWorkoutCalendarPopulated) => {
+    const difficulty = workoutCalendar.workout.difficulty;
+    difficultyCounts[difficulty]++;
+  });
+
+  return difficultyCounts;
+}
+
+//frequency for each exercise
+export async function getExerciseFrequency(userId: string) {
+  const workoutCalendars = await WorkoutCalendar.find({
+    user: userId,
+    completed: true,
+  })
+  .populate({
+    path: "workout",
+    populate: {
+      path: "exercises"
+    }
+  })
+  .exec();
+
+  const exerciseCounts: { [key: string]: number } = {};
+
+  workoutCalendars.forEach((workoutCalendar: IWorkoutCalendarPopulated) => {
+    (workoutCalendar.workout.exercises as unknown as IExerciseDetails[]).forEach((exerciseDetail: IExerciseDetails) => {
+      const exerciseName = exerciseDetail.name;
+      if (exerciseCounts[exerciseName]) {
+        exerciseCounts[exerciseName]++;
+      } else {
+        exerciseCounts[exerciseName] = 1;
+      }
+    });
+  });
+
+  return exerciseCounts;
+}
+
+//average sets and reps
+export async function getAverageSetsAndReps(userId: string) {
+  const workoutCalendars = await WorkoutCalendar.find({
+    user: userId,
+    completed: true,
+  })
+  .populate({
+    path: "workout",
+    populate: {
+      path: "exercises.exerciseId"
+    }
+  })
+  .exec();
+
+  const exerciseData: { [key: string]: { totalSets: number, totalReps: number, count: number } } = {};
+
+  workoutCalendars.forEach((workoutCalendar: IWorkoutCalendarPopulated) => {
+    (workoutCalendar.workout.exercises as unknown as IExerciseDetails[]).forEach((exerciseDetail: IExerciseDetails) => {
+      const exerciseName = exerciseDetail.name;
+      if (exerciseData[exerciseName]) {
+        exerciseData[exerciseName].totalSets += exerciseDetail.sets;
+        exerciseData[exerciseName].totalReps += exerciseDetail.reps;
+        exerciseData[exerciseName].count++;
+      } else {
+        exerciseData[exerciseName] = {
+          totalSets: exerciseDetail.sets,
+          totalReps: exerciseDetail.reps,
+          count: 1
+        };
+      }
+    });
+  });
+
+  const averageData: { [key: string]: { averageSets: number, averageReps: number } } = {};
+  
+  for (let exerciseName in exerciseData) {
+    averageData[exerciseName] = {
+      averageSets: exerciseData[exerciseName].totalSets / exerciseData[exerciseName].count,
+      averageReps: exerciseData[exerciseName].totalReps / exerciseData[exerciseName].count
+    };
+  }
+
+  return averageData;
+}
+
+//workout streak
+export async function getWorkoutStreak(userId: string) {
+  const workoutCalendars = await WorkoutCalendar.find({
+    user: userId,
+    completed: true,
+  })
+  .sort({ date: -1 })  // Sort by date in descending order
+  .exec();
+
+  let currentStreak = 0;
+  let longestStreak = 0;
+  let previousDate: Date | null = null;
+
+  workoutCalendars.forEach((workoutCalendar: IWorkoutCalendarPopulated) => {
+    const currentDate = new Date(workoutCalendar.date);
+    if (previousDate) {
+      const diffInDays = (previousDate.getTime() - currentDate.getTime()) / (1000 * 3600 * 24);
+      if (diffInDays === 1) {
+        currentStreak++;
+      } else {
+        longestStreak = Math.max(longestStreak, currentStreak);
+        currentStreak = 1;
+      }
+    } else {
+      currentStreak = 1;
+    }
+    previousDate = currentDate;
+  });
+
+  longestStreak = Math.max(longestStreak, currentStreak);  // Check if the current streak at the end was the longest
+
+  return longestStreak;
+}
+

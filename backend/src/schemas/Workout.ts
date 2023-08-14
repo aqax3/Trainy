@@ -1,7 +1,7 @@
 import { Document, Schema, model, Types } from "mongoose";
 import Exercise from "./Exercise";
 
-interface IExerciseDetails {
+export interface IExerciseDetails {
   exerciseId: Types.ObjectId;
   name: string,
   sets: number;

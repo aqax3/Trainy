@@ -9,6 +9,16 @@ type ExerciseStat = {
   value: number;
   label: string;
 };
+type AverageDataStructure = {
+  [key: string]: {
+    averageSets: number;
+    averageReps: number;
+  }
+}
+const exerciseFrequency: Record<string, any> = {};
+const data: Record<string, any> = {};
+
+const averageData: AverageDataStructure = {};
 
 // Function to set up Axios configurations with user token
 const getAxiosConfig = async () => {
@@ -32,9 +42,10 @@ function CompletedWorkouts() {
           "http://192.168.1.106:5001/completedWorkouts",
           config
         );
-        setCompletedWorkouts(response.data.count);
+        console.log('Completed Workouts Response:', response.data);
+      setCompletedWorkouts(response.data.count);
       } catch (error) {
-        console.error(error);
+        console.error('Axios Error:', error);
       }
     };
 
@@ -61,13 +72,13 @@ function ExerciseTypeStats() {
           "http://192.168.1.106:5001/exerciseTypeStats",
           config
         );
-        const dataValues = response.data.map((item) => item.value);
-        const dataLabels = response.data.map((item) => item.label);
+        const dataValues = response.data.map((item: { value: any; }) => item.value);
+        const dataLabels = response.data.map((item: { label: any; }) => item.label);
 
         setExerciseData(dataValues);
         setExerciseLabels(dataLabels);
       } catch (error) {
-        console.error(error);
+        console.error('Axios Error:', error);
       }
     };
 
@@ -107,7 +118,7 @@ function AverageWorkoutDuration() {
         );
         setAverageDuration(response.data.duration);
       } catch (error) {
-        console.error(error);
+        console.error('Axios Error:', error);
       }
     };
 
@@ -137,7 +148,7 @@ function LongestShortestWorkout() {
         setLongestWorkout(response.data.longest);
         setShortestWorkout(response.data.shortest);
       } catch (error) {
-        console.error(error);
+        console.error('Axios Error:', error);
       }
     };
 
@@ -167,7 +178,7 @@ function MostCommonExercise() {
         );
         setMostCommonExercise(response.data.exercise);
       } catch (error) {
-        console.error(error);
+        console.error('Axios Error:', error);
       }
     };
 
@@ -195,7 +206,7 @@ function WorkoutFrequency() {
         );
         setFrequencyData(response.data.frequency);
       } catch (error) {
-        console.error(error);
+        console.error('Axios Error:', error);
       }
     };
 
@@ -214,6 +225,88 @@ function WorkoutFrequency() {
     </View>
   );
 }
+// Exercise Frequency Component
+function ExerciseFrequency() {
+  const [exerciseFrequency, setExerciseFrequency] = useState({});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const config = await getAxiosConfig();
+        const response = await axios.get("http://192.168.1.106:5001/statistics/exercise-frequency", config);
+        setExerciseFrequency(response.data);
+      } catch (error) {
+        console.error('Axios Error:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+  return (
+    <View style={styles.card}>
+      <Text style={styles.title}>Exercise Frequency</Text>
+      {Object.keys(exerciseFrequency).map(exercise => (
+        <Text key={exercise}>{exercise}: {exerciseFrequency[exercise]}</Text>
+      ))}
+    </View>
+  );
+}
+// Average Sets and Reps Component
+function AverageSetsAndReps() {
+  const [averageData, setAverageData] = useState({});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const config = await getAxiosConfig();
+        const response = await axios.get("http://192.168.1.106:5001/statistics/average-sets-reps", config);
+        console.log('Average Sets and Reps Response:', response.data);
+      setAverageData(response.data);
+      } catch (error) {
+        console.error('Axios Error:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  return (
+    <View style={styles.card}>
+      <Text style={styles.title}>Average Sets and Reps</Text>
+      {Object.keys(averageData).map(exercise => (
+        <Text key={exercise}>
+          {exercise}: {averageData[exercise].averageSets} sets, {averageData[exercise].averageReps} reps
+        </Text>
+      ))}
+    </View>
+  );
+}
+// Workout Streak Component
+function WorkoutStreak() {
+  const [streak, setStreak] = useState(0);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const config = await getAxiosConfig();
+        const response = await axios.get("http://192.168.1.106:5001/statistics/workout-streak", config);
+        console.log('Workout Streak Response:', response.data);
+      setStreak(response.data);
+      } catch (error) {
+        console.error('Axios Error:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  return (
+    <View style={styles.card}>
+      <Text style={styles.title}>Workout Streak</Text>
+      <Text>Current Streak: {streak} days</Text>
+    </View>
+  );
+}
 
 // Main Statistics Component
 function WorkoutStatistics() {
@@ -225,6 +318,7 @@ function WorkoutStatistics() {
       <LongestShortestWorkout />
       <MostCommonExercise />
       <WorkoutFrequency />
+      <WorkoutStreak />
     </ScrollView>
   );
 }
