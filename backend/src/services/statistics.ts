@@ -55,7 +55,13 @@ export async function getExerciseTypeStats(userId: string) {
     });
   });
 
-  return muscleGroupCounts;
+  // Convert the muscleGroupCounts object to an array of objects
+  const result = Object.entries(muscleGroupCounts).map(([label, value]) => ({
+    label,
+    value,
+  }));
+
+  return result;
 }
 
 
@@ -100,14 +106,14 @@ export async function getLongestAndShortestWorkout(userId: string) {
 
   if (workoutCalendars.length === 0) return { longest: null, shortest: null };
 
-  let longest = workoutCalendars[0].workout;
-  let shortest = workoutCalendars[0].workout;
+  let longest = workoutCalendars[0].workout.duration;
+  let shortest = workoutCalendars[0].workout.duration;
 
   workoutCalendars.forEach((workoutCalendar: IWorkoutCalendarPopulated) => {
-    if (workoutCalendar.workout.duration > longest.duration)
-      longest = workoutCalendar.workout;
-    if (workoutCalendar.workout.duration < shortest.duration)
-      shortest = workoutCalendar.workout;
+    if (workoutCalendar.workout.duration > longest)
+      longest = workoutCalendar.workout.duration;
+    if (workoutCalendar.workout.duration < shortest)
+      shortest = workoutCalendar.workout.duration;
   });
 
   return { longest, shortest };
@@ -321,5 +327,87 @@ export async function getWorkoutStreak(userId: string) {
   longestStreak = Math.max(longestStreak, currentStreak);  // Check if the current streak at the end was the longest
 
   return longestStreak;
+}
+//common muscle group
+export async function mostCommonMuscleGroup(userId: string) {
+  const workoutCalendars = await WorkoutCalendar.find({ user: userId, completed: true })
+    .populate({
+      path: 'workout',
+      populate: {
+        path: 'exercises',
+        populate: {
+          path: 'exerciseId'
+        }
+      }
+    })
+    .exec();
+
+  const muscleGroupCounts: { [key: string]: number } = {};
+
+  workoutCalendars.forEach((calendar: { workout: { exercises: { exerciseId: { muscleGroup: any; }; }[]; }; }) => {
+    calendar.workout.exercises.forEach((exerciseDetail: { exerciseId: { muscleGroup: any; }; }) => {
+      const muscleGroup = exerciseDetail.exerciseId.muscleGroup;
+      if (muscleGroupCounts[muscleGroup]) {
+        muscleGroupCounts[muscleGroup]++;
+      } else {
+        muscleGroupCounts[muscleGroup] = 1;
+      }
+    });
+  });
+
+  const mostCommonMuscleGroup = Object.keys(muscleGroupCounts).reduce((a, b) => muscleGroupCounts[a] > muscleGroupCounts[b] ? a : b);
+  return mostCommonMuscleGroup;
+}
+
+//total weight
+export async function totalWeightLifted(userId: string) {
+  const workoutCalendars = await WorkoutCalendar.find({ user: userId, completed: true })
+    .populate({
+      path: 'workout',
+    })
+    .exec();
+
+  let totalWeight = 0;
+  workoutCalendars.forEach((calendar: { workout: { exercises: any[]; }; }) => {
+    calendar.workout.exercises.forEach((exerciseDetail: { weight: number; sets: number; reps: number; }) => {
+      totalWeight += exerciseDetail.weight * exerciseDetail.sets * exerciseDetail.reps;
+    });
+  });
+
+  return totalWeight;
+}
+
+export async function mostUsedExercise(userId: string) {
+  const workoutCalendars = await WorkoutCalendar.find({ user: userId, completed: true })
+    .populate({
+      path: 'workout',
+    })
+    .exec();
+
+  const exerciseCounts: { [key: string]: number } = {};
+
+  workoutCalendars.forEach((calendar: { workout: { exercises: any[]; }; }) => {
+    calendar.workout.exercises.forEach((exerciseDetail) => {
+      const exerciseName = exerciseDetail.name;
+      if (exerciseCounts[exerciseName]) {
+        exerciseCounts[exerciseName]++;
+      } else {
+        exerciseCounts[exerciseName] = 1;
+      }
+    });
+  });
+
+  const mostUsedExercise = Object.keys(exerciseCounts).reduce((a, b) => exerciseCounts[a] > exerciseCounts[b] ? a : b);
+  return mostUsedExercise;
+}
+
+export async function mostRecentCompletedWorkouts(userId: string) {
+  const workoutCalendars = await WorkoutCalendar.find({ user: userId, completed: true })
+    .sort({ date: -1 })
+    .limit(5)
+    .populate('workout')
+    .exec();
+
+  return workoutCalendars.map((calendar: { workout: any; }) => calendar.workout);
 }
 
