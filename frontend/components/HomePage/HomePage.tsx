@@ -124,7 +124,7 @@ export default function HomePage({ navigation }: Props) {
         const userToken = await AsyncStorage.getItem("userToken");
         try {
           const response = await axios.get(
-            "http://localhost:5001/exercises-latest",
+            "http://192.168.1.106:5001/exercises-latest",
             {
               headers: {
                 "Content-Type": "application/json",

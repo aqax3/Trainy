@@ -15,8 +15,24 @@ type RootStackParamList = {
   };
 };
 
+type Exercise = {
+  exerciseId: string;
+  name: string;
+  sets: number;
+  reps: number;
+  weight?: number; // weight is optional
+  // ... any other properties
+};
+
+type WorkoutDetail = {
+  name: string;
+  description: string;
+  difficulty?: string;
+  exercises: Exercise[];
+};
+
 const WorkoutDetailScreen = ({ route }) => {
-  const [workoutDetail, setWorkoutDetail] = useState(null);
+  const [workoutDetail, setWorkoutDetail] = useState<WorkoutDetail | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -52,16 +68,16 @@ const WorkoutDetailScreen = ({ route }) => {
 
   return (
     <View>
-      <Text>{workoutDetail.name}</Text>
-      <Text>{workoutDetail.description}</Text>
+      <Text>{workoutDetail?.name}</Text>
+      <Text>{workoutDetail?.description}</Text>
 
-      {workoutDetail.difficulty ? (
+      {workoutDetail?.difficulty ? (
         <Text>Difficulty: {workoutDetail.difficulty}</Text>
       ) : null}
 
       {/* Display the exercises */}
       <Text>Exercises:</Text>
-      {workoutDetail.exercises.map((exercise, index) => (
+      {workoutDetail?.exercises?.map((exercise, index) => (
         <View key={index}>
           <TouchableOpacity
             onPress={() =>
