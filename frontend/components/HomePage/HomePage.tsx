@@ -8,6 +8,7 @@ import axios from "axios";
 import { Modal, TouchableHighlight } from "react-native";
 import DropdownAlert from "react-native-dropdownalert";
 import { useIsFocused } from "@react-navigation/native";
+import { ActivityIndicator } from "react-native";
 
 import CookieManager from "@react-native-cookies/cookies";
 
@@ -53,7 +54,7 @@ export default function HomePage({ navigation }: Props) {
 
         const userToken = await AsyncStorage.getItem("userToken");
         const response = await axios.get(
-          "http://localhost:5001/recommendations",
+          "http://192.168.1.106:5001/recommendations",
           {
             headers: {
               "Content-Type": "application/json",
@@ -69,12 +70,15 @@ export default function HomePage({ navigation }: Props) {
           setModalVisible(true);
         }
         try {
-          const response = await axios.get("http://localhost:5001/workoutcalendar/today", {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${userToken}`,
-            },
-          });
+          const response = await axios.get(
+            "http://192.168.1.106:5001/workoutcalendar/today",
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${userToken}`,
+              },
+            }
+          );
 
           if (response.data && response.data.workout) {
             setTodayWorkout(response.data);
@@ -132,18 +136,28 @@ export default function HomePage({ navigation }: Props) {
         </View>
 
         <View style={styles.workoutCardContainer}>
-        <View style={styles.workoutCard}>
-          {todayWorkout?.workout?.name === "Rest day" ? (
-            <ImageBackground source={{ uri: "https://images.pexels.com/photos/2261482/pexels-photo-2261482.jpeg?auto=compress&cs=tinysrgb&w=1600" }} style={styles.imageBackground}>
-              <Text style={styles.workoutNameText}>{todayWorkout?.workout?.name}</Text>
-            </ImageBackground>
-          ) : (
-            <ImageBackground source={{ uri: restDayImageUrl }} style={styles.imageBackground}>
-              <Text style={styles.noWorkoutText}>Enjoy your rest day!</Text>
-            </ImageBackground>
-          )}
+          <View style={styles.workoutCard}>
+            {todayWorkout?.workout?.name === "Rest day" ? (
+              <ImageBackground
+                source={{
+                  uri: "https://images.pexels.com/photos/2261482/pexels-photo-2261482.jpeg?auto=compress&cs=tinysrgb&w=1600",
+                }}
+                style={styles.imageBackground}
+              >
+                <Text style={styles.workoutNameText}>
+                  {todayWorkout?.workout?.name}
+                </Text>
+              </ImageBackground>
+            ) : (
+              <ImageBackground
+                source={{ uri: restDayImageUrl }}
+                style={styles.imageBackground}
+              >
+                <Text style={styles.noWorkoutText}>Enjoy your rest day!</Text>
+              </ImageBackground>
+            )}
+          </View>
         </View>
-      </View>
       </View>
     );
   }
@@ -277,12 +291,11 @@ const styles = StyleSheet.create({
   },
   noWorkoutText: {
     fontSize: 20,
-    color: '#e5f4e3',
-    fontWeight: 'bold',
-    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    color: "#e5f4e3",
+    fontWeight: "bold",
+    textShadowColor: "rgba(0, 0, 0, 0.75)",
     textShadowOffset: { width: -1, height: 1 },
     textShadowRadius: 10,
     padding: 5,
-},
-
+  },
 });

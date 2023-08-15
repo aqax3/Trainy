@@ -27,6 +27,8 @@ import CalendarScreen from "../Calendar/Calendar";
 import EditWorkout from "../Workouts/EditWorkout";
 import WorkoutStatistics from "../Statistics/Statstics";
 import ProfileScreen from "../Profile/Profile";
+import WorkoutDetailScreen from "../Workouts/WorkoutDetailScreen";
+import { CommonActions } from '@react-navigation/native';
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -63,10 +65,9 @@ function AppDrawer() {
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={{
         drawerStyle: { backgroundColor: "#1a2d3d" },
-        drawerLabelStyle: { color: '#e5f4e3' },
-        drawerActiveBackgroundColor: '#2e4e6f',
-        drawerActiveTintColor: '#92b4f4'
-
+        drawerLabelStyle: { color: "#e5f4e3" },
+        drawerActiveBackgroundColor: "#2e4e6f",
+        drawerActiveTintColor: "#92b4f4",
       }}
     >
       <Drawer.Screen
@@ -75,12 +76,17 @@ function AppDrawer() {
         options={{
           headerTintColor: "#e5f4e3",
           drawerIcon: ({ size, color }) => (
-            <Fontisto name="home" size={24} color="white"/>
+            <Fontisto name="home" size={24} color="white" />
           ),
           title: "Home",
           headerTitle: "",
-          headerStyle: { backgroundColor: '#1a2d3d', borderBottomWidth: 0, shadowOpacity: 0,  shadowRadius: 0, elevation: 0},
-          
+          headerStyle: {
+            backgroundColor: "#1a2d3d",
+            borderBottomWidth: 0,
+            shadowOpacity: 0,
+            shadowRadius: 0,
+            elevation: 0,
+          },
         }}
       />
       <Drawer.Screen
@@ -157,7 +163,7 @@ function HomeTabs() {
 
 function ExerciseStack() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName="ExerciseList">
       <Stack.Screen
         name="ExerciseList"
         component={ExerciseList}
@@ -166,7 +172,7 @@ function ExerciseStack() {
       <Stack.Screen
         name="ExerciseDetails"
         component={ExerciseDetails}
-        options={{ headerTitle: "" }}
+        options={{ headerTitle: "", }}
       />
     </Stack.Navigator>
   );
@@ -189,6 +195,11 @@ function WorkoutStack() {
         name="EditWorkout"
         component={EditWorkout}
         options={{ headerShown: true }}
+      />
+      <Stack.Screen
+        name="WorkoutDetail"
+        component={WorkoutDetailScreen}
+        options={{ headerTitle: "Workout details" }}
       />
     </Stack.Navigator>
   );
@@ -250,7 +261,7 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
         <DrawerItem
           label="Logout"
           onPress={logoutUser}
-          labelStyle={{color: '#e5f4e3'}}
+          labelStyle={{ color: "#e5f4e3" }}
           icon={({ color, size }) => (
             <MaterialCommunityIcons name="logout" size={24} color="#e5f4e3" />
           )}

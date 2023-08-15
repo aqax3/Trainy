@@ -14,16 +14,19 @@ import RNPickerSelect from "react-native-picker-select";
 
 // Define the structure of an Exercise
 interface Exercise {
-  id: string;
+  _id: string;
   name: string;
   weight: boolean;
 }
 
 // Define the structure of ExerciseDetail which extends Exercise
-interface ExerciseDetail extends Exercise {
-  weightValue?: string;
+interface ExerciseDetail {
+  exerciseId: string;
+  name: string;
   sets: string;
   reps: string;
+  weight: boolean;  // Add this
+  weightValue?: string;
 }
 
 const CreateWorkoutScreen = () => {
@@ -45,10 +48,12 @@ const CreateWorkoutScreen = () => {
   const addExercise = () => {
     if (selectedExercise) {
       const detail: ExerciseDetail = {
-        ...selectedExercise,
-        weightValue: selectedExercise.weight ? weight : undefined,
+        exerciseId: selectedExercise._id,
+        name: selectedExercise.name,
         sets,
         reps,
+        weight: selectedExercise.weight, // Add this
+        weightValue: selectedExercise.weight ? weight : undefined,
       };
       setExerciseDetails((prev) => [...prev, detail]);
       setSelectedExercise(null);
@@ -64,13 +69,24 @@ const CreateWorkoutScreen = () => {
       const userToken = await AsyncStorage.getItem("userToken");
       const userId = await AsyncStorage.getItem("userId");
 
+      // Transform the exerciseDetails array
+      const exercisesToSend = exerciseDetails.map((exercise) => ({
+        exerciseId: exercise.exerciseId, 
+        name: exercise.name,
+        sets: parseInt(exercise.sets),
+        reps: parseInt(exercise.reps),
+        weight: exercise.weightValue ? parseInt(exercise.weightValue) : 0,
+      }));
+
+      console.log("Sending these exercises:", exercisesToSend);
+
       const response = await axios.post(
-        "http://localhost:5001/workouts",
+        "http://192.168.1.106:5001/workouts",
         {
           userId,
           name: workoutName,
           description,
-          exercises: exerciseDetails,
+          exercises: exercisesToSend,
         },
         {
           headers: {
@@ -92,9 +108,9 @@ const CreateWorkoutScreen = () => {
     try {
       const userToken = await AsyncStorage.getItem("userToken");
 
-      const response = await axios.get(`http://localhost:5001/exercise`, {
+      const response = await axios.get(`http://192.168.1.106:5001/exercise`, {
         params: {
-          name: name,  // Changed 'query' to 'name' for clarity
+          name: name, // Changed 'query' to 'name' for clarity
         },
         headers: {
           "Content-Type": "application/json",
@@ -108,7 +124,6 @@ const CreateWorkoutScreen = () => {
       Alert.alert("Failed to fetch exercises.");
     }
   };
-
 
   // Function to handle the selection of an exercise
   const onExerciseSelect = (exercise: Exercise) => {
@@ -157,23 +172,22 @@ const CreateWorkoutScreen = () => {
 
       {/* List of search results */}
       <FlatList
-  data={searchResults}
-  renderItem={({ item }) => (
-    <View
-      key={item.id}  // <-- Add the key prop here
-      style={{
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginTop: 10,
-      }}
-    >
-      <Text>{item.name}</Text>
-      <Button title="Select" onPress={() => onExerciseSelect(item)} />
-    </View>
-  )}
-/>
-
+        data={searchResults}
+        renderItem={({ item }) => (
+          <View
+            key={item.id} // <-- Add the key prop here
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginTop: 10,
+            }}
+          >
+            <Text>{item.name}</Text>
+            <Button title="Select" onPress={() => onExerciseSelect(item)} />
+          </View>
+        )}
+      />
 
       {selectedExercise && (
         <View style={{ marginTop: 20 }}>

@@ -39,7 +39,7 @@ function CompletedWorkouts() {
       try {
         const config = await getAxiosConfig();
         const response = await axios.get(
-          "http://localhost:5001/completedWorkouts",
+          "http://192.168.1.106:5001/completedWorkouts",
           config
         );
         console.log("Completed Workouts Response:", response.data);
@@ -69,7 +69,7 @@ function ExerciseTypeStats() {
       try {
         const config = await getAxiosConfig();
         const response = await axios.get(
-          "http://localhost:5001/exerciseTypeStats",
+          "http://192.168.1.106:5001/exerciseTypeStats",
           config
         );
         const dataValues = response.data.map(
@@ -117,7 +117,7 @@ function AverageWorkoutDuration() {
       try {
         const config = await getAxiosConfig();
         const response = await axios.get(
-          "http://localhost:5001/averageWorkoutDuration",
+          "http://192.168.1.106:5001/averageWorkoutDuration",
           config
         );
         setAverageDuration(response.data.averageDuration);
@@ -178,7 +178,7 @@ function MostCommonExercise() {
       try {
         const config = await getAxiosConfig();
         const response = await axios.get(
-          "http://localhost:5001/mostCommonExercise",
+          "http://192.168.1.106:5001/mostCommonExercise",
           config
         );
         console.log(response.data);
