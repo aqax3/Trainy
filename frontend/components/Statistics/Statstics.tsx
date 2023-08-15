@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, ScrollView } from "react-native";
 import { LineChart, BarChart, XAxis } from "react-native-svg-charts";
+import { IWorkout } from '../../../backend/src/schemas/Workout';
 
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -201,7 +202,7 @@ function MostCommonExercise() {
 
 // Average Sets and Reps Component
 function AverageSetsAndReps() {
-  const [averageData, setAverageData] = useState({});
+  const [averageData, setAverageData] = useState<AverageDataStructure>({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -259,6 +260,105 @@ function WorkoutStreak() {
     <View style={styles.card}>
       <Text style={styles.title}>Workout Streak</Text>
       <Text>Current Streak: {streak} days</Text>
+    </View>
+  );
+}
+
+function RecentCompletedWorkouts() {
+  const [recentWorkouts, setRecentWorkouts] = useState<IWorkout[]>([]);
+
+  useEffect(() => {
+    const fetchRecentCompletedWorkouts = async () => {
+      try {
+        const config = await getAxiosConfig();
+        const response = await axios.get("http://localhost:5001/statistics/recent-completed-workouts", config);
+        setRecentWorkouts(response.data);
+      } catch (error) {
+        console.error("Axios Error:", error);
+      }
+    };
+
+    fetchRecentCompletedWorkouts();
+  }, []);
+
+  return (
+    <View style={styles.card}>
+      <Text style={styles.title}>Recent Workouts</Text>
+      {recentWorkouts.map(workout => (
+        <Text key={workout._id}>{workout.name}</Text>
+      ))}
+    </View>
+  );
+}
+function MostUsedExercise() {
+  const [exercise, setExercise] = useState("");
+
+  useEffect(() => {
+    const fetchMostUsedExercise = async () => {
+      try {
+        const config = await getAxiosConfig();
+        const response = await axios.get("http://localhost:5001/statistics/most-used-exercise", config);
+        setExercise(response.data);
+      } catch (error) {
+        console.error("Axios Error:", error);
+      }
+    };
+
+    fetchMostUsedExercise();
+  }, []);
+
+  return (
+    <View style={styles.card}>
+      <Text style={styles.title}>Most Used Exercise</Text>
+      <Text style={styles.value}>{exercise}</Text>
+    </View>
+  );
+}
+function TotalWeightLifted() {
+  const [totalWeight, setTotalWeight] = useState(0);
+
+  useEffect(() => {
+    const fetchTotalWeightLifted = async () => {
+      try {
+        const config = await getAxiosConfig();
+        const response = await axios.get("http://localhost:5001/statistics/total-weight-lifted", config);
+        setTotalWeight(response.data);
+      } catch (error) {
+        console.error("Axios Error:", error);
+      }
+    };
+
+    fetchTotalWeightLifted();
+  }, []);
+
+  return (
+    <View style={styles.card}>
+      <Text style={styles.title}>Total Weight Lifted</Text>
+      <Text style={styles.value}>{totalWeight} lbs</Text>
+    </View>
+  );
+}
+function MostCommonMuscleGroup() {
+  const [mostCommonGroup, setMostCommonGroup] = useState("");
+
+  useEffect(() => {
+    const fetchMostCommonMuscleGroup = async () => {
+      try {
+        const config = await getAxiosConfig();
+        const response = await axios.get("http://localhost:5001/statistics/most-common-muscle-group", config);
+        setMostCommonGroup(response.data);
+      } catch (error) {
+        console.error("Axios Error:", error);
+      }
+    };
+
+    fetchMostCommonMuscleGroup();
+  }, []);
+
+  return (
+    <View style={styles.card}>
+      <Text style={styles.title}>Most Common Muscle Group</Text>
+      <Text style={styles.value}>{mostCommonGroup}</Text>
     </View>
   );
 }

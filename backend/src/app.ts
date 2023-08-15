@@ -30,6 +30,10 @@ import {
   getWorkoutStreak,
   getExerciseFrequency,
   getTotalWorkoutsByDifficulty,
+  mostCommonMuscleGroup,
+  mostRecentCompletedWorkouts,
+  mostUsedExercise,
+  totalWeightLifted
 } from "./services/statistics";
 
 const app = express();
@@ -759,6 +763,34 @@ app.get(
 app.get("/statistics/workout-streak", authenticateToken, async (req, res) => {
   const userId = req.user.userId;
   const data = await getWorkoutStreak(userId);
+  res.json(data);
+});
+
+// 1. Most Common Muscle Group Route
+app.get('/statistics/most-common-muscle-group', authenticateToken, async (req, res) => {
+  const userId = req.user.userId; 
+  const data = await mostCommonMuscleGroup(userId);
+  res.json(data);
+});
+
+// 2. Total Weight Lifted Route
+app.get('/statistics/total-weight-lifted', authenticateToken, async (req, res) => {
+  const userId = req.user.userId; 
+  const data = await totalWeightLifted(userId);
+  res.json(data);
+});
+
+// 3. Most Used Exercise Route
+app.get('/statistics/most-used-exercise', authenticateToken, async (req, res) => {
+  const userId = req.user.userId; 
+  const data = await mostUsedExercise(userId);
+  res.json(data);
+});
+
+// 5. Most Recent Completed Workouts Route
+app.get('/statistics/recent-completed-workouts', authenticateToken, async (req, res) => {
+  const userId = req.user.userId; 
+  const data = await mostRecentCompletedWorkouts(userId);
   res.json(data);
 });
 
