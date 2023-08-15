@@ -7,21 +7,13 @@ import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
 type RootStackParamList = {
-    Exercises: {
-      screen: keyof ExerciseStackParamList;
-      params?: ExerciseStackParamList[keyof ExerciseStackParamList];
-    };
-    WorkoutDetailScreen: {
-      workoutId: string;
-    };
+  ExerciseDetails: {
+    exerciseId: string;
   };
-  
-  type ExerciseStackParamList = {
-    ExerciseList: undefined;
-    ExerciseDetails: {
-      exerciseId: string;
-    };
+  WorkoutDetailScreen: {
+    workoutId: string;
   };
+};
 
 const WorkoutDetailScreen = ({ route }) => {
   const [workoutDetail, setWorkoutDetail] = useState(null);
@@ -72,9 +64,9 @@ const WorkoutDetailScreen = ({ route }) => {
       {workoutDetail.exercises.map((exercise, index) => (
         <View key={index}>
           <TouchableOpacity
-            onPress={() => navigation.navigate('Exercises', {
-                screen: 'ExerciseDetails',
-                params: { exerciseId: exercise.exerciseId }
+            onPress={() =>
+              navigation.navigate("ExerciseDetails", {
+                exerciseId: exercise.exerciseId,
               })
             }
           >
@@ -82,6 +74,7 @@ const WorkoutDetailScreen = ({ route }) => {
           </TouchableOpacity>
           <Text>Sets: {exercise.sets}</Text>
           <Text>Reps: {exercise.reps}</Text>
+          {exercise.weight && <Text>Weight: {exercise.weight}</Text>}
           {/* Add other exercise properties if they exist */}
         </View>
       ))}

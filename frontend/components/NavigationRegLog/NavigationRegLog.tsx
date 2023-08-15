@@ -163,7 +163,7 @@ function HomeTabs() {
 
 function ExerciseStack() {
   return (
-    <Stack.Navigator initialRouteName="ExerciseList">
+    <Stack.Navigator>
       <Stack.Screen
         name="ExerciseList"
         component={ExerciseList}

@@ -1,12 +1,5 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
-import {
-  View,
-  TextInput,
-  Button,
-  Alert,
-  Text,
-  FlatList,
-} from "react-native";
+import { View, TextInput, Button, Alert, Text, FlatList } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
@@ -21,17 +14,18 @@ const EditWorkout = ({ route, navigation }) => {
     const fetchWorkoutDetails = async () => {
       try {
         const userToken = await AsyncStorage.getItem("userToken");
-        const response = await axios.get(`http://192.168.1.106:5001/workouts/${workoutId}`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${userToken}`,
-          },
-        });
+        const response = await axios.get(
+          `http://192.168.1.106:5001/workouts/${workoutId}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${userToken}`,
+            },
+          }
+        );
 
         const workout = response.data;
-        console.log(
-            response.data
-        )
+        console.log(response.data);
         setWorkoutName(workout.name);
         setDescription(workout.description);
         setExerciseDetails(workout.exercises || []);
@@ -46,12 +40,9 @@ const EditWorkout = ({ route, navigation }) => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: 'Edit Workout', // You can set a title for the screen here
+      title: "Edit Workout", // You can set a title for the screen here
       headerLeft: () => (
-        <Button 
-          title="Go Back" 
-          onPress={() => navigation.goBack()} 
-        />
+        <Button title="Go Back" onPress={() => navigation.goBack()} />
       ),
     });
   }, [navigation]);
@@ -59,16 +50,20 @@ const EditWorkout = ({ route, navigation }) => {
   const updateWorkout = async () => {
     try {
       const userToken = await AsyncStorage.getItem("userToken");
-      await axios.put(`http://192.168.1.106:5001/workouts/${workoutId}`, {
-        name: workoutName,
-        description,
-        exercises: exerciseDetails,
-      }, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${userToken}`,
+      await axios.put(
+        `http://192.168.1.106:5001/workouts/${workoutId}`,
+        {
+          name: workoutName,
+          description,
+          exercises: exerciseDetails,
         },
-      });
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${userToken}`,
+          },
+        }
+      );
 
       Alert.alert("Workout Updated Successfully!");
       navigation.goBack();
@@ -119,31 +114,53 @@ const EditWorkout = ({ route, navigation }) => {
               value={item.sets.toString()}
               onChangeText={(text) => {
                 const updatedExercises = [...exerciseDetails];
-                const index = updatedExercises.findIndex(ex => ex._id === item._id);
+                const index = updatedExercises.findIndex(
+                  (ex) => ex._id === item._id
+                );
                 updatedExercises[index].sets = text ? parseInt(text) : "";
                 setExerciseDetails(updatedExercises);
-              }}              
+              }}
             />
             <TextInput
               placeholder="Reps"
               value={item.reps.toString()}
               onChangeText={(text) => {
                 const updatedExercises = [...exerciseDetails];
-                const index = updatedExercises.findIndex(ex => ex._id === item._id);
+                const index = updatedExercises.findIndex(
+                  (ex) => ex._id === item._id
+                );
                 updatedExercises[index].reps = text ? parseInt(text) : "";
                 setExerciseDetails(updatedExercises);
-              }}              
+              }}
             />
-            <Button title="Delete Exercise" onPress={() => {
-              console.log("Deleting exercise with ID:", item._id);
-              console.log("Exercises before deletion:", exerciseDetails);
-              setExerciseDetails(prev => {
-                const updatedExercises = prev.filter(ex => ex._id !== item._id);
-                console.log("Exercises after deletion:", updatedExercises);
-                return updatedExercises;
-              });
-              
-            }} />
+            {item.weight && (
+              <TextInput
+                placeholder="Weight"
+                value={item.weight.toString()}
+                onChangeText={(text) => {
+                  const updatedExercises = [...exerciseDetails];
+                  const index = updatedExercises.findIndex(
+                    (ex) => ex._id === item._id
+                  );
+                  updatedExercises[index].weight = text ? parseFloat(text) : "";
+                  setExerciseDetails(updatedExercises);
+                }}
+              />
+            )}
+            <Button
+              title="Delete Exercise"
+              onPress={() => {
+                console.log("Deleting exercise with ID:", item._id);
+                console.log("Exercises before deletion:", exerciseDetails);
+                setExerciseDetails((prev) => {
+                  const updatedExercises = prev.filter(
+                    (ex) => ex._id !== item._id
+                  );
+                  console.log("Exercises after deletion:", updatedExercises);
+                  return updatedExercises;
+                });
+              }}
+            />
           </View>
         )}
       />
