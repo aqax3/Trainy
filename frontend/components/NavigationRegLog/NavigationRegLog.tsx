@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -112,6 +112,23 @@ function AppDrawer() {
 }
 
 function HomeTabs() {
+
+  const [isRendered, setIsRendered] = useState({
+    Home: false,
+    Workout: false,
+    Exercises: false,
+    Calendar: false
+  });
+
+  useEffect(() => {
+    setIsRendered({
+      Home: true,
+      Workout: true,
+      Exercises: true,
+      Calendar: true
+    });
+  }, []);
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -130,6 +147,7 @@ function HomeTabs() {
           ),
         }}
       />
+     
       <Tab.Screen
         name="Workout"
         component={WorkoutStack}
@@ -139,6 +157,7 @@ function HomeTabs() {
           ),
         }}
       />
+     
       <Tab.Screen
         name="Exercises"
         component={ExerciseStack}
@@ -154,10 +173,7 @@ function HomeTabs() {
             e.preventDefault();
 
             // Reset the ExerciseStack to start with ExerciseList
-            navigation.reset({
-              index: 0,
-              routes: [{ name: 'ExerciseList' }],
-            });
+            navigation.jumpTo('Exercises');
 
             // Navigate to the desired screen (it will be ExerciseList as we reset it above)
             navigation.navigate('ExerciseList');

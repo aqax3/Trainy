@@ -13,6 +13,15 @@ type RootStackParamList = {
   WorkoutDetailScreen: {
     workoutId: string;
   };
+  HomeDrawer: {
+    screen: string;
+    params?: {
+      screen: string;
+      params?: {
+        exerciseId: string;
+      };
+    };
+  };
 };
 
 type Exercise = {
@@ -73,11 +82,17 @@ const WorkoutDetailScreen = ({ route }) => {
       {workoutDetail?.exercises?.map((exercise, index) => (
         <View key={index}>
           <TouchableOpacity
-            onPress={() =>
-              navigation.navigate("ExerciseDetails", {
-                exerciseId: exercise.exerciseId,
+            onPress={() =>{
+              navigation.navigate("HomeDrawer",{
+                screen: "Exercises",
+                params: {
+                  screen: "ExerciseDetails",
+                  params:{
+                    exerciseId: exercise.exerciseId,
+                  }
+                }
               })
-            }
+            }}
           >
             <Text>Name: {exercise.name}</Text>
           </TouchableOpacity>
