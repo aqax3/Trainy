@@ -33,7 +33,6 @@ type WorkoutDetail = {
 
 const WorkoutDetailScreen = ({ route }) => {
   const [workoutDetail, setWorkoutDetail] = useState<WorkoutDetail | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
 
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
@@ -42,7 +41,7 @@ const WorkoutDetailScreen = ({ route }) => {
       try {
         const userToken = await AsyncStorage.getItem("userToken");
         const response = await axios.get(
-          `http://192.168.1.106:5001/workouts/${route.params.workoutId}`,
+          `http://localhost:5001/workouts/${route.params.workoutId}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -51,18 +50,12 @@ const WorkoutDetailScreen = ({ route }) => {
           }
         );
         setWorkoutDetail(response.data);
-        setIsLoading(false);
       } catch (error) {
         console.error(error);
-        setIsLoading(false);
       }
     };
     fetchWorkoutDetail();
   }, [route.params.workoutId]);
-
-  if (isLoading) {
-    return <ActivityIndicator />;
-  }
 
   console.log(workoutDetail);
 
@@ -90,7 +83,7 @@ const WorkoutDetailScreen = ({ route }) => {
           </TouchableOpacity>
           <Text>Sets: {exercise.sets}</Text>
           <Text>Reps: {exercise.reps}</Text>
-          {exercise.weight && <Text>Weight: {exercise.weight}</Text>}
+          {exercise.weight ? <Text>Weight: {exercise.weight}</Text> : null}
           {/* Add other exercise properties if they exist */}
         </View>
       ))}

@@ -143,10 +143,26 @@ function HomeTabs() {
         name="Exercises"
         component={ExerciseStack}
         options={{
+          headerShown: false,
           tabBarIcon: ({ size, color }) => (
             <Ionicons name="ios-barbell-sharp" size={24} color="#E5F4E3" />
           ),
         }}
+        listeners={({ navigation }) => ({
+          tabPress: e => {
+            // Prevent the default action (i.e., navigating to the tab)
+            e.preventDefault();
+
+            // Reset the ExerciseStack to start with ExerciseList
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'ExerciseList' }],
+            });
+
+            // Navigate to the desired screen (it will be ExerciseList as we reset it above)
+            navigation.navigate('ExerciseList');
+          },
+        })}
       />
       <Tab.Screen
         name="Calendar"
@@ -172,7 +188,7 @@ function ExerciseStack() {
       <Stack.Screen
         name="ExerciseDetails"
         component={ExerciseDetails}
-        options={{ headerTitle: "", }}
+        options={{ headerTitle: "", headerShown: false }}
       />
     </Stack.Navigator>
   );

@@ -290,7 +290,43 @@ app.get("/exercise", async (req, res) => {
   }
 });
 
-app.get("/exercises/id/:id", authenticateToken, async (req, res) => {
+app.put("/exercises/:id", authenticateAdminToken, async (req, res) => {
+  const exerciseId = req.params.id;
+
+  // Extract the fields from the request body
+  const { name, description, muscleGroup, videoURL, imageURL, weight } = req.body;
+
+  try {
+    // Find the exercise by its ID and update it
+    const exercise = await Exercise.findByIdAndUpdate(
+      exerciseId,
+      {
+        // Update only fields that are provided
+        ...(name && { name }),
+        ...(description && { description }),
+        ...(muscleGroup && { muscleGroup }),
+        ...(videoURL && { videoURL }),
+        ...(imageURL && { imageURL }),
+        ...(typeof weight !== "undefined" && { weight }),  // Using typeof check because weight can be 0
+      },
+      { new: true } // This option ensures that the updated document is returned
+    );
+
+    // If the exercise is not found, return a 404 error
+    if (!exercise) {
+      return res.status(404).send("Exercise not found");
+    }
+
+    // Send the updated exercise details as the response
+    res.send(exercise);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
+});
+
+
+app.get("/exercises-id/:id", authenticateToken, async (req, res) => {
   try {
     const exercise = await Exercise.findById(req.params.id)
     console.log(exercise);

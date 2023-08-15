@@ -31,8 +31,16 @@ type RootStackParamList = {
   Login: undefined;
   Home: { username: string };
   MyWorkoutScreen: undefined;
-  HomeDrawer: { screen: string; params: { screen: string } };
-  ExerciseDetails: { exercise: Exercise };
+  HomeDrawer: {
+    screen: string;
+    params?: {
+      screen: string;
+      params?: {
+        exerciseId: string;
+      };
+    };
+  };
+  ExerciseDetails: { exerciseId: string | number };
 };
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "Home">;
@@ -58,106 +66,130 @@ export default function HomePage({ navigation }: Props) {
   const isFocused = useIsFocused();
 
   useEffect(() => {
-      (async () => {
-        const storedUsername = await AsyncStorage.getItem("username");
-        if (storedUsername !== null) {
-          setUsername(storedUsername);
-        }
+    (async () => {
+      const storedUsername = await AsyncStorage.getItem("username");
+      if (storedUsername !== null) {
+        setUsername(storedUsername);
+      }
 
-        const userToken = await AsyncStorage.getItem("userToken");
+      const userToken = await AsyncStorage.getItem("userToken");
+      const response = await axios
+        .get("http://localhost:5001/recommendations", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${userToken}`,
+          },
+        })
+        .then((response) => {
+          setRecommendedDifficulty(response.data.recommendedDifficulty);
+          if (
+            response.data.recommendedDifficulty !== "beginner" &&
+            response.data.recommendedDifficulty !== "none"
+          ) {
+            setModalVisible(true);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching recommendations:", error);
+        });
+
+      try {
         const response = await axios.get(
-          "http://192.168.1.106:5001/recommendations",
+          "http://localhost:5001/workoutcalendar/today",
           {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${userToken}`,
             },
-          })
-          .then((response) => {
-            setRecommendedDifficulty(response.data.recommendedDifficulty);
-            if (
-              response.data.recommendedDifficulty !== "beginner" &&
-              response.data.recommendedDifficulty !== "none"
-            ) {
-              setModalVisible(true);
-            }
-          })
-          .catch((error) => {
-            console.error("Error fetching recommendations:", error);
+          }
+        );
+
+        if (response.data && response.data.workout) {
+          setTodayWorkout(response.data);
+          setIsWorkoutCompleted(response.data.completed);
+        } else {
+          setTodayWorkout({
+            workout: {
+              name: "Rest Day",
+            },
           });
-
-        try {
-          const response = await axios.get(
-            "http://192.168.1.106:5001/workoutcalendar/today",
-            {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${userToken}`,
-              },
-            }
-          );
-
-          if (response.data && response.data.workout) {
-            setTodayWorkout(response.data);
-            setIsWorkoutCompleted(response.data.completed);
-          } else {
-            setTodayWorkout({
-              workout: {
-                name: "Rest Day",
-              },
-            });
-          }
-        } catch (error: any) {
-          if (error.response && error.response.status === 404) {
-            // Handle 404 error
-            setTodayWorkout({
-              workout: {
-                name: "Rest Day",
-              },
-            });
-          } else {
-            console.error("Error fetching today's workout:", error);
-          }
         }
-      })();
-      const fetchLatestExercises = async () => {
-        const userToken = await AsyncStorage.getItem("userToken");
-        try {
-          const response = await axios.get(
-            "http://192.168.1.106:5001/exercises-latest",
-            {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${userToken}`,
-              },
-            }
-          );
-          setLatestExercises(response.data);
-          console.log(response.data)
-        } catch (error : any) {
-          console.error("Error fetching latest exercises:", error.response ? error.response.data : error.message);
+      } catch (error: any) {
+        if (error.response && error.response.status === 404) {
+          // Handle 404 error
+          setTodayWorkout({
+            workout: {
+              name: "Rest Day",
+            },
+          });
+        } else {
+          console.error("Error fetching today's workout:", error);
         }
-      };
+      }
+    })();
+    const fetchLatestExercises = async () => {
+      const userToken = await AsyncStorage.getItem("userToken");
+      try {
+        const response = await axios.get(
+          "http://localhost:5001/exercises-latest",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${userToken}`,
+            },
+          }
+        );
+        setLatestExercises(response.data);
+      } catch (error: any) {
+        console.error(
+          "Error fetching latest exercises:",
+          error.response ? error.response.data : error.message
+        );
+      }
+    };
 
-      fetchLatestExercises();
-    
+    fetchLatestExercises();
   }, [isFocused]);
 
   function LatestExercises({ navigation }: Props) {
     return (
       <View style={styles.latestExercisesContainer}>
-        <Text style={styles.cardsHeaderText}>New Workouts</Text>
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <Text style={styles.cardsHeaderText}>Try some new exercises</Text>
+        <ScrollView
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          style={styles.horizontalScroll}
+        >
           {latestExercises.map((exercise, index) => (
-            <TouchableHighlight
+            <ImageBackground
+              source={{ uri: (exercise as Exercise).imageURL }} // Assuming the image URL is stored in the 'imageUrl' property of the exercise object
+              style={styles.exerciseCardImage}
               key={index}
-              style={styles.exerciseCard}
-              onPress={() =>
-                navigation?.navigate("ExerciseDetails", { exercise: exercise })
-              }
             >
-              <Text style={styles.cardText}>{(exercise as Exercise).name}</Text>
-            </TouchableHighlight>
+              <TouchableHighlight
+                style={styles.exerciseCard}
+                onPress={() => {
+                  console.log(
+                    "Selected exerciseId:",
+                    (exercise as Exercise)._id
+                  );
+                  console.log("selected exercise", exercise as Exercise); // Log the exerciseId
+                  navigation?.navigate("HomeDrawer", {
+                    screen: "Exercises",
+                    params: {
+                      screen: "ExerciseDetails",
+                      params: {
+                        exerciseId: (exercise as Exercise)._id,
+                      },
+                    },
+                  });
+                }}
+              >
+                <Text style={styles.cardText}>
+                  {(exercise as Exercise).name}
+                </Text>
+              </TouchableHighlight>
+            </ImageBackground>
           ))}
         </ScrollView>
       </View>
@@ -267,31 +299,33 @@ export default function HomePage({ navigation }: Props) {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.welcomeText}>
-        Welcome <Text style={styles.boldText}>{username}</Text>
-      </Text>
-      <WorkoutPlan />
-      <WorkoutCards navigation={navigation} />
-      <LatestExercises navigation={navigation} />
-      <Modal animationType="slide" transparent={true} visible={modalVisible}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>
-              Consider trying a {recommendedDifficulty} workout!
-            </Text>
-            <TouchableHighlight
-              style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
-              onPress={() => {
-                setModalVisible(!modalVisible);
-              }}
-            >
-              <Text style={styles.textStyle}>Close</Text>
-            </TouchableHighlight>
+    <ScrollView style={{ flex: 1, backgroundColor: "#1a2d3d" }}>
+      <View style={styles.container}>
+        <Text style={styles.welcomeText}>
+          Welcome <Text style={styles.boldText}>{username}</Text>
+        </Text>
+        <WorkoutPlan />
+        <WorkoutCards navigation={navigation} />
+        <LatestExercises navigation={navigation} />
+        <Modal animationType="slide" transparent={true} visible={modalVisible}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>
+                Consider trying a {recommendedDifficulty} workout!
+              </Text>
+              <TouchableHighlight
+                style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
+                onPress={() => {
+                  setModalVisible(!modalVisible);
+                }}
+              >
+                <Text style={styles.textStyle}>Close</Text>
+              </TouchableHighlight>
+            </View>
           </View>
-        </View>
-      </Modal>
-    </View>
+        </Modal>
+      </View>
+    </ScrollView>
   );
 }
 
@@ -448,20 +482,32 @@ const styles = StyleSheet.create({
     color: "#e5f4e3",
     fontSize: 18,
     fontWeight: "bold",
+    textShadowColor: "black", // Shadow color
+    textShadowOffset: { width: -1, height: 1 },
+    textShadowRadius: 1,
   },
   latestExercisesContainer: {
-    width: "100%",
+    width: "95%",
     alignItems: "center",
     marginVertical: 10,
-    maxHeight: 300,
   },
+  horizontalScroll: {
+    flexDirection: "row",
+  },
+  exerciseCardImage: {
+    width: 120,
+    height: 120,
+    marginRight: 20,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: "#e5f4e3",
+    overflow: "hidden",
+  },
+
   exerciseCard: {
     flex: 1,
-    backgroundColor: "#5e7ce2",
-    padding: 20,
-    marginVertical: 5,
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-end",
+    paddingHorizontal: 5,
+    paddingBottom: 5,
   },
 });
