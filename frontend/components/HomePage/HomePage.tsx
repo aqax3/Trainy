@@ -15,6 +15,7 @@ import axios from "axios";
 import { Modal, TouchableHighlight } from "react-native";
 import DropdownAlert from "react-native-dropdownalert";
 import { useIsFocused } from "@react-navigation/native";
+import { ActivityIndicator } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Exercise } from "../Exercises/ExerciseDetails";
 
@@ -64,8 +65,9 @@ export default function HomePage({ navigation }: Props) {
         }
 
         const userToken = await AsyncStorage.getItem("userToken");
-        const response = await axios
-          .get("http://localhost:5001/recommendations", {
+        const response = await axios.get(
+          "http://192.168.1.106:5001/recommendations",
+          {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${userToken}`,
@@ -86,7 +88,7 @@ export default function HomePage({ navigation }: Props) {
 
         try {
           const response = await axios.get(
-            "http://localhost:5001/workoutcalendar/today",
+            "http://192.168.1.106:5001/workoutcalendar/today",
             {
               headers: {
                 "Content-Type": "application/json",

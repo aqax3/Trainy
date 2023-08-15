@@ -3,6 +3,10 @@ import { View, Text, Image } from "react-native";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import YoutubePlayer from "react-native-youtube-iframe";
 import { ScrollView } from "react-native";
+import { ActivityIndicator } from "react-native";
+import { useEffect } from "react";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export interface Exercise {
   _id: string;
@@ -15,13 +19,44 @@ export interface Exercise {
 
 type RouteParams = {
   ExerciseDetails: {
-    exercise: Exercise;
+    exerciseId: string;
   };
 };
 
 export default function ExerciseDetails() {
   const route = useRoute<RouteProp<RouteParams, "ExerciseDetails">>();
-  const { exercise } = route.params;
+  const { exerciseId } = route.params;
+
+  const [exercise, setExercise] = useState<Exercise | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchExerciseDetail = async () => {
+      try {
+        const userToken = await AsyncStorage.getItem("userToken");
+        const response = await axios.get(
+          `http://192.168.1.106:5001/exercises/id/${exerciseId}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${userToken}`,
+            },
+          }
+        );
+        setExercise(response.data);
+        setIsLoading(false);
+      } catch (error) {
+        console.error(error);
+        setIsLoading(false);
+      }
+    };
+
+    fetchExerciseDetail();
+  }, [exerciseId]);
+
+  if (isLoading || !exercise) {
+    return <ActivityIndicator />;
+  }
 
   return (
     <ScrollView>

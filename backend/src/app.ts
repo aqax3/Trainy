@@ -29,7 +29,11 @@ import {
   getAverageSetsAndReps,
   getWorkoutStreak,
   getExerciseFrequency,
-  getTotalWorkoutsByDifficulty
+  getTotalWorkoutsByDifficulty,
+  mostCommonMuscleGroup,
+  mostRecentCompletedWorkouts,
+  mostUsedExercise,
+  totalWeightLifted
 } from "./services/statistics";
 
 const app = express();
@@ -161,18 +165,18 @@ app.get("/user-info", authenticateToken, async (req, res) => {
   const { userId } = req.user;
 
   try {
-    const userInfo = await User.findById(userId, '-password');
+    const userInfo = await User.findById(userId, "-password");
 
     if (!userInfo) {
-      return res.status(404).send({ message: "User not found" })
+      return res.status(404).send({ message: "User not found" });
     }
 
     res.status(200).send(userInfo);
-  } catch(error) {
+  } catch (error) {
     console.error(error);
     res.status(500).send("Server error");
   }
-})
+});
 
 // user height
 app.put("/update-height", authenticateToken, async (req, res) => {
@@ -286,6 +290,22 @@ app.get("/exercise", async (req, res) => {
   }
 });
 
+app.get("/exercises/id/:id", authenticateToken, async (req, res) => {
+  try {
+    const exercise = await Exercise.findById(req.params.id)
+    console.log(exercise);
+
+    if (!exercise) {
+      return res.status(404).send("Exercise not found");
+    }
+
+    res.send(exercise);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
+});
+
 app.delete("/exercises/:id", authenticateToken, async (req, res) => {
   try {
     const exercise = await Exercise.findByIdAndDelete(req.params.id);
@@ -370,6 +390,8 @@ app.post("/workouts", authenticateToken, async (req, res) => {
   //checks if the user that's creating the workout is an admin account
   const createdByAdmin = user.isAdmin;
 
+  console.log("Received exercises:", exercises);
+
   const workout = new Workout({
     userId,
     name,
@@ -408,10 +430,19 @@ app.get("/workouts/:workoutId", authenticateToken, async (req, res) => {
   const { userId } = req.user;
 
   try {
-    const workout = await Workout.findOne({ _id: workoutId, userId: userId });
+    // Fetch the workout just based on its ID.
+    const workout = await Workout.findById(workoutId);
 
     if (!workout) {
       return res.status(404).send("Workout not found");
+    }
+
+    // Check if the workout belongs to the user or is a community workout.
+    if (
+      workout.userId.toString() !== userId.toString() &&
+      !workout.createdByAdmin
+    ) {
+      return res.status(403).send("Not authorized to access this workout");
     }
 
     res.send(workout);
@@ -520,8 +551,8 @@ app.get("/workoutcalendar/today", authenticateToken, async (req, res) => {
 
     const workoutForToday = await WorkoutCalendar.findOne({
       user: req.user.userId,
-      date: today
-    }).populate('workout'); // assuming the workout field in WorkoutCalendar references the Workout schema
+      date: today,
+    }).populate("workout"); // assuming the workout field in WorkoutCalendar references the Workout schema
 
     if (!workoutForToday) {
       return res.status(404).send("No workout planned for today");
@@ -716,27 +747,67 @@ app.get("/workoutFrequency/:period", authenticateToken, async (req, res) => {
   }
 });
 
-app.get('/statistics/workouts-by-difficulty', authenticateToken, async (req, res) => {
-  const userId = req.user.userId; 
-  const data = await getTotalWorkoutsByDifficulty(userId);
-  res.json(data);
-});
+app.get(
+  "/statistics/workouts-by-difficulty",
+  authenticateToken,
+  async (req, res) => {
+    const userId = req.user.userId;
+    const data = await getTotalWorkoutsByDifficulty(userId);
+    res.json(data);
+  }
+);
 
-app.get('/statistics/exercise-frequency', authenticateToken, async (req, res) => {
-  const userId = req.user.userId; 
-  const data = await getExerciseFrequency(userId);
-  res.json(data);
-});
+app.get(
+  "/statistics/exercise-frequency",
+  authenticateToken,
+  async (req, res) => {
+    const userId = req.user.userId;
+    const data = await getExerciseFrequency(userId);
+    res.json(data);
+  }
+);
 
-app.get('/statistics/average-sets-reps', authenticateToken, async (req, res) => {
-  const userId = req.user.userId; 
-  const data = await getAverageSetsAndReps(userId);
-  res.json(data);
-});
+app.get(
+  "/statistics/average-sets-reps",
+  authenticateToken,
+  async (req, res) => {
+    const userId = req.user.userId;
+    const data = await getAverageSetsAndReps(userId);
+    res.json(data);
+  }
+);
 
-app.get('/statistics/workout-streak', authenticateToken, async (req, res) => {
-  const userId = req.user.userId; 
+app.get("/statistics/workout-streak", authenticateToken, async (req, res) => {
+  const userId = req.user.userId;
   const data = await getWorkoutStreak(userId);
+  res.json(data);
+});
+
+// 1. Most Common Muscle Group Route
+app.get('/statistics/most-common-muscle-group', authenticateToken, async (req, res) => {
+  const userId = req.user.userId; 
+  const data = await mostCommonMuscleGroup(userId);
+  res.json(data);
+});
+
+// 2. Total Weight Lifted Route
+app.get('/statistics/total-weight-lifted', authenticateToken, async (req, res) => {
+  const userId = req.user.userId; 
+  const data = await totalWeightLifted(userId);
+  res.json(data);
+});
+
+// 3. Most Used Exercise Route
+app.get('/statistics/most-used-exercise', authenticateToken, async (req, res) => {
+  const userId = req.user.userId; 
+  const data = await mostUsedExercise(userId);
+  res.json(data);
+});
+
+// 5. Most Recent Completed Workouts Route
+app.get('/statistics/recent-completed-workouts', authenticateToken, async (req, res) => {
+  const userId = req.user.userId; 
+  const data = await mostRecentCompletedWorkouts(userId);
   res.json(data);
 });
 

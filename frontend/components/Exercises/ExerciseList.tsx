@@ -27,7 +27,8 @@ interface Exercise {
 
 type StackParamList = {
   ExerciseList: undefined;
-  ExerciseDetails: { exercise: Exercise };
+  ExerciseDetails: { exerciseId: string };
+  WorkoutDetailScreen: { workoutId: string };
 };
 
 export default function ExerciseList() {
@@ -48,7 +49,7 @@ export default function ExerciseList() {
     setIsLoading(true);
     try {
       const userToken = await AsyncStorage.getItem("userToken");
-      const response = await axios.get(`http://localhost:5001/exercises`, {
+      const response = await axios.get(`http://192.168.1.106:5001/exercises`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${userToken}`,
@@ -149,7 +150,11 @@ export default function ExerciseList() {
         {filteredExercises.map((exercise, index) => (
           <TouchableOpacity
             key={index}
-            onPress={() => navigation.navigate("ExerciseDetails", { exercise })}
+            onPress={() =>
+              navigation.navigate("ExerciseDetails", {
+                exerciseId: exercise._id,
+              })
+            }
           >
             <Card key={index}>
               <Card.Title>{exercise.name}</Card.Title>

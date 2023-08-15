@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { View, Button, Text } from "react-native";
+import { View, Button, Text, TouchableOpacity } from "react-native";
 import axios from "axios";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -15,7 +15,7 @@ const MyWorkoutScreen = () => {
         try {
           const userToken = await AsyncStorage.getItem("userToken");
           const response = await axios.get(
-            "http://localhost:5001/workouts",
+            "http://192.168.1.106:5001/workouts",
             {
               headers: {
                 "Content-Type": "application/json",
@@ -34,7 +34,7 @@ const MyWorkoutScreen = () => {
         try {
           const userToken = await AsyncStorage.getItem("userToken");
           const response = await axios.get(
-            "http://localhost:5001/adminWorkouts",
+            "http://192.168.1.106:5001/adminWorkouts",
             {
               headers: {
                 "Content-Type": "application/json",
@@ -73,8 +73,19 @@ const MyWorkoutScreen = () => {
               marginBottom: 10,
             }}
           >
-            <Text>{workout.name}</Text>
-            <Button title="Edit" onPress={() => {navigation.navigate("EditWorkout", {workoutId: workout._id})}} /> 
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("WorkoutDetail", { workoutId: workout._id })
+              }
+            >
+              <Text>{workout.name}</Text>
+            </TouchableOpacity>
+            <Button
+              title="Edit"
+              onPress={() => {
+                navigation.navigate("EditWorkout", { workoutId: workout._id });
+              }}
+            />
             <Button
               title="Add to Calendar"
               onPress={() => {
@@ -112,7 +123,13 @@ const MyWorkoutScreen = () => {
               marginBottom: 10,
             }}
           >
-            <Text>{workout.name}</Text>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("WorkoutDetail", { workoutId: workout._id })
+              }
+            >
+              <Text>{workout.name}</Text>
+            </TouchableOpacity>
             <Button
               title="Add to Calendar"
               onPress={() => {
