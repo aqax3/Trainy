@@ -5,6 +5,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRoute } from "@react-navigation/native";
 import { RouteProp } from "@react-navigation/native";
 import { Modal } from "react-native";
+import { StyleSheet } from "react-native";
+import { TouchableOpacity } from "react-native";
 
 import { useNavigation } from "@react-navigation/native";
 import { useFocusEffect } from "@react-navigation/native";
@@ -15,6 +17,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 
 import axios from "axios";
+import { color } from "react-native-reanimated";
 
 type MarkedDates = {
   [date: string]: { marked: boolean };
@@ -24,6 +27,7 @@ type Workout = {
   _id: string;
   date: string | number | Date;
   completedStatus: boolean;
+  workoutName: string; // Add this line
 };
 
 type CalendarRouteParams = {
@@ -79,15 +83,20 @@ const CalendarScreen: React.FC = () => {
     const userToken = await AsyncStorage.getItem("userToken");
     try {
       const response = await axios.get(
-        "http://localhost:5001/workoutcalendar",
+        "http://192.168.1.106:5001/workoutcalendar",
         {
           headers: {
             Authorization: `Bearer ${userToken}`,
           },
         }
       );
-      const data = response.data;
-      console.log("Fetched Workouts:", data); // Add this line
+      const data = response.data.map((w) => ({
+        _id: w._id,
+        date: w.date,
+        completedStatus: w.completed,
+        workoutName: w.workout.name,
+      }));
+      //console.log("Fetched Workouts:", data); // Add this line
 
       setWorkouts(data);
       const dates = data.reduce((acc: MarkedDates, workout: Workout) => {
@@ -106,7 +115,7 @@ const CalendarScreen: React.FC = () => {
     const fetchWorkouts = async () => {
       const userToken = await AsyncStorage.getItem("userToken");
 
-      fetch("http://localhost:5001/workoutcalendar", {
+      fetch("http://192.168.1.106:5001/workoutcalendar", {
         headers: {
           Authorization: `Bearer ${userToken}`,
         },
@@ -140,13 +149,13 @@ const CalendarScreen: React.FC = () => {
           new Date(workout.date).toISOString().split("T")[0] === day.dateString
       );
       setWorkoutsForDate(workoutsForSelectedDate);
-      console.log(workoutsForSelectedDate)
-      if(workoutsForSelectedDate[0].completed === true){
-        setCompleted(true)
-        console.log(completed)
+      console.log(workoutsForSelectedDate);
+      if (workoutsForSelectedDate[0].completed === true) {
+        setCompleted(true);
+        console.log(completed);
       } else {
-        setCompleted(false)
-        console.log(completed)
+        setCompleted(false);
+        console.log(completed);
       }
       return; // Add an explicit return here
     }
@@ -173,7 +182,7 @@ const CalendarScreen: React.FC = () => {
         workout: currentWorkoutId,
       };
       const response = await axios.post(
-        "http://localhost:5001/workoutcalendar",
+        "http://192.168.1.106:5001/workoutcalendar",
         workoutData,
         {
           headers: {
@@ -209,45 +218,49 @@ const CalendarScreen: React.FC = () => {
         <Modal
           visible={!!selectedDate}
           onRequestClose={() => setSelectedDate(null)}
+          transparent={true}
+          animationType="slide"
         >
-          <View
-            style={{
-              flex: 1,
-              justifyContent: "center",
-              alignItems: "center",
-              backgroundColor: "rgba(0,0,0,0.7)",
-            }}
-          >
-            <View
-              style={{
-                width: 300,
-                padding: 20,
-                backgroundColor: "white",
-                borderRadius: 10,
-              }}
-            >
+          <View style={styles.overlay}>
+            <View style={styles.modalContainer}>
+              <Text style={styles.workoutDate}>
+                {new Date(selectedDate).toLocaleDateString()}{" "}
+                {/* Assuming each modal is for a specific date */}
+              </Text>
               {workoutsForDate.map((workout) => (
-                <View key={workout._id}>
-                  <Text onPress={() => deleteWorkout(workout._id)}>
-                    {new Date(workout.date).toLocaleDateString()}
-                  </Text>
-                  <Text>{String(completed)}</Text>
-                  <FontAwesome
-                    name={
-                      completed ? "check-circle" : "times-circle"
+                <View key={workout._id} style={styles.workoutItem}>
+                  <Text style={styles.workoutName}>{workout.workoutName}</Text>
+                  <TouchableOpacity
+                    style={
+                      workout.completedStatus
+                        ? styles.buttonActive
+                        : styles.button
                     }
-                    size={30}
-                    color={completed ? "green" : "red"}
                     onPress={() =>
                       optimisticToggleCompleted(
                         workout._id,
                         !workout.completedStatus
                       )
                     }
-                  />
+                  >
+                    <Text style={styles.statusText}>
+                      {workout.completedStatus ? "Completed" : "Not Completed"}
+                    </Text>
+                  </TouchableOpacity>
+                  <View style={styles.deleteButtonContainer}>
+                    <Button
+                      title="Delete"
+                      onPress={() => deleteWorkout(workout._id)}
+                      color="red"
+                    />
+                  </View>
                 </View>
               ))}
-              <Button title="Close" onPress={() => setSelectedDate(null)} />
+              <Button
+                title="Close"
+                onPress={() => setSelectedDate(null)}
+                color="#e5f4e3"
+              />
             </View>
           </View>
         </Modal>
@@ -262,7 +275,7 @@ const CalendarScreen: React.FC = () => {
 
     try {
       const response = await axios.patch(
-        `http://localhost:5001/workoutcalendar/${id}/completed`,
+        `http://192.168.1.106:5001/workoutcalendar/${id}/completed`,
         { completed: completedStatus },
         {
           headers: {
@@ -275,18 +288,14 @@ const CalendarScreen: React.FC = () => {
       if (response.status === 200) {
         // Update the local state to reflect the change
         const updatedWorkouts = workouts.map((workout) =>
-          workout._id === id
-            ? { ...workout, completed: completed }
-            : workout
+          workout._id === id ? { ...workout, completed: completed } : workout
         );
 
         setWorkouts(updatedWorkouts);
 
         // You can also update `workoutsForDate` if necessary
         const updatedWorkoutsForDate = workoutsForDate.map((workout) =>
-          workout._id === id
-            ? { ...workout, completed: completed }
-            : workout
+          workout._id === id ? { ...workout, completed: completed } : workout
         );
 
         setWorkoutsForDate(updatedWorkoutsForDate);
@@ -334,7 +343,7 @@ const CalendarScreen: React.FC = () => {
 
     try {
       const response = await axios.delete(
-        `http://localhost:5001/workoutcalendar/${id}`,
+        `http://192.168.1.106:5001/workoutcalendar/${id}`,
         {
           headers: {
             Authorization: `Bearer ${userToken}`,
@@ -374,12 +383,114 @@ const CalendarScreen: React.FC = () => {
   };
 
   return (
-    <View>
+    <View style={styles.container}>
       {renderWorkoutsForDate()}
-      <Text>Selected workout: {route.params?.selectedWorkoutName}</Text>
-      <Calendar markedDates={markedDates} onDayPress={onDayPress} />
+      <Text style={styles.headerText}>
+        Selected workout: {route.params?.selectedWorkoutName}
+      </Text>
+      <Calendar
+        markedDates={markedDates}
+        onDayPress={onDayPress}
+        theme={{
+          backgroundColor: "#1a2d3d",
+          calendarBackground: "#1a2d3d",
+          textSectionTitleColor: "#e5f4e3",
+          textSectionTitleDisabledColor: "#4e937a",
+          dayTextColor: "#e5f4e3",
+          todayTextColor: "#92b4f4",
+          selectedDayBackgroundColor: "#92b4f4",
+          monthTextColor: "#e5f4e3",
+          indicatorColor: "#92b4f4",
+          textDayFontWeight: "300",
+          textMonthFontWeight: "bold",
+          textDayHeaderFontWeight: "300",
+          textDayFontSize: 16,
+          textMonthFontSize: 18,
+          textDayHeaderFontSize: 16,
+          dotColor: "#4e937a",
+          textDisabledColor: "#818589",
+        }}
+      />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  overlay: {
+    flex: 1,
+    backgroundColor: "rgba(26, 45, 61, 0.8)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContainer: {
+    width: "90%",
+    backgroundColor: "#4e937a",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  workoutContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginVertical: 10,
+    width: "100%",
+  },
+  workoutDate: {
+    color: "#e5f4e3",
+    marginBottom: 20,
+    fontSize: 18,
+  },
+  workoutItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%",
+    marginBottom: 15,
+  },
+  workoutName: {
+    color: "#e5f4e3",
+    fontSize: 16,
+    flex: 1,
+    fontWeight: "bold",
+    marginLeft: 10
+  },
+  statusText: {
+    color: "#e5f4e3",
+    fontSize: 14, 
+  },
+  button: {
+    backgroundColor: "#92b4f4",
+    padding: 8,
+    borderRadius: 5,
+    flex: 1.5, 
+    alignItems: "center", 
+    justifyContent: "center",
+  },
+  buttonActive: {
+    backgroundColor: "green",
+    padding: 8,
+    borderRadius: 5,
+    flex: 1.25, 
+    alignItems: "center", 
+    justifyContent: "center",
+  },
+  container: {
+    flex: 1,
+    backgroundColor: "#1a2d3d",
+    padding: 10,
+  },
+  deleteButtonContainer: {
+    flex: 1, 
+    marginLeft: 10,
+  },
+  headerText: {
+    color: "#e5f4e3",
+    marginBottom: 20,
+    fontSize: 18,
+    fontStyle: "italic",
+    fontWeight: "bold",
+  },
+});
 
 export default CalendarScreen;

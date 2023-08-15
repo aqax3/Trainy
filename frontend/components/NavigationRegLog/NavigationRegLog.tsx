@@ -28,7 +28,7 @@ import EditWorkout from "../Workouts/EditWorkout";
 import WorkoutStatistics from "../Statistics/Statstics";
 import ProfileScreen from "../Profile/Profile";
 import WorkoutDetailScreen from "../Workouts/WorkoutDetailScreen";
-import { CommonActions } from '@react-navigation/native';
+import { CommonActions } from "@react-navigation/native";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -64,7 +64,9 @@ function AppDrawer() {
       initialRouteName="HomeDrawer"
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={{
-        drawerStyle: { backgroundColor: "#1a2d3d" },
+        drawerStyle: {
+          backgroundColor: "#1a2d3d",
+        },
         drawerLabelStyle: { color: "#e5f4e3" },
         drawerActiveBackgroundColor: "#2e4e6f",
         drawerActiveTintColor: "#92b4f4",
@@ -96,6 +98,15 @@ function AppDrawer() {
           drawerIcon: ({ size, color }) => (
             <FontAwesome name="bar-chart" size={24} color="#E5F4E3" />
           ),
+          headerStyle: {
+            backgroundColor: "#1a2d3d",
+            borderTopWidth: 0,
+            shadowOpacity: 0,
+            shadowRadius: 0,
+            elevation: 0,
+          },
+          headerTitle: "",
+          headerTintColor: "#e5f4e3",
         }}
       />
       <Drawer.Screen
@@ -105,6 +116,15 @@ function AppDrawer() {
           drawerIcon: ({ size, color }) => (
             <MaterialIcons name="account-circle" size={24} color="#E5F4E3" />
           ),
+          headerStyle: {
+            backgroundColor: "#1a2d3d",
+            borderTopWidth: 0,
+            shadowOpacity: 0,
+            shadowRadius: 0,
+            elevation: 0,
+          },
+          headerTitle: "",
+          headerTintColor: "#e5f4e3",
         }}
       />
     </Drawer.Navigator>
@@ -112,12 +132,11 @@ function AppDrawer() {
 }
 
 function HomeTabs() {
-
   const [isRendered, setIsRendered] = useState({
     Home: false,
     Workout: false,
     Exercises: false,
-    Calendar: false
+    Calendar: false,
   });
 
   useEffect(() => {
@@ -125,7 +144,7 @@ function HomeTabs() {
       Home: true,
       Workout: true,
       Exercises: true,
-      Calendar: true
+      Calendar: true,
     });
   }, []);
 
@@ -134,7 +153,23 @@ function HomeTabs() {
       screenOptions={{
         tabBarActiveTintColor: "#1a2d3d",
         tabBarInactiveTintColor: "#1a2d3d",
-        tabBarStyle: { backgroundColor: "#1a2d3d", borderTopWidth: 0 },
+        tabBarStyle: {
+          backgroundColor: "#1a2d3d",
+          borderTopWidth: 0,
+          borderTopLeftRadius: 80,
+          borderTopRightRadius: 80,
+          height: 120,
+          position: "absolute",
+          shadowColor: "#000",
+          bottom: -40,
+          shadowOffset: {
+            width: 0,
+            height: -5,
+          },
+          shadowOpacity: 0.34,
+          shadowRadius: 6.27,
+          elevation: 10,
+        },
       }}
     >
       <Tab.Screen
@@ -147,36 +182,48 @@ function HomeTabs() {
           ),
         }}
       />
-     
+
       <Tab.Screen
         name="Workout"
         component={WorkoutStack}
         options={{
           tabBarIcon: ({ size, color }) => (
-            <Ionicons name="ios-stats-chart-sharp" size={24} color="#E5F4E3" />
+            <MaterialCommunityIcons name="run-fast" size={30} color="#E5F4E3" />
           ),
+          headerStyle: {
+            backgroundColor: "#1a2d3d",
+          },
+          headerTitleStyle: {
+            color: "#E5F4E3",
+          },
+          headerTitle: "Workouts",
         }}
       />
-     
+
       <Tab.Screen
         name="Exercises"
         component={ExerciseStack}
         options={{
-          headerShown: false,
+          headerStyle: {
+            backgroundColor: "#1a2d3d",
+          },
+          headerTitleStyle: {
+            color: "#E5F4E3",
+          },
           tabBarIcon: ({ size, color }) => (
             <Ionicons name="ios-barbell-sharp" size={24} color="#E5F4E3" />
           ),
         }}
         listeners={({ navigation }) => ({
-          tabPress: e => {
+          tabPress: (e) => {
             // Prevent the default action (i.e., navigating to the tab)
             e.preventDefault();
 
             // Reset the ExerciseStack to start with ExerciseList
-            navigation.jumpTo('Exercises');
+            navigation.jumpTo("Exercises");
 
             // Navigate to the desired screen (it will be ExerciseList as we reset it above)
-            navigation.navigate('ExerciseList');
+            navigation.navigate("ExerciseList");
           },
         })}
       />
@@ -187,6 +234,16 @@ function HomeTabs() {
           tabBarIcon: ({ size, color }) => (
             <Ionicons name="ios-calendar" size={24} color="#E5F4E3" />
           ),
+          headerStyle: {
+            backgroundColor: "#1a2d3d",
+            borderBottomWidth: 0,
+            shadowOpacity: 0,
+            shadowRadius: 0,
+            elevation: 0,
+          },
+          headerTitleStyle: {
+            color: "#E5F4E3",
+          },
         }}
       />
     </Tab.Navigator>
@@ -255,7 +312,18 @@ function StatisticsStack() {
       <Stack.Screen
         name="StatisticsScreen"
         component={WorkoutStatistics}
-        options={{ headerShown: false }}
+        options={{
+          headerStyle: {
+            backgroundColor: "#1a2d3d",
+            shadowOpacity: 0, // for iOS
+            elevation: 0, // for Android
+            borderBottomWidth: 0,
+          },
+          headerTitleStyle: {
+            color: "#E5F4E3",
+          },
+          headerTitle: "Statistics",
+        }}
       ></Stack.Screen>
     </Stack.Navigator>
   );
@@ -267,7 +335,18 @@ function ProfileStack() {
       <Stack.Screen
         name="ProfileScreen"
         component={ProfileScreen}
-        options={{ headerShown: false }}
+        options={{
+          headerStyle: {
+            backgroundColor: "#1a2d3d",
+            shadowOpacity: 0, // for iOS
+            elevation: 0, // for Android
+            borderBottomWidth: 0,
+          },
+          headerTitleStyle: {
+            color: "#E5F4E3",
+          },
+          headerTitle: "Profile",
+        }}
       ></Stack.Screen>
     </Stack.Navigator>
   );
@@ -277,16 +356,17 @@ function ProfileStack() {
 function CustomDrawerContent(props: DrawerContentComponentProps) {
   const logoutUser = async (): Promise<void> => {
     try {
-        await AsyncStorage.removeItem("userToken");
-        await AsyncStorage.removeItem("username");
-        props.navigation.reset({
-            index: 0,
-            routes: [{ name: "Login" }],
-        });
+      await AsyncStorage.removeItem("userToken");
+      await AsyncStorage.removeItem("username");
+      await AsyncStorage.removeItem("hideModal");
+      props.navigation.reset({
+        index: 0,
+        routes: [{ name: "Login" }],
+      });
     } catch (error) {
-        console.error("Error during logout:", error);
+      console.error("Error during logout:", error);
     }
-};
+  };
 
   return (
     <View style={{ flex: 1 }}>

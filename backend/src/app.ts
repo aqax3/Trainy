@@ -33,7 +33,7 @@ import {
   mostCommonMuscleGroup,
   mostRecentCompletedWorkouts,
   mostUsedExercise,
-  totalWeightLifted
+  totalWeightLifted,
 } from "./services/statistics";
 
 const app = express();
@@ -294,7 +294,8 @@ app.put("/exercises/:id", authenticateAdminToken, async (req, res) => {
   const exerciseId = req.params.id;
 
   // Extract the fields from the request body
-  const { name, description, muscleGroup, videoURL, imageURL, weight } = req.body;
+  const { name, description, muscleGroup, videoURL, imageURL, weight } =
+    req.body;
 
   try {
     // Find the exercise by its ID and update it
@@ -307,7 +308,7 @@ app.put("/exercises/:id", authenticateAdminToken, async (req, res) => {
         ...(muscleGroup && { muscleGroup }),
         ...(videoURL && { videoURL }),
         ...(imageURL && { imageURL }),
-        ...(typeof weight !== "undefined" && { weight }),  // Using typeof check because weight can be 0
+        ...(typeof weight !== "undefined" && { weight }), // Using typeof check because weight can be 0
       },
       { new: true } // This option ensures that the updated document is returned
     );
@@ -325,10 +326,9 @@ app.put("/exercises/:id", authenticateAdminToken, async (req, res) => {
   }
 });
 
-
 app.get("/exercises-id/:id", authenticateToken, async (req, res) => {
   try {
-    const exercise = await Exercise.findById(req.params.id)
+    const exercise = await Exercise.findById(req.params.id);
     console.log(exercise);
 
     if (!exercise) {
@@ -396,17 +396,14 @@ app.put("/exercises/weight/:id", authenticateToken, async (req, res) => {
 app.get("/exercises-latest", authenticateToken, async (req, res) => {
   console.log("Accessing /exercises/latest endpoint");
   try {
-    const latestExercises = await Exercise.find()
-      .sort({ _id: -1 })  
-      .limit(5);         
-      console.log(latestExercises);
+    const latestExercises = await Exercise.find().sort({ _id: -1 }).limit(5);
+    console.log(latestExercises);
     res.send(latestExercises);
   } catch (err) {
     console.error(err);
     res.status(500).send("Server error");
   }
 });
-
 
 app.post("/workouts", authenticateToken, async (req, res) => {
   const { name, description, duration, difficulty, exercises } = req.body;
@@ -572,7 +569,9 @@ app.post("/workoutcalendar", authenticateToken, async (req, res) => {
 //prikazi workout
 app.get("/workoutcalendar", authenticateToken, async (req, res) => {
   try {
-    const workouts = await WorkoutCalendar.find({ user: req.user.userId });
+    const workouts = await WorkoutCalendar.find({ user: req.user.userId })
+      .populate("workout", "name")
+      .exec();
     res.send(workouts);
   } catch (error) {
     console.error(error);
@@ -600,8 +599,6 @@ app.get("/workoutcalendar/today", authenticateToken, async (req, res) => {
     res.status(500).send(error);
   }
 });
-
-
 
 //uredi workout
 app.patch("/workoutcalendar/:id", authenticateToken, async (req, res) => {
@@ -820,32 +817,48 @@ app.get("/statistics/workout-streak", authenticateToken, async (req, res) => {
 });
 
 // 1. Most Common Muscle Group Route
-app.get('/statistics/most-common-muscle-group', authenticateToken, async (req, res) => {
-  const userId = req.user.userId; 
-  const data = await mostCommonMuscleGroup(userId);
-  res.json(data);
-});
+app.get(
+  "/statistics/most-common-muscle-group",
+  authenticateToken,
+  async (req, res) => {
+    const userId = req.user.userId;
+    const data = await mostCommonMuscleGroup(userId);
+    res.json(data);
+  }
+);
 
 // 2. Total Weight Lifted Route
-app.get('/statistics/total-weight-lifted', authenticateToken, async (req, res) => {
-  const userId = req.user.userId; 
-  const data = await totalWeightLifted(userId);
-  res.json(data);
-});
+app.get(
+  "/statistics/total-weight-lifted",
+  authenticateToken,
+  async (req, res) => {
+    const userId = req.user.userId;
+    const data = await totalWeightLifted(userId);
+    res.json(data);
+  }
+);
 
 // 3. Most Used Exercise Route
-app.get('/statistics/most-used-exercise', authenticateToken, async (req, res) => {
-  const userId = req.user.userId; 
-  const data = await mostUsedExercise(userId);
-  res.json(data);
-});
+app.get(
+  "/statistics/most-used-exercise",
+  authenticateToken,
+  async (req, res) => {
+    const userId = req.user.userId;
+    const data = await mostUsedExercise(userId);
+    res.json(data);
+  }
+);
 
 // 5. Most Recent Completed Workouts Route
-app.get('/statistics/recent-completed-workouts', authenticateToken, async (req, res) => {
-  const userId = req.user.userId; 
-  const data = await mostRecentCompletedWorkouts(userId);
-  res.json(data);
-});
+app.get(
+  "/statistics/recent-completed-workouts",
+  authenticateToken,
+  async (req, res) => {
+    const userId = req.user.userId;
+    const data = await mostRecentCompletedWorkouts(userId);
+    res.json(data);
+  }
+);
 
 app.get("/server-time", (req, res) => {
   res.send(new Date().toString());
