@@ -47,9 +47,10 @@ export async function getWorkoutRecommendation(userId: string) {
   };
 
   userWorkouts.forEach((workoutCalendar) => {
-    const difficulty = workoutCalendar.workout.difficulty || "none";
+    const difficulty = workoutCalendar.workout ? workoutCalendar.workout.difficulty || "none" : "none";
     difficultyCounts[difficulty]++;
   });
+  
 
   // Remove the none difficulty from consideration for mostFrequent
   const { none, ...validDifficulties } = difficultyCounts;

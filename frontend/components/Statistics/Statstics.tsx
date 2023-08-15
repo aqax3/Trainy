@@ -147,7 +147,7 @@ function LongestShortestWorkout() {
       try {
         const config = await getAxiosConfig();
         const response = await axios.get(
-          "http://192.168.1.106:5001/workoutLengthStats",
+          "http://localhost:5001/workoutLengthStats",
           config
         );
         setLongestWorkout(response.data.longest);
@@ -208,7 +208,7 @@ function AverageSetsAndReps() {
       try {
         const config = await getAxiosConfig();
         const response = await axios.get(
-          "http://192.168.1.106:5001/statistics/average-sets-reps",
+          "http://localhost:5001/statistics/average-sets-reps",
           config
         );
         console.log("Average Sets and Reps Response:", response.data);
@@ -242,7 +242,7 @@ function WorkoutStreak() {
       try {
         const config = await getAxiosConfig();
         const response = await axios.get(
-          "http://192.168.1.106:5001/statistics/workout-streak",
+          "http://localhost:5001/statistics/workout-streak",
           config
         );
         console.log("Workout Streak Response:", response.data);

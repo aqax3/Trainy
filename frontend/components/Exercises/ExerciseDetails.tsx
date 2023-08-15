@@ -4,7 +4,7 @@ import { RouteProp, useRoute } from "@react-navigation/native";
 import YoutubePlayer from "react-native-youtube-iframe";
 import { ScrollView } from "react-native";
 
-interface Exercise {
+export interface Exercise {
   _id: string;
   name: string;
   description: string;

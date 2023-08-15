@@ -337,6 +337,21 @@ app.put("/exercises/weight/:id", authenticateToken, async (req, res) => {
   }
 });
 
+app.get("/exercises-latest", authenticateToken, async (req, res) => {
+  console.log("Accessing /exercises/latest endpoint");
+  try {
+    const latestExercises = await Exercise.find()
+      .sort({ _id: -1 })  
+      .limit(5);         
+      console.log(latestExercises);
+    res.send(latestExercises);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
+});
+
+
 app.post("/workouts", authenticateToken, async (req, res) => {
   const { name, description, duration, difficulty, exercises } = req.body;
   const { userId } = req.user;
@@ -518,6 +533,7 @@ app.get("/workoutcalendar/today", authenticateToken, async (req, res) => {
     res.status(500).send(error);
   }
 });
+
 
 
 //uredi workout
@@ -722,6 +738,10 @@ app.get('/statistics/workout-streak', authenticateToken, async (req, res) => {
   const userId = req.user.userId; 
   const data = await getWorkoutStreak(userId);
   res.json(data);
+});
+
+app.get("/server-time", (req, res) => {
+  res.send(new Date().toString());
 });
 
 // Start the server

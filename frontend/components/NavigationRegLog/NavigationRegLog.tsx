@@ -232,14 +232,18 @@ function ProfileStack() {
 
 // log out button
 function CustomDrawerContent(props: DrawerContentComponentProps) {
-  const logoutUser = async () => {
-    await AsyncStorage.removeItem("userToken");
-    await AsyncStorage.removeItem("username");
-    props.navigation.reset({
-      index: 0,
-      routes: [{ name: "Login" }],
-    });
-  };
+  const logoutUser = async (): Promise<void> => {
+    try {
+        await AsyncStorage.removeItem("userToken");
+        await AsyncStorage.removeItem("username");
+        props.navigation.reset({
+            index: 0,
+            routes: [{ name: "Login" }],
+        });
+    } catch (error) {
+        console.error("Error during logout:", error);
+    }
+};
 
   return (
     <View style={{ flex: 1 }}>
