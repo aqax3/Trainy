@@ -3,25 +3,31 @@ import React, { useState } from "react";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Platform } from "react-native";
-import { Button, lightColors, createTheme, ThemeProvider, Input, Icon } from '@rneui/themed';
+import {
+  Button,
+  lightColors,
+  createTheme,
+  ThemeProvider,
+  Input,
+  Icon,
+} from "@rneui/themed";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 
-import { StackNavigationProp } from '@react-navigation/stack';
+import { StackNavigationProp } from "@react-navigation/stack";
 
 type RootStackParamList = {
-    Register: undefined;
-    Login: undefined;
-  };
-  
-  type RegistrationScreenNavigationProp = StackNavigationProp<
-    RootStackParamList,
-    'Register'
-  >;
-  
-  type Props = {
-    navigation: RegistrationScreenNavigationProp;
-  };
-  
+  Register: undefined;
+  Login: undefined;
+};
+
+type RegistrationScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  "Register"
+>;
+
+type Props = {
+  navigation: RegistrationScreenNavigationProp;
+};
 
 export default function RegistrationForm({ navigation }: Props) {
   const [username, setUsername] = useState("");
@@ -29,9 +35,22 @@ export default function RegistrationForm({ navigation }: Props) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [registrationStatus, setRegistrationStatus] = useState("");
 
+  const isValidPassword = (password) => {
+    // Minimum 6 characters, 1 special character and one number
+    const regex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,}$/;
+    return regex.test(password);
+  };
+
   const registerUser = async () => {
     if (password !== confirmPassword) {
       setRegistrationStatus("Passwords do not match!");
+      return;
+    }
+
+    if (!isValidPassword(password)) {
+      setRegistrationStatus(
+        "Password must be at least 6 characters, contain 1 special character, and 1 number."
+      );
       return;
     }
 
@@ -50,7 +69,7 @@ export default function RegistrationForm({ navigation }: Props) {
         setPassword("");
         setRegistrationStatus("Registration successful!");
 
-        navigation.navigate('Login');
+        navigation.navigate("Login");
       }
     } catch (error) {
       console.error(error);
@@ -66,13 +85,7 @@ export default function RegistrationForm({ navigation }: Props) {
         value={username}
         onChangeText={setUsername}
         placeholder="Enter username"
-        leftIcon={
-          <AntDesign
-            name="user"
-            size={24}
-            color='black' 
-          />
-        }
+        leftIcon={<AntDesign name="user" size={24} color="black" />}
       />
       <Input
         style={styles.input}
@@ -81,11 +94,7 @@ export default function RegistrationForm({ navigation }: Props) {
         placeholder="Enter password"
         secureTextEntry={true}
         leftIcon={
-          <Ionicons
-            name="lock-closed-outline"
-            size={24}
-            color='black' 
-          />
+          <Ionicons name="lock-closed-outline" size={24} color="black" />
         }
       />
       <Input
@@ -95,15 +104,16 @@ export default function RegistrationForm({ navigation }: Props) {
         placeholder="Confirm password"
         secureTextEntry={true}
         leftIcon={
-          <Ionicons
-            name="lock-closed-outline"
-            size={24}
-            color='black' 
-          />
+          <Ionicons name="lock-closed-outline" size={24} color="black" />
         }
       />
       <Button title="Register" onPress={registerUser} />
-      <Button title="Go to Login" type="clear" size="sm" onPress={() => navigation.navigate('Login')} />
+      <Button
+        title="Go to Login"
+        type="clear"
+        size="sm"
+        onPress={() => navigation.navigate("Login")}
+      />
     </ThemeProvider>
   );
 }
@@ -115,7 +125,7 @@ const theme = createTheme({
       ios: lightColors.platform.ios,
     }),
   },
-})
+});
 
 const styles = StyleSheet.create({
   container: {
