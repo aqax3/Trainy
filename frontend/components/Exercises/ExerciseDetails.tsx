@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { View, Text, Image, Button, TouchableOpacity } from "react-native";
-import { RouteProp, useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
+import {
+  RouteProp,
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 import YoutubePlayer from "react-native-youtube-iframe";
 import { ScrollView } from "react-native";
 import { ActivityIndicator } from "react-native";
@@ -8,6 +13,7 @@ import { useEffect } from "react";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
+import { StyleSheet, Platform } from "react-native";
 
 export interface Exercise {
   _id: string;
@@ -36,7 +42,6 @@ export default function ExerciseDetails() {
   useFocusEffect(
     React.useCallback(() => {
       console.log("Focused on CalendarScreen");
-     
     }, [navigation]) // Add 'navigation' to the dependency array
   );
 
@@ -69,24 +74,71 @@ export default function ExerciseDetails() {
   }
 
   return (
-    <>
-      <View style={{ flexDirection: 'row', alignItems: 'center', padding: 20 }}>
-      <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginRight: 10 }}>
-          <Ionicons name="ios-arrow-back" size={24} color="black" />
-        </TouchableOpacity> 
-        <Text style={{ fontSize: 24, fontWeight: "bold", marginLeft: 10 }}>
-          Exercise Details
-        </Text>
+    <View style={styles.rootContainer}>
+      <View style={styles.header}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backButton}
+        >
+          <Ionicons name="ios-arrow-back" size={24} style={styles.icon} />
+        </TouchableOpacity>
+        <Text style={styles.headerText}>Exercise Details</Text>
       </View>
-      <ScrollView>
-        <View style={{ padding: 20 }}>
-          <Text style={{ fontSize: 24, fontWeight: "bold", marginBottom: 10 }}>
-            {exercise.name}
-          </Text>
-          <YoutubePlayer height={200} play={false} videoId={exercise.videoURL} />
-          <Text style={{ marginTop: 10 }}>{exercise.description}</Text>
+      <ScrollView style={styles.scrollView}>
+        <View style={styles.contentContainer}>
+          <Text style={styles.title}>{exercise.name}</Text>
+          <YoutubePlayer
+            height={200}
+            play={false}
+            videoId={exercise.videoURL}
+          />
+          <Text style={styles.description}>{exercise.description}</Text>
         </View>
       </ScrollView>
-    </>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  rootContainer: {
+    flex: 1,
+    backgroundColor: '#1a2d3d',
+  },
+  scrollView: {
+    backgroundColor: '#1a2d3d',
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 20,
+    backgroundColor: "#1a2d3d",
+  },
+  backButton: {
+    marginRight: 10,
+  },
+  headerText: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginLeft: 10,
+    color: "#e5f4e3",
+  },
+  contentContainer: {
+    padding: 20,
+    backgroundColor: "#1a2d3d",
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 10,
+    color: "#e5f4e3",
+  },
+  description: {
+    marginTop: 10,
+    color: "#e5f4e3",
+    textAlign: "center",
+    fontWeight: "bold",
+  },
+  icon: {
+    color: "#92b4f4",
+  },
+});
