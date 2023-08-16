@@ -83,14 +83,14 @@ const CalendarScreen: React.FC = () => {
     const userToken = await AsyncStorage.getItem("userToken");
     try {
       const response = await axios.get(
-        "http://192.168.1.106:5001/workoutcalendar",
+        "http://localhost:5001/workoutcalendar",
         {
           headers: {
             Authorization: `Bearer ${userToken}`,
           },
         }
       );
-      const data = response.data.map((w) => ({
+      const data = response.data.map((w :  any) => ({
         _id: w._id,
         date: w.date,
         completedStatus: w.completed,
@@ -115,7 +115,7 @@ const CalendarScreen: React.FC = () => {
     const fetchWorkouts = async () => {
       const userToken = await AsyncStorage.getItem("userToken");
 
-      fetch("http://192.168.1.106:5001/workoutcalendar", {
+      fetch("http://localhost:5001/workoutcalendar", {
         headers: {
           Authorization: `Bearer ${userToken}`,
         },
@@ -182,7 +182,7 @@ const CalendarScreen: React.FC = () => {
         workout: currentWorkoutId,
       };
       const response = await axios.post(
-        "http://192.168.1.106:5001/workoutcalendar",
+        "http://localhost:5001/workoutcalendar",
         workoutData,
         {
           headers: {
@@ -275,7 +275,7 @@ const CalendarScreen: React.FC = () => {
 
     try {
       const response = await axios.patch(
-        `http://192.168.1.106:5001/workoutcalendar/${id}/completed`,
+        `http://localhost:5001/workoutcalendar/${id}/completed`,
         { completed: completedStatus },
         {
           headers: {
@@ -343,7 +343,7 @@ const CalendarScreen: React.FC = () => {
 
     try {
       const response = await axios.delete(
-        `http://192.168.1.106:5001/workoutcalendar/${id}`,
+        `http://localhost:5001/workoutcalendar/${id}`,
         {
           headers: {
             Authorization: `Bearer ${userToken}`,
