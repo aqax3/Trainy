@@ -83,10 +83,11 @@ export default function HomePage({ navigation }: Props) {
       if (storedUsername !== null) {
         setUsername(storedUsername);
       }
+      const hideModal = await AsyncStorage.getItem("hideModal");
 
       const userToken = await AsyncStorage.getItem("userToken");
       const response = await axios
-        .get("http://localhost:5001/recommendations", {
+        .get("http://192.168.1.106:5001/recommendations", {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${userToken}`,
@@ -95,6 +96,7 @@ export default function HomePage({ navigation }: Props) {
         .then((response) => {
           setRecommendedDifficulty(response.data.recommendedDifficulty);
           if (
+            hideModal !== "true" &&
             response.data.recommendedDifficulty !== "beginner" &&
             response.data.recommendedDifficulty !== "none"
           ) {
@@ -107,7 +109,7 @@ export default function HomePage({ navigation }: Props) {
 
       try {
         const response = await axios.get(
-          "http://localhost:5001/workoutcalendar/today",
+          "http://192.168.1.106:5001/workoutcalendar/today",
           {
             headers: {
               "Content-Type": "application/json",
@@ -139,11 +141,12 @@ export default function HomePage({ navigation }: Props) {
         }
       }
     })();
+
     const fetchLatestExercises = async () => {
       const userToken = await AsyncStorage.getItem("userToken");
       try {
         const response = await axios.get(
-          "http://localhost:5001/exercises-latest",
+          "http://192.168.1.106:5001/exercises-latest",
           {
             headers: {
               "Content-Type": "application/json",
@@ -328,8 +331,21 @@ export default function HomePage({ navigation }: Props) {
     );
   }
 
+  //function that handles the hiding of modal
+  const handleDontShowAgain = async () => {
+    try {
+      await AsyncStorage.setItem("hideModal", "true");
+      setModalVisible(false);
+    } catch (error) {
+      console.error("Error hiding modal:", error);
+    }
+  };
+
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: "#1a2d3d" }}>
+    <ScrollView
+      style={{ flex: 1, backgroundColor: "#1a2d3d" }}
+      contentContainerStyle={{ paddingBottom: 80 }}
+    >
       <View style={styles.container}>
         <Text style={styles.welcomeText}>
           Welcome <Text style={styles.boldText}>{username}</Text>
@@ -344,12 +360,18 @@ export default function HomePage({ navigation }: Props) {
                 Consider trying a {recommendedDifficulty} workout!
               </Text>
               <TouchableHighlight
-                style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
+                style={{ ...styles.openButton, backgroundColor: "#4e937a" }}
                 onPress={() => {
                   setModalVisible(!modalVisible);
                 }}
               >
                 <Text style={styles.textStyle}>Close</Text>
+              </TouchableHighlight>
+              <TouchableHighlight
+                style={{ ...styles.openButton, backgroundColor: "red" }}
+                onPress={handleDontShowAgain}
+              >
+                <Text style={styles.textStyle}>Don't show again</Text>
               </TouchableHighlight>
             </View>
           </View>
@@ -376,7 +398,7 @@ const styles = StyleSheet.create({
   modalView: {
     marginTop: 50,
     margin: 20,
-    backgroundColor: "white",
+    backgroundColor: "#4e937a",
     borderRadius: 20,
     padding: 35,
     alignItems: "center",
@@ -394,15 +416,21 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 10,
     elevation: 2,
+    marginTop: 1,
+    marginBottom: 5,
   },
   textStyle: {
     color: "#e5f4e3",
-    fontWeight: "bold",
     textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 15,
   },
   modalText: {
     marginBottom: 15,
     textAlign: "center",
+    color: "#e5f4e3",
+    fontSize: 20,
+    fontWeight: "bold",
   },
   welcomeText: {
     fontSize: 30,
