@@ -36,12 +36,23 @@ type RootStackParamList = {
     params?: {
       screen: string;
       params?: {
-        exerciseId: string;
+        exerciseId?: string;
+        workoutId?: string;
       };
     };
   };
+  Workouts: { screen: string; exercisesId: string };
   ExerciseDetails: { exerciseId: string | number };
+  Workout: {
+    screen: string;
+    params?: {
+      WorkoutDetails: {
+        workoutId?: string;
+      };
+    };
+  };
 };
+
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "Home">;
 
@@ -51,7 +62,8 @@ type Props = {
 };
 type Workout = {
   workout: {
-    name: string;
+    name?: string;
+    _id?: string;
   };
 };
 
@@ -196,7 +208,7 @@ export default function HomePage({ navigation }: Props) {
     );
   }
 
-  function WorkoutPlan() {
+  function WorkoutPlan({ navigation }: Props) {
     const today = new Date();
     const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     const months = [
@@ -218,7 +230,6 @@ export default function HomePage({ navigation }: Props) {
     }`;
     const restDayImageUrl =
       "https://images.squarespace-cdn.com/content/v1/57a1427c46c3c493fb92dfde/1598847784198-AFFUOU3YA8JK3ZZRLL3Z/Day+of+rest.PNG";
-
     return (
       <View style={styles.workoutPlanContainer}>
         <View style={styles.headerContainer}>
@@ -236,23 +247,42 @@ export default function HomePage({ navigation }: Props) {
                 <Text style={styles.noWorkoutText}>Enjoy your rest day!</Text>
               </ImageBackground>
             ) : (
-              <ImageBackground
-                source={{
-                  uri: "https://images.pexels.com/photos/2261482/pexels-photo-2261482.jpeg?auto=compress&cs=tinysrgb&w=1600",
+              <TouchableHighlight
+                style={styles.workoutImage}
+                onPress={() => {
+                  navigation?.navigate("Workout", {
+                    screen: "WorkoutDetail",
+                    params: {
+                      WorkoutDetails: {
+                        workoutId: todayWorkout?.workout._id
+                      }
+                    }
+                  });
+                  
                 }}
-                style={styles.imageBackground}
               >
-                <Text style={styles.workoutNameText}>
-                  {todayWorkout?.workout?.name}
-                </Text>
-                <View style={styles.completionStatusContainer}>
-                  {isWorkoutCompleted ? (
-                    <Ionicons name="checkmark-circle" size={24} color="green" />
-                  ) : (
-                    <Ionicons name="close-circle" size={24} color="red" />
-                  )}
-                </View>
-              </ImageBackground>
+                <ImageBackground
+                  source={{
+                    uri: "https://images.pexels.com/photos/2261482/pexels-photo-2261482.jpeg?auto=compress&cs=tinysrgb&w=1600",
+                  }}
+                  style={styles.imageBackground}
+                >
+                  <Text style={styles.workoutNameText}>
+                    {todayWorkout?.workout?.name}
+                  </Text>
+                  <View style={styles.completionStatusContainer}>
+                    {isWorkoutCompleted ? (
+                      <Ionicons
+                        name="checkmark-circle"
+                        size={24}
+                        color="green"
+                      />
+                    ) : (
+                      <Ionicons name="close-circle" size={24} color="red" />
+                    )}
+                  </View>
+                </ImageBackground>
+              </TouchableHighlight>
             )}
           </View>
         </View>
@@ -404,15 +434,19 @@ const styles = StyleSheet.create({
     color: "#5e7ce2",
   },
   workoutCardContainer: {
+    flex: 1,
     marginTop: 10,
     borderRadius: 10,
     width: "95%",
-    height: 180,
+    height: 210,
     overflow: "hidden",
   },
   workoutCard: {
     flex: 1,
     padding: 15,
+  },
+  workoutImage: {
+    height: 180,
   },
   imageBackground: {
     flex: 1,
@@ -420,6 +454,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     padding: 10,
     overflow: "hidden",
+    resizeMode: "cover",
   },
   workoutNameText: {
     fontSize: 20,
@@ -457,7 +492,7 @@ const styles = StyleSheet.create({
   cardsContainer: {
     width: "100%",
     alignItems: "center",
-    marginVertical: 10,
+    marginVertical: 0,
   },
   cardsHeaderText: {
     fontSize: 24,
@@ -495,8 +530,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   exerciseCardImage: {
-    width: 120,
-    height: 120,
+    width: 180,
+    height: 180,
     marginRight: 20,
     borderRadius: 10,
     borderWidth: 2,
