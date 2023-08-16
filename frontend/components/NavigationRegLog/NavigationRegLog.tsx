@@ -206,6 +206,10 @@ function HomeTabs() {
         options={{
           headerStyle: {
             backgroundColor: "#1a2d3d",
+            borderBottomWidth: 0,
+            shadowOpacity: 0,
+            shadowRadius: 0,
+            elevation: 0,
           },
           headerTitleStyle: {
             color: "#E5F4E3",
