@@ -37,7 +37,7 @@ export default function RegistrationForm({ navigation }: Props) {
 
   const isValidPassword = (password) => {
     // Minimum 6 characters, 1 special character and one number
-    const regex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,}$/;
+    const regex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[\s\S]{6,}$/;
     return regex.test(password);
   };
 
@@ -91,7 +91,7 @@ export default function RegistrationForm({ navigation }: Props) {
           placeholder="Enter username"
           placeholderTextColor="#92b4f4"
           leftIcon={<AntDesign name="user" size={24} color="#e5f4e3" />}
-          inputContainerStyle={{borderBottomWidth:0}}
+          inputContainerStyle={{ borderBottomWidth: 0 }}
         />
         <Input
           style={styles.input}
@@ -103,7 +103,7 @@ export default function RegistrationForm({ navigation }: Props) {
           leftIcon={
             <Ionicons name="lock-closed-outline" size={24} color="#e5f4e3" />
           }
-          inputContainerStyle={{borderBottomWidth:0}}
+          inputContainerStyle={{ borderBottomWidth: 0 }}
         />
         <Input
           style={styles.input}
@@ -115,7 +115,7 @@ export default function RegistrationForm({ navigation }: Props) {
           leftIcon={
             <Ionicons name="lock-closed-outline" size={24} color="#e5f4e3" />
           }
-          inputContainerStyle={{borderBottomWidth:0}}
+          inputContainerStyle={{ borderBottomWidth: 0 }}
         />
         <Button
           title="Register"
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     color: "#ffefd5",
     fontSize: 18,
     marginBottom: 20,
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   input: {
     height: 50,

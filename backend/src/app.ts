@@ -106,6 +106,7 @@ app.post("/login-user", async (req, res) => {
     }
 
     const passwordMatch = await bcrypt.compare(password, user.password);
+    console.log('Password Match:', passwordMatch);
 
     if (!passwordMatch) {
       return res.status(400).send("Invalid username or password!");
@@ -128,7 +129,7 @@ app.post("/login-user", async (req, res) => {
 
 app.patch("/user-update", authenticateToken, async (req, res) => {
   const { userId } = req.user;
-  const { username, password, height, weight } = req.body;
+  const { username, oldPassword, password, height, weight } = req.body;
 
   try {
     const user = await User.findById(userId);
@@ -136,12 +137,27 @@ app.patch("/user-update", authenticateToken, async (req, res) => {
       return res.status(404).send({ message: "User not found" });
     }
 
+    if (oldPassword && password) {
+      const isMatch = await bcrypt.compare(oldPassword, user.password);
+
+      if (!isMatch) {
+        return res.status(400).send({ message: "Old password is incorrect" });
+      }
+
+      user.password = password;
+      await user.save();
+
+      /*
+      console.log("Old Password:", oldPassword);
+      console.log("User Hashed Password:", user.password);
+      console.log("New Password:", password);
+      console.log("Hashed New Password:", hashedPassword);
+      */
+    }
+
     // Update the fields if provided
     if (username) {
       user.username = username;
-    }
-    if (password) {
-      user.password = password;
     }
     if (typeof height !== "undefined") {
       // Check for undefined because height can be 0
