@@ -51,8 +51,38 @@ export default function NavigationRegLog({
           component={AppDrawer}
           options={{ headerShown: false }}
         />
-        <Stack.Screen name="Login" component={LoginForm} />
-        <Stack.Screen name="Register" component={RegistrationForm} />
+        <Stack.Screen
+          name="Login"
+          component={LoginForm}
+          options={{
+            headerStyle: {
+              backgroundColor: "#1a2d3d",
+              borderBottomWidth: 0,
+              shadowOpacity: 0,
+              shadowRadius: 0,
+              elevation: 0,
+            },
+            headerTitleStyle: {
+              color: "#E5F4E3",
+            },
+          }}
+        />
+        <Stack.Screen
+          name="Register"
+          component={RegistrationForm}
+          options={{
+            headerStyle: {
+              backgroundColor: "#1a2d3d",
+              borderBottomWidth: 0,
+              shadowOpacity: 0,
+              shadowRadius: 0,
+              elevation: 0,
+            },
+            headerTitleStyle: {
+              color: "#E5F4E3",
+            },
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -177,8 +207,12 @@ function HomeTabs() {
         component={HomePage}
         options={{
           headerShown: false,
-          tabBarIcon: ({ focused ,size, color }) => (
-            <Fontisto name="home" size={24} color={focused ? '#4e937a' : '#e5f4e3'} />
+          tabBarIcon: ({ focused, size, color }) => (
+            <Fontisto
+              name="home"
+              size={24}
+              color={focused ? "#4e937a" : "#e5f4e3"}
+            />
           ),
         }}
       />
@@ -187,8 +221,12 @@ function HomeTabs() {
         name="Workout"
         component={WorkoutStack}
         options={{
-          tabBarIcon: ({focused,  size, color }) => (
-            <MaterialCommunityIcons name="run-fast" size={30} color={focused ? '#4e937a' : '#e5f4e3'} />
+          tabBarIcon: ({ focused, size, color }) => (
+            <MaterialCommunityIcons
+              name="run-fast"
+              size={30}
+              color={focused ? "#4e937a" : "#e5f4e3"}
+            />
           ),
           headerStyle: {
             backgroundColor: "#1a2d3d",
@@ -215,7 +253,11 @@ function HomeTabs() {
             color: "#E5F4E3",
           },
           tabBarIcon: ({ focused, size, color }) => (
-            <Ionicons name="ios-barbell-sharp" size={24} color={focused ? '#4e937a' : '#e5f4e3'} />
+            <Ionicons
+              name="ios-barbell-sharp"
+              size={24}
+              color={focused ? "#4e937a" : "#e5f4e3"}
+            />
           ),
         }}
         listeners={({ navigation }) => ({
@@ -236,7 +278,11 @@ function HomeTabs() {
         component={CalendarStack}
         options={{
           tabBarIcon: ({ focused, size, color }) => (
-            <Ionicons name="ios-calendar" size={24} color={focused ? '#4e937a' : '#e5f4e3'} />
+            <Ionicons
+              name="ios-calendar"
+              size={24}
+              color={focused ? "#4e937a" : "#e5f4e3"}
+            />
           ),
           headerStyle: {
             backgroundColor: "#1a2d3d",

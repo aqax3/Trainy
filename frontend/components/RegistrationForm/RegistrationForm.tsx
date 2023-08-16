@@ -49,14 +49,14 @@ export default function RegistrationForm({ navigation }: Props) {
 
     if (!isValidPassword(password)) {
       setRegistrationStatus(
-        "Password must be at least 6 characters, contain 1 special character, and 1 number."
+        "Password must be at least 6 characters, contain 1 special character, and 1 number!"
       );
       return;
     }
 
     try {
       const response = await axios.post(
-        "http://localhost:5001/register-user",
+        "http://192.168.1.106:5001/register-user",
         {
           username,
           password,
@@ -72,48 +72,64 @@ export default function RegistrationForm({ navigation }: Props) {
         navigation.navigate("Login");
       }
     } catch (error) {
-      console.error(error);
-      setRegistrationStatus("Registration failed!");
+      if (error.response && error.response.status === 400) {
+        setRegistrationStatus(error.response.data);
+      } else {
+        setRegistrationStatus("Registration failed!");
+      }
     }
   };
 
   return (
     <ThemeProvider theme={theme}>
-      <Text>{registrationStatus}</Text>
-      <Input
-        style={styles.input}
-        value={username}
-        onChangeText={setUsername}
-        placeholder="Enter username"
-        leftIcon={<AntDesign name="user" size={24} color="black" />}
-      />
-      <Input
-        style={styles.input}
-        value={password}
-        onChangeText={setPassword}
-        placeholder="Enter password"
-        secureTextEntry={true}
-        leftIcon={
-          <Ionicons name="lock-closed-outline" size={24} color="black" />
-        }
-      />
-      <Input
-        style={styles.input}
-        value={confirmPassword}
-        onChangeText={setConfirmPassword}
-        placeholder="Confirm password"
-        secureTextEntry={true}
-        leftIcon={
-          <Ionicons name="lock-closed-outline" size={24} color="black" />
-        }
-      />
-      <Button title="Register" onPress={registerUser} />
-      <Button
-        title="Go to Login"
-        type="clear"
-        size="sm"
-        onPress={() => navigation.navigate("Login")}
-      />
+      <View style={styles.container}>
+        <Text style={styles.status}>{registrationStatus}</Text>
+        <Input
+          style={styles.input}
+          value={username}
+          onChangeText={setUsername}
+          placeholder="Enter username"
+          placeholderTextColor="#92b4f4"
+          leftIcon={<AntDesign name="user" size={24} color="#e5f4e3" />}
+          inputContainerStyle={{borderBottomWidth:0}}
+        />
+        <Input
+          style={styles.input}
+          value={password}
+          onChangeText={setPassword}
+          placeholder="Enter password"
+          placeholderTextColor="#92b4f4"
+          secureTextEntry={true}
+          leftIcon={
+            <Ionicons name="lock-closed-outline" size={24} color="#e5f4e3" />
+          }
+          inputContainerStyle={{borderBottomWidth:0}}
+        />
+        <Input
+          style={styles.input}
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
+          placeholder="Confirm password"
+          placeholderTextColor="#92b4f4"
+          secureTextEntry={true}
+          leftIcon={
+            <Ionicons name="lock-closed-outline" size={24} color="#e5f4e3" />
+          }
+          inputContainerStyle={{borderBottomWidth:0}}
+        />
+        <Button
+          title="Register"
+          onPress={registerUser}
+          style={styles.registerButton}
+        />
+        <Button
+          title="Go to Login"
+          type="clear"
+          size="sm"
+          onPress={() => navigation.navigate("Login")}
+          style={styles.loginButton}
+        />
+      </View>
     </ThemeProvider>
   );
 }
@@ -121,8 +137,16 @@ export default function RegistrationForm({ navigation }: Props) {
 const theme = createTheme({
   lightColors: {
     ...Platform.select({
-      default: lightColors.platform.android,
-      ios: lightColors.platform.ios,
+      default: {
+        ...lightColors.platform.android,
+        primary: "#4e937a",
+        secondary: "#92b4f4",
+      },
+      ios: {
+        ...lightColors.platform.ios,
+        primary: "#4e937a",
+        secondary: "#92b4f4",
+      },
     }),
   },
 });
@@ -130,14 +154,41 @@ const theme = createTheme({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#1a2d3d",
     alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 20,
+    paddingBottom: 30,
+  },
+  status: {
+    color: "#ffefd5",
+    fontSize: 18,
+    marginBottom: 20,
+    fontWeight: "bold"
   },
   input: {
-    height: 40,
-    width: "80%",
+    height: 50,
+    width: "100%",
     marginTop: 10,
     marginBottom: 10,
     padding: 10,
+    backgroundColor: "#4e937a",
+    borderRadius: 10,
+    color: "#e5f4e3",
+  },
+  registerButton: {
+    marginTop: 10,
+    backgroundColor: "#4e937a",
+    width: "100%",
+    alignItems: "center",
+    padding: 10,
+    borderRadius: 10,
+  },
+  loginButton: {
+    marginTop: 10,
+    width: "100%",
+    alignItems: "center",
+    padding: 10,
+    borderRadius: 10,
   },
 });

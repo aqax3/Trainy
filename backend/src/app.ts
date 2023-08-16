@@ -60,13 +60,13 @@ app.post("/register-user", async (req, res) => {
   const { username, password, adminCode } = req.body;
 
   if (!username || !password) {
-    return res.status(400).send("Missing user data");
+    return res.status(400).send("Missing registration data! Try again.");
   }
 
   const existingUser = await User.findOne({ username });
 
   if (existingUser) {
-    return res.status(400).send("Username already taken!");
+    return res.status(400).send("This username is already taken!");
   }
 
   let isAdmin = false;
@@ -102,13 +102,13 @@ app.post("/login-user", async (req, res) => {
     const user = await User.findOne({ username });
 
     if (!user) {
-      return res.status(400).send("User not found");
+      return res.status(400).send("Invalid username or password!");
     }
 
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {
-      return res.status(400).send("Invalid password");
+      return res.status(400).send("Invalid username or password!");
     }
 
     console.log(process.env.JWT_SECRET);
