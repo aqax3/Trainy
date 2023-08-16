@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, ScrollView } from "react-native";
+import { View, Text, ScrollView, StyleSheet } from "react-native";
 import { LineChart, BarChart, XAxis } from "react-native-svg-charts";
 import { IWorkout } from '../../../backend/src/schemas/Workout';
 
@@ -96,7 +96,7 @@ function ExerciseTypeStats() {
       <BarChart
         style={{ height: 200, flex: 1 }}
         data={exerciseData}
-        svg={{ fill: "rgba(134, 65, 244, 0.8)" }}
+        svg={{ fill: "#92b4f4" }}
         contentInset={{ top: 20, bottom: 20 }}
       />
       <XAxis
@@ -104,7 +104,7 @@ function ExerciseTypeStats() {
         data={exerciseLabels}
         formatLabel={(value, index) => exerciseLabels[index]}
         contentInset={{ left: 15, right: 15 }}
-        svg={{ fontSize: 10, fill: "black" }}
+        svg={{ fontSize: 10 }}
       />
     </View>
   );
@@ -364,6 +364,8 @@ function MostCommonMuscleGroup() {
 }
 
 // Main Statistics Component
+
+//sprobaj zadnji dve
 function WorkoutStatistics() {
   return (
     <ScrollView style={styles.container}>
@@ -376,27 +378,47 @@ function WorkoutStatistics() {
       <WorkoutStreak />
       <MostUsedExercise />
       <MostCommonMuscleGroup />
+
+      <LongestShortestWorkout /> 
+      <ExerciseTypeStats />
     </ScrollView>
   );
 }
 
-const styles = {
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    backgroundColor: '#1a2d3d'
   },
   card: {
     padding: 20,
-    backgroundColor: "#e0e0e0",
+    backgroundColor: '#4e937a',
     borderRadius: 10,
     marginBottom: 16,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+    elevation: 4,
   },
   title: {
     fontSize: 24,
+    color: '#e5f4e3',
+    marginBottom: 8,
   },
   value: {
     fontSize: 48,
+    color: '#e5f4e3',
   },
-};
+  axis: {
+    fontSize: 10,
+    fill: '#e5f4e3'
+  }
+});
+
 
 export default WorkoutStatistics;
