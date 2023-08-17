@@ -4,6 +4,7 @@ import Exercise from "./Exercise";
 export interface IExerciseDetails {
   exerciseId: Types.ObjectId;
   name: string,
+  imageURL: string;
   sets: number;
   reps: number;
   weight: number;
@@ -22,6 +23,7 @@ export interface IWorkout extends Document {
 const exerciseDetailsSchema: Schema<IExerciseDetails> = new Schema({
   exerciseId: { type: Schema.Types.ObjectId, ref: 'Exercise' },
   name: String,
+  imageURL: String,
   sets: Number,
   reps: Number,
   weight: Number,

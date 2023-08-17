@@ -16,6 +16,7 @@ import RNPickerSelect from "react-native-picker-select";
 interface Exercise {
   _id: string;
   name: string;
+  imageURL: string;
   weight: boolean;
 }
 
@@ -23,6 +24,7 @@ interface Exercise {
 interface ExerciseDetail {
   exerciseId: string;
   name: string;
+  imageURL: string;
   sets: string;
   reps: string;
   weight: boolean;  // Add this
@@ -50,6 +52,7 @@ const CreateWorkoutScreen = () => {
       const detail: ExerciseDetail = {
         exerciseId: selectedExercise._id,
         name: selectedExercise.name,
+        imageURL: selectedExercise.imageURL,
         sets,
         reps,
         weight: selectedExercise.weight, // Add this
@@ -73,6 +76,7 @@ const CreateWorkoutScreen = () => {
       const exercisesToSend = exerciseDetails.map((exercise) => ({
         exerciseId: exercise.exerciseId, 
         name: exercise.name,
+        imageURL: exercise.imageURL,
         sets: parseInt(exercise.sets),
         reps: parseInt(exercise.reps),
         weight: exercise.weightValue ? parseInt(exercise.weightValue) : 0,
