@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, ScrollView } from "react-native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TouchableOpacity } from "react-native";
@@ -52,7 +52,7 @@ const WorkoutDetailScreen = ({ route }) => {
       try {
         const userToken = await AsyncStorage.getItem("userToken");
         const response = await axios.get(
-          `http://localhost:5001/workouts/${route.params.workoutId}`,
+          `http://192.168.1.106:5001/workouts/${route.params.workoutId}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -72,7 +72,7 @@ const WorkoutDetailScreen = ({ route }) => {
   console.log(workoutDetail);
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#1a2d3d", padding: 20 }}>
+    <ScrollView style={{ flex: 1, backgroundColor: "#1a2d3d", padding: 20 }}>
       <View
         style={{ backgroundColor: "#2e4b61", padding: 10, borderRadius: 5 }}
       >
@@ -176,7 +176,7 @@ const WorkoutDetailScreen = ({ route }) => {
           ) : null}
         </TouchableOpacity>
       ))}
-    </View>
+    </ScrollView>
   );
 };
 

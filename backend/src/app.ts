@@ -503,7 +503,7 @@ app.get("/workouts/:workoutId", authenticateToken, async (req, res) => {
 
 app.put("/workouts/:workoutId", authenticateToken, async (req, res) => {
   const { workoutId } = req.params;
-  const { name, description, exercises } = req.body;
+  const { name, description, duration, exercises } = req.body;
 
   try {
     const workout = await Workout.findById(workoutId);
@@ -519,6 +519,7 @@ app.put("/workouts/:workoutId", authenticateToken, async (req, res) => {
 
     workout.name = name;
     workout.description = description;
+    workout.duration = duration;
     workout.exercises = exercises;
 
     await workout.save();

@@ -35,6 +35,7 @@ const CreateWorkoutScreen = () => {
   // State variables for the component
   const [workoutName, setWorkoutName] = useState("");
   const [description, setDescription] = useState("");
+  const [duration, setDuration] = useState("");
   const [exerciseDetails, setExerciseDetails] = useState<ExerciseDetail[]>([]);
   const [searchInput, setSearchInput] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -85,11 +86,12 @@ const CreateWorkoutScreen = () => {
       console.log("Sending these exercises:", exercisesToSend);
 
       const response = await axios.post(
-        "http://localhost:5001/workouts",
+        "http://192.168.1.106:5001/workouts",
         {
           userId,
           name: workoutName,
           description,
+          duration,
           exercises: exercisesToSend,
         },
         {
@@ -112,7 +114,7 @@ const CreateWorkoutScreen = () => {
     try {
       const userToken = await AsyncStorage.getItem("userToken");
 
-      const response = await axios.get(`http://localhost:5001/exercise`, {
+      const response = await axios.get(`http://192.168.1.106:5001/exercise`, {
         params: {
           name: name, // Changed 'query' to 'name' for clarity
         },
@@ -155,12 +157,16 @@ const CreateWorkoutScreen = () => {
   return (
     <ScrollView style={styles.container} contentContainerStyle={{paddingBottom: 120}}>
       <Text style={styles.label}>Workout Name</Text>
-      <TextInput style={styles.input} placeholder="Workout Name" value={workoutName} onChangeText={(text) => setWorkoutName(text)} />
+      <TextInput style={styles.input} placeholder="Workout Name" placeholderTextColor={"#92b4f4"} value={workoutName} onChangeText={(text) => setWorkoutName(text)} />
   
       <Text style={styles.label}>Description</Text>
-      <TextInput style={styles.input} placeholder="Description" value={description} onChangeText={(text) => setDescription(text)} />
+      <TextInput style={styles.input} placeholder="Description" placeholderTextColor={"#92b4f4"} value={description} onChangeText={(text) => setDescription(text)} />
+
+      <Text style={styles.label}>Duration in minutes</Text>
+      <TextInput style={styles.input} placeholder="Duration" placeholderTextColor={"#92b4f4"} value={duration} onChangeText={setDuration} keyboardType="numeric" />
   
-      <TextInput style={styles.input} placeholder="Search Exercises" value={searchInput} onChangeText={setSearchInput} />
+      <Text style={styles.label}>Exercises</Text>
+      <TextInput style={styles.input} placeholder="Search Exercises" placeholderTextColor={"#92b4f4"} value={searchInput} onChangeText={setSearchInput} />
   
       {/* List of search results */}
       <FlatList
@@ -168,7 +174,7 @@ const CreateWorkoutScreen = () => {
         renderItem={({ item }) => (
           <View style={styles.listItem}>
             <Text>{item.name}</Text>
-            <Button title="Select" onPress={() => onExerciseSelect(item)} />
+            <Button title="Select" onPress={() => onExerciseSelect(item)} color={"#e5f4e3"}/>
           </View>
         )}
       />
@@ -177,11 +183,11 @@ const CreateWorkoutScreen = () => {
         <View style={{ marginTop: 20 }}>
           <Text style={styles.exerciseName}>{selectedExercise.name}</Text>
           {selectedExercise.weight && (
-            <TextInput style={styles.input} placeholder="Weight" value={weight} onChangeText={setWeight} keyboardType="numeric" />
+            <TextInput style={styles.input} placeholder="Weight" placeholderTextColor={"#92b4f4"} value={weight} onChangeText={setWeight} keyboardType="numeric" />
           )}
-          <TextInput style={styles.input} placeholder="Sets" value={sets} onChangeText={setSets} keyboardType="numeric" />
-          <TextInput style={styles.input} placeholder="Reps" value={reps} onChangeText={setReps} keyboardType="numeric" />
-          <Button title="Add Exercise" onPress={addExercise} />
+          <TextInput style={styles.input} placeholder="Sets" placeholderTextColor={"#92b4f4"} value={sets} onChangeText={setSets} keyboardType="numeric" />
+          <TextInput style={styles.input} placeholder="Reps" placeholderTextColor={"#92b4f4"} value={reps} onChangeText={setReps} keyboardType="numeric" />
+          <Button title="Add Exercise" onPress={addExercise} color={"#4e937a"} />
         </View>
       )}
 
@@ -189,16 +195,17 @@ const CreateWorkoutScreen = () => {
         data={exerciseDetails}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <View style={{ marginTop: 10 }}>
-            <Text>{item.name}</Text>
-            {item.weight && <Text>Weight: {item.weightValue}</Text>}
-            <Text>Sets: {item.sets}</Text>
-            <Text>Reps: {item.reps}</Text>
+          <View style={{ marginTop: 10, }}>
+            <Text style={styles.label}>Selected Exercises</Text>
+            <Text style={{color: "#e5f4e3"}}>{item.name}</Text>
+            {item.weight && <Text style={{color: "#e5f4e3"}}>Weight: {item.weightValue}</Text>}
+            <Text style={{color: "#e5f4e3"}}>Sets: {item.sets}</Text>
+            <Text style={{color: "#e5f4e3"}}>Reps: {item.reps}</Text>
           </View>
         )}
       />
 
-      <Button title="Submit Workout" onPress={submitWorkout} />
+      <Button title="Submit Workout" onPress={submitWorkout} color={"#4e937a"}/>
     </ScrollView>
   );
 };
@@ -240,6 +247,7 @@ const styles = StyleSheet.create({
     borderColor: "#ddd",
   },
   exerciseName: {
+    color: "#e5f4e3",
     fontSize: 16,
     marginBottom: 8,
   },

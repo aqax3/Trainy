@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { View, Button, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Button, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import axios from "axios";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -15,7 +15,7 @@ const MyWorkoutScreen = () => {
         try {
           const userToken = await AsyncStorage.getItem("userToken");
           const response = await axios.get(
-            "http://localhost:5001/workouts",
+            "http://192.168.1.106:5001/workouts",
             {
               headers: {
                 "Content-Type": "application/json",
@@ -35,7 +35,7 @@ const MyWorkoutScreen = () => {
         try {
           const userToken = await AsyncStorage.getItem("userToken");
           const response = await axios.get(
-            "http://localhost:5001/adminWorkouts",
+            "http://192.168.1.106:5001/adminWorkouts",
             {
               headers: {
                 "Content-Type": "application/json",
@@ -61,9 +61,9 @@ const MyWorkoutScreen = () => {
   
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#1a2d3d", padding: 10 }}>
-      <View style={{ marginBottom: 20 }}>
-        <Text style={[styles.text, { fontSize: 20, fontWeight: "bold", alignSelf: 'center' }]}>
+    <ScrollView style={{ flex: 1, backgroundColor: "#1a2d3d", padding: 10 }}>
+      <View style={{ marginBottom: 30 }}>
+        <Text style={[styles.text, { fontSize: 20, fontWeight: "bold", alignSelf: 'center', marginBottom: 15 }]}>
           MY WORKOUTS
         </Text>
         {workouts.map((workout, index) => (
@@ -130,7 +130,7 @@ const MyWorkoutScreen = () => {
         </View>
       </View>
       <View>
-        <Text style={{ color: "#e5f4e3", fontSize: 20, fontWeight: "bold", alignSelf: 'center' }}>
+        <Text style={{ color: "#e5f4e3", fontSize: 20, fontWeight: "bold", alignSelf: 'center', marginBottom: 15 }}>
           COMMUNITY WORKOUTS
         </Text>
         {adminWorkouts.map((workout, index) => (
@@ -177,7 +177,7 @@ const MyWorkoutScreen = () => {
           </View>
         ))}
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
