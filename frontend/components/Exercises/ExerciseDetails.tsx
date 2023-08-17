@@ -50,7 +50,7 @@ export default function ExerciseDetails() {
       try {
         const userToken = await AsyncStorage.getItem("userToken");
         const response = await axios.get(
-          `http://192.168.1.106:5001/exercises-id/${exerciseId}`,
+          `http://localhost:5001/exercises-id/${exerciseId}`,
           {
             headers: {
               "Content-Type": "application/json",

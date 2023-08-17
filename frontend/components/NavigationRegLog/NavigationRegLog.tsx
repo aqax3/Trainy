@@ -235,6 +235,7 @@ function HomeTabs() {
             color: "#E5F4E3",
           },
           headerTitle: "Workouts",
+          headerShown: false,
         }}
       />
 
@@ -338,7 +339,7 @@ function WorkoutStack() {
       <Stack.Screen
         name="WorkoutDetail"
         component={WorkoutDetailScreen}
-        options={{ headerTitle: "Workout details" }}
+        options={{ headerTitle: "Workout details", headerShown: false }}
       />
     </Stack.Navigator>
   );
