@@ -329,17 +329,19 @@ function WorkoutStack() {
       <Stack.Screen
         name="CreateWorkoutScreen"
         component={createWorkoutScreen}
-        options={{ headerTitle: "" }}
+        options={{ headerTitle: "", headerShown: false }}
       />
       <Stack.Screen
         name="EditWorkout"
         component={EditWorkout}
-        options={{ headerShown: true }}
+        options={{ headerShown: true , headerTintColor: '#e5f4e3', headerStyle: {
+          backgroundColor: "#1a2d3d",
+        }}}
       />
       <Stack.Screen
         name="WorkoutDetail"
         component={WorkoutDetailScreen}
-        options={{ headerTitle: "Workout details", headerShown: false }}
+        options={{ headerTitle: "Workout details", headerShown: false}}
       />
     </Stack.Navigator>
   );

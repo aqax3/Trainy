@@ -1,14 +1,35 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
-import { View, TextInput, Button, Alert, Text, FlatList } from "react-native";
+import { View, TextInput, Button, Alert, Text, FlatList, StyleSheet, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import { RouteProp } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { ScrollView } from 'react-native'; // Add this import
 
-const EditWorkout = ({ route, navigation }) => {
+
+type EditWorkoutRouteProp = RouteProp<
+  { EditWorkout: { workoutId: string } },
+  "EditWorkout"
+>;
+
+type EditWorkoutNavigationProp = StackNavigationProp<
+  { EditWorkout: { workoutId: string } },
+  "EditWorkout"
+>;
+
+type Props = {
+  route: EditWorkoutRouteProp;
+  navigation: EditWorkoutNavigationProp;
+};
+
+const EditWorkout = ({ route, navigation }: Props) => {
   const workoutId = route.params.workoutId;
 
   const [workoutName, setWorkoutName] = useState("");
   const [description, setDescription] = useState("");
   const [exerciseDetails, setExerciseDetails] = useState([]);
+  const [expandedExerciseId, setExpandedExerciseId] = useState(null);
+
 
   useEffect(() => {
     const fetchWorkoutDetails = async () => {
@@ -92,13 +113,17 @@ const EditWorkout = ({ route, navigation }) => {
   };
 
   return (
-    <View style={{ padding: 20 }}>
+    <ScrollView style={styles.container}>
+      <Text style={styles.labelText}>Workout Name:</Text>
       <TextInput
+        style={styles.input}
         placeholder="Workout Name"
         value={workoutName}
         onChangeText={setWorkoutName}
       />
+      <Text style={styles.labelText}>Description:</Text>
       <TextInput
+        style={styles.input}
         placeholder="Description"
         value={description}
         onChangeText={setDescription}
@@ -108,8 +133,21 @@ const EditWorkout = ({ route, navigation }) => {
         keyExtractor={(item) => item._id}
         renderItem={({ item }) => (
           <View style={{ marginTop: 10 }}>
-            <Text>{item.name}</Text>
+            <Text style={styles.labelText}>{item.name}</Text>
+
+            <TouchableOpacity onPress={() => {
+      setExpandedExerciseId(
+        expandedExerciseId === item._id ? null : item._id
+      );
+    }}>
+      <Text style={{color: '#e5f4e3'}}>Show/Hide Details</Text>
+    </TouchableOpacity>
+    {expandedExerciseId === item._id && (
+      <>
+            <Text style={styles.labelText}>Sets:</Text>
+
             <TextInput
+              style={styles.input}
               placeholder="Sets"
               value={item.sets.toString()}
               onChangeText={(text) => {
@@ -119,9 +157,11 @@ const EditWorkout = ({ route, navigation }) => {
                 );
                 updatedExercises[index].sets = text ? parseInt(text) : "";
                 setExerciseDetails(updatedExercises);
-              }}
-            />
+              }}            />
+            <Text style={styles.labelText}>Reps:</Text>
+
             <TextInput
+              style={styles.input}
               placeholder="Reps"
               value={item.reps.toString()}
               onChangeText={(text) => {
@@ -131,43 +171,92 @@ const EditWorkout = ({ route, navigation }) => {
                 );
                 updatedExercises[index].reps = text ? parseInt(text) : "";
                 setExerciseDetails(updatedExercises);
-              }}
-            />
-            {item.weight ?  (
-              <TextInput
-                placeholder="Weight"
-                value={item.weight.toString()}
-                onChangeText={(text) => {
-                  const updatedExercises = [...exerciseDetails];
-                  const index = updatedExercises.findIndex(
-                    (ex) => ex._id === item._id
-                  );
-                  updatedExercises[index].weight = text ? parseFloat(text) : "";
-                  setExerciseDetails(updatedExercises);
-                }}
-              />
-            ) : null }
-            <Button
-              title="Delete Exercise"
-              onPress={() => {
-                console.log("Deleting exercise with ID:", item._id);
-                console.log("Exercises before deletion:", exerciseDetails);
-                setExerciseDetails((prev) => {
-                  const updatedExercises = prev.filter(
-                    (ex) => ex._id !== item._id
-                  );
-                  console.log("Exercises after deletion:", updatedExercises);
-                  return updatedExercises;
-                });
-              }}
-            />
+              }}            />
+            {item.weight ? (
+              <>
+                <Text style={styles.labelText}>Weight:</Text>
+
+                <TextInput
+                  style={styles.input}
+                  placeholder="Weight"
+                  value={item.weight.toString()}
+                  onChangeText={(text) => {
+                    const updatedExercises = [...exerciseDetails];
+                    const index = updatedExercises.findIndex(
+                      (ex) => ex._id === item._id
+                    );
+                    updatedExercises[index].weight = text
+                      ? parseFloat(text)
+                      : "";
+                    setExerciseDetails(updatedExercises);
+                  }}              
+                    />
+              </>
+            ) : null}
+            <View style={styles.button}>
+              <Button
+                title="Delete Exercise"
+                color='#e5f4e3'
+                onPress={() => {
+                  console.log("Deleting exercise with ID:", item._id);
+                  console.log("Exercises before deletion:", exerciseDetails);
+                  setExerciseDetails((prev) => {
+                    const updatedExercises = prev.filter(
+                      (ex) => ex._id !== item._id
+                    );
+                    console.log("Exercises after deletion:", updatedExercises);
+                    return updatedExercises;
+                  });
+                }}             
+                 />
+            </View>
+            </>
+    )}
           </View>
         )}
       />
-      <Button title="Update Workout" onPress={updateWorkout} />
-      <Button title="Delete Workout" onPress={deleteWorkout} color="red" />
-    </View>
+      <View style={styles.button}>
+        <Button title="Update Workout" onPress={updateWorkout} color="#e5f4e3" />
+      </View>
+      <View style={styles.deleteButton}>
+        <Button title="Delete Workout" onPress={deleteWorkout} color="#e5f4e3" />
+      </View>
+    </ScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 20,
+    backgroundColor: "#1a2d3d",
+    flex: 1
+  },
+  labelText: {
+    fontWeight: "bold",
+    color: "#e5f4e3",
+    marginTop: 10
+  },
+  input: {
+    backgroundColor: "#4e937a",
+    color: "#e5f4e3",
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 5
+  },
+  button: {
+    backgroundColor: "#4e937a",
+    color: "#e5f4e3",
+    marginTop: 10,
+    padding: 10,
+    borderRadius: 5
+  },
+  deleteButton: {
+    backgroundColor: "red",
+    color: "#e5f4e3",
+    marginTop: 10,
+    padding: 10,
+    borderRadius: 5
+  }
+});
 
 export default EditWorkout;

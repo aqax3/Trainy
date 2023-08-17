@@ -6,7 +6,7 @@ import {
   Alert,
   Text,
   FlatList,
-  TouchableOpacity,
+  TouchableOpacity, StyleSheet, ScrollView
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
@@ -153,69 +153,34 @@ const CreateWorkoutScreen = () => {
 
   // Render the component
   return (
-    <View style={{ padding: 20 }}>
-      <Text>Workout Name</Text>
-      <TextInput
-        placeholder="Workout Name"
-        value={workoutName}
-        onChangeText={(text) => setWorkoutName(text)}
-      />
-
-      <Text>Description</Text>
-      <TextInput
-        placeholder="Description"
-        value={description}
-        onChangeText={(text) => setDescription(text)}
-      />
-
-      <TextInput
-        placeholder="Search Exercises"
-        value={searchInput}
-        onChangeText={setSearchInput}
-      />
-
+    <ScrollView style={styles.container} contentContainerStyle={{paddingBottom: 120}}>
+      <Text style={styles.label}>Workout Name</Text>
+      <TextInput style={styles.input} placeholder="Workout Name" value={workoutName} onChangeText={(text) => setWorkoutName(text)} />
+  
+      <Text style={styles.label}>Description</Text>
+      <TextInput style={styles.input} placeholder="Description" value={description} onChangeText={(text) => setDescription(text)} />
+  
+      <TextInput style={styles.input} placeholder="Search Exercises" value={searchInput} onChangeText={setSearchInput} />
+  
       {/* List of search results */}
       <FlatList
         data={searchResults}
         renderItem={({ item }) => (
-          <View
-            key={item.id} // <-- Add the key prop here
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginTop: 10,
-            }}
-          >
+          <View style={styles.listItem}>
             <Text>{item.name}</Text>
             <Button title="Select" onPress={() => onExerciseSelect(item)} />
           </View>
         )}
       />
-
+  
       {selectedExercise && (
         <View style={{ marginTop: 20 }}>
-          <Text>{selectedExercise.name}</Text>
+          <Text style={styles.exerciseName}>{selectedExercise.name}</Text>
           {selectedExercise.weight && (
-            <TextInput
-              placeholder="Weight"
-              value={weight}
-              onChangeText={setWeight}
-              keyboardType="numeric"
-            />
+            <TextInput style={styles.input} placeholder="Weight" value={weight} onChangeText={setWeight} keyboardType="numeric" />
           )}
-          <TextInput
-            placeholder="Sets"
-            value={sets}
-            onChangeText={setSets}
-            keyboardType="numeric"
-          />
-          <TextInput
-            placeholder="Reps"
-            value={reps}
-            onChangeText={setReps}
-            keyboardType="numeric"
-          />
+          <TextInput style={styles.input} placeholder="Sets" value={sets} onChangeText={setSets} keyboardType="numeric" />
+          <TextInput style={styles.input} placeholder="Reps" value={reps} onChangeText={setReps} keyboardType="numeric" />
           <Button title="Add Exercise" onPress={addExercise} />
         </View>
       )}
@@ -234,8 +199,48 @@ const CreateWorkoutScreen = () => {
       />
 
       <Button title="Submit Workout" onPress={submitWorkout} />
-    </View>
+    </ScrollView>
   );
 };
 
 export default CreateWorkoutScreen;
+
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 20,
+    backgroundColor: "#1a2d3d",
+    flex: 1,
+  },
+  label: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: '#e5f4e3',
+    marginVertical: 8,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#e5f4e3",
+    backgroundColor: '#4e937a',
+    borderRadius: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    marginBottom: 16,
+    fontSize: 14,
+  },
+  listItem: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: "#4e937a",
+    padding: 10,
+    borderRadius: 8,
+    marginVertical: 5,
+    borderWidth: 1,
+    borderColor: "#ddd",
+  },
+  exerciseName: {
+    fontSize: 16,
+    marginBottom: 8,
+  },
+});

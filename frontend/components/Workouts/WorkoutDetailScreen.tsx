@@ -78,7 +78,7 @@ const WorkoutDetailScreen = ({ route }) => {
       >
         <Text
           style={{
-            color: "#fff",
+            color: "#e5f4e3",
             fontSize: 30,
             fontWeight: "bold",
             textAlign: "center",
@@ -96,7 +96,7 @@ const WorkoutDetailScreen = ({ route }) => {
           marginTop: 10,
         }}
       >
-        <Text style={{ color: "#fff", fontSize: 18, fontStyle: "italic" }}>
+        <Text style={{ color: "#e5f4e3", fontSize: 18, fontStyle: "italic" }}>
           {workoutDetail?.description}
         </Text>
       </View>
@@ -110,7 +110,7 @@ const WorkoutDetailScreen = ({ route }) => {
             marginTop: 10,
           }}
         >
-          <Text style={{ color: "#fff" }}>
+          <Text style={{ color: "#e5f4e3" }}>
             Difficulty: {workoutDetail.difficulty}
           </Text>
         </View>
@@ -124,7 +124,7 @@ const WorkoutDetailScreen = ({ route }) => {
           marginTop: 10,
         }}
       >
-        <Text style={{ color: "#fff" }}>Exercises:</Text>
+        <Text style={{ color: "#e5f4e3" }}>Exercises:</Text>
       </View>
 
       {workoutDetail?.exercises?.map((exercise, index) => (
@@ -160,17 +160,17 @@ const WorkoutDetailScreen = ({ route }) => {
               resizeMode="cover"
             />
           ) : null}
-          <Text style={{ color: "#fff", fontWeight: "bold" }}>
+          <Text style={{ color: "#e5f4e3", fontWeight: "bold" }}>
             {exercise.name}
           </Text>
-          <Text style={{ color: "#fff", marginTop: 5 }}>
+          <Text style={{ color: "#e5f4e3", marginTop: 5 }}>
             Sets: {exercise.sets}
           </Text>
-          <Text style={{ color: "#fff", marginTop: 5 }}>
+          <Text style={{ color: "#e5f4e3", marginTop: 5 }}>
             Reps: {exercise.reps}
           </Text>
           {exercise.weight ? (
-            <Text style={{ color: "#fff", marginTop: 5 }}>
+            <Text style={{ color: "#e5f4e3", marginTop: 5 }}>
               Weight: {exercise.weight}
             </Text>
           ) : null}
