@@ -59,6 +59,7 @@ const WorkoutDetailScreen = ({ route }) => {
           }
         );
         setWorkoutDetail(response.data);
+        console.log(response.data)
       } catch (error) {
         console.error(error);
       }
