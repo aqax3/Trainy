@@ -56,7 +56,7 @@ The Expo development server will start, and you can access your application thro
 
 Username: demouser
 
-Password: demo1234
+Password: demo1234!
 
 ## Contacts
 
