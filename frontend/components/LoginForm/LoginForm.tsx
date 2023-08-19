@@ -55,7 +55,7 @@ export default function LoginForm({ navigation }: Props) {
     try {
       // Sends a POST request to log in the user
       const response = await axios.post(
-        "http://192.168.1.106:5001/login-user",
+        "https://trainy-app-99e3d8c3fb24.herokuapp.com/login-user",
         {
           username,
           password,

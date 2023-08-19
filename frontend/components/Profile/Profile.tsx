@@ -83,7 +83,7 @@ export default function ProfileScreen() {
       const userToken = await AsyncStorage.getItem("userToken");
       setToken(userToken);
 
-      const response = await axios.get(`http://192.168.1.106:5001/user-info`, {
+      const response = await axios.get(`https://trainy-app-99e3d8c3fb24.herokuapp.com/user-info`, {
         headers: { Authorization: `Bearer ${userToken}` },
       });
 
@@ -130,7 +130,7 @@ export default function ProfileScreen() {
       }
 
       const response = await axios.patch(
-        `http://192.168.1.106:5001/user-update`,
+        `https://trainy-app-99e3d8c3fb24.herokuapp.com/user-update`,
         payload,
         {
           headers: {

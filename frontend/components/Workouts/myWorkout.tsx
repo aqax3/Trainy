@@ -15,7 +15,7 @@ const MyWorkoutScreen = () => {
         try {
           const userToken = await AsyncStorage.getItem("userToken");
           const response = await axios.get(
-            "http://192.168.1.106:5001/workouts",
+            "https://trainy-app-99e3d8c3fb24.herokuapp.com/workouts",
             {
               headers: {
                 "Content-Type": "application/json",
@@ -35,7 +35,7 @@ const MyWorkoutScreen = () => {
         try {
           const userToken = await AsyncStorage.getItem("userToken");
           const response = await axios.get(
-            "http://192.168.1.106:5001/adminWorkouts",
+            "https://trainy-app-99e3d8c3fb24.herokuapp.com/adminWorkouts",
             {
               headers: {
                 "Content-Type": "application/json",

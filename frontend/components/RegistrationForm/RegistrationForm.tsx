@@ -37,7 +37,7 @@ export default function RegistrationForm({ navigation }: Props) {
 
   const isValidPassword = (password) => {
     // Minimum 6 characters, 1 special character and one number
-    const regex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[\s\S]{6,}$/;
+    const regex = /^(?=.*[0-9])(?=.*[!@#$%^&*.])[\s\S]{6,}$/;
     return regex.test(password);
   };
 
@@ -56,7 +56,7 @@ export default function RegistrationForm({ navigation }: Props) {
 
     try {
       const response = await axios.post(
-        "http://192.168.1.106:5001/register-user",
+        "https://trainy-app-99e3d8c3fb24.herokuapp.com/register-user",
         {
           username,
           password,
@@ -75,7 +75,7 @@ export default function RegistrationForm({ navigation }: Props) {
       if (error.response && error.response.status === 400) {
         setRegistrationStatus(error.response.data);
       } else {
-        setRegistrationStatus("Registration failed!");
+        setRegistrationStatus("Login failed!");
       }
     }
   };

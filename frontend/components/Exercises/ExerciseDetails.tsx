@@ -50,7 +50,7 @@ export default function ExerciseDetails() {
       try {
         const userToken = await AsyncStorage.getItem("userToken");
         const response = await axios.get(
-          `http://192.168.1.106:5001/exercises-id/${exerciseId}`,
+          `https://trainy-app-99e3d8c3fb24.herokuapp.com/exercises-id/${exerciseId}`,
           {
             headers: {
               "Content-Type": "application/json",
