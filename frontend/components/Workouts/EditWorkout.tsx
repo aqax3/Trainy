@@ -159,7 +159,7 @@ const EditWorkout = ({ route, navigation }: Props) => {
         placeholderTextColor={"#92b4f4"}
       />
 
-      <Divider width={5}></Divider>
+      <Divider width={30} color="transparent"></Divider>
 
       <Text style={styles.labelText}>Exercises:</Text>
       <FlatList
@@ -290,6 +290,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#e5f4e3",
     marginTop: 10,
+    fontSize: 20
   },
   input: {
     backgroundColor: "#4e937a",
