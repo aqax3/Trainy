@@ -72,7 +72,7 @@ const WorkoutDetailScreen = ({ route }) => {
   console.log(workoutDetail);
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: "#1a2d3d", padding: 20 }}>
+    <ScrollView style={{ flex: 1, backgroundColor: "#1a2d3d", padding: 20 }} contentContainerStyle={{ paddingBottom: 120 }}>
       <View
         style={{ backgroundColor: "#2e4b61", padding: 10, borderRadius: 5 }}
       >

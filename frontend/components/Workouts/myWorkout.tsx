@@ -1,5 +1,12 @@
 import React, { useState, useCallback } from "react";
-import { View, Button, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  Button,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
 import axios from "axios";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -8,64 +15,86 @@ const MyWorkoutScreen = () => {
   const navigation = useNavigation<any>();
   const [workouts, setWorkouts] = useState<any[]>([]);
   const [adminWorkouts, setAdminWorkouts] = useState<any[]>([]);
+  const [selectedDifficulty, setSelectedDifficulty] = useState<string | null>(
+    null
+  );
 
   useFocusEffect(
     useCallback(() => {
-      const fetchWorkouts = async () => {
-        try {
-          const userToken = await AsyncStorage.getItem("userToken");
-          const response = await axios.get(
-            "https://trainy-app-99e3d8c3fb24.herokuapp.com/workouts",
-            {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${userToken}`,
-              },
-            }
-          );
-
-          setWorkouts(response.data);
-          console.log(response.data);
-        } catch (error) {
-          console.error(error);
-        }
-      };
-
-      const fetchAdminWorkouts = async () => {
-        try {
-          const userToken = await AsyncStorage.getItem("userToken");
-          const response = await axios.get(
-            "https://trainy-app-99e3d8c3fb24.herokuapp.com/adminWorkouts",
-            {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${userToken}`,
-              },
-            }
-          );
-
-          setAdminWorkouts(response.data);
-          console.log(response.data);
-        } catch (error) {
-          console.error(error);
-        }
-      };
-
       fetchWorkouts();
       fetchAdminWorkouts();
 
       return () => {};
-    }, [])
+    }, [selectedDifficulty])
   );
 
-  
+  const fetchWorkouts = async () => {
+    try {
+      const userToken = await AsyncStorage.getItem("userToken");
+      const response = await axios.get(
+        "https://trainy-app-99e3d8c3fb24.herokuapp.com/workouts",
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${userToken}`,
+          },
+        }
+      );
+
+      setWorkouts(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchAdminWorkouts = async () => {
+    try {
+      const userToken = await AsyncStorage.getItem("userToken");
+      let url = "https://trainy-app-99e3d8c3fb24.herokuapp.com/adminWorkouts";
+
+      if (selectedDifficulty) {
+        url += `?difficulty=${selectedDifficulty}`;
+      }
+
+      const response = await axios.get(url, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userToken}`,
+        },
+      });
+
+      setAdminWorkouts(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: "#1a2d3d", padding: 10 }}>
       <View style={{ marginBottom: 30 }}>
-        <Text style={[styles.text, { fontSize: 20, fontWeight: "bold", alignSelf: 'center', marginBottom: 15 }]}>
+        <Text
+          style={[
+            styles.text,
+            {
+              fontSize: 20,
+              fontWeight: "bold",
+              alignSelf: "center",
+              marginBottom: 15,
+            },
+          ]}
+        >
           MY WORKOUTS
         </Text>
+        <View style={{ justifyContent: "center", alignItems: "center", paddingBottom: 10 }}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("CreateWorkoutScreen")}
+          >
+            <View style={styles.textWrapper}>
+              <Text style={styles.text}>Create New Workout</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
         {workouts.map((workout, index) => (
           <View
             key={index}
@@ -80,7 +109,7 @@ const MyWorkoutScreen = () => {
             }}
           >
             <TouchableOpacity
-              style={styles.buttonWrapper}
+              style={styles.myButtonWrapper}
               onPress={() =>
                 navigation.navigate("WorkoutDetail", { workoutId: workout._id })
               }
@@ -88,7 +117,7 @@ const MyWorkoutScreen = () => {
               <Text style={styles.text}>{workout.name}</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.buttonWrapper}
+              style={styles.myButtonWrapper}
               onPress={() =>
                 navigation.navigate("EditWorkout", { workoutId: workout._id })
               }
@@ -96,7 +125,7 @@ const MyWorkoutScreen = () => {
               <Text style={styles.text}>Edit</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.buttonWrapper}
+              style={styles.myButtonWrapper}
               onPress={() =>
                 navigation.navigate("App", {
                   screen: "HomeDrawer",
@@ -117,22 +146,51 @@ const MyWorkoutScreen = () => {
             </TouchableOpacity>
           </View>
         ))}
-        <View
-          style={{ justifyContent: "center", alignItems: "center" }}
-        >
-          <TouchableOpacity
-            onPress={() => navigation.navigate("CreateWorkoutScreen")}
-          >
-            <View style={styles.textWrapper}>
-              <Text style={styles.text}>Create New Workout</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
       </View>
       <View>
-        <Text style={{ color: "#e5f4e3", fontSize: 20, fontWeight: "bold", alignSelf: 'center', marginBottom: 15 }}>
+        <Text
+          style={{
+            color: "#e5f4e3",
+            fontSize: 20,
+            fontWeight: "bold",
+            alignSelf: "center",
+            marginBottom: 15,
+          }}
+        >
           COMMUNITY WORKOUTS
         </Text>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-around",
+            marginBottom: 20,
+          }}
+        >
+          <Button
+            title="Beginner"
+            onPress={() => {
+              setSelectedDifficulty("beginner");
+              fetchAdminWorkouts();
+            }}
+            color={"#e5f4e3"}
+          />
+          <Button
+            title="Intermediate"
+            onPress={() => {
+              setSelectedDifficulty("intermediate");
+              fetchAdminWorkouts();
+            }}
+            color={"#e5f4e3"}
+          />
+          <Button
+            title="Advanced"
+            onPress={() => {
+              setSelectedDifficulty("advanced");
+              fetchAdminWorkouts();
+            }}
+            color={"#e5f4e3"}
+          />
+        </View>
         {adminWorkouts.map((workout, index) => (
           <View
             key={index}
@@ -194,6 +252,21 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     borderWidth: 1,
     borderColor: "#e5f4e3",
+    width: 150
+  },
+  myButtonWrapper: {
+    backgroundColor: "#2e4a62",
+    borderRadius: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 5,
+    marginHorizontal: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderWidth: 1,
+    borderColor: "#e5f4e3",
+    width: 100
   },
   text: {
     color: "#e5f4e3",
