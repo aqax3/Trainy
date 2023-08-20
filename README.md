@@ -52,6 +52,10 @@ npx expo start --tunnel
 ```
 The Expo development server will start, and you can access your application through the Expo app on your mobile device, which you can download on the iOS App Store, or an emulator.
 
+## Link to test the app on expo
+
+exp://exp.host/@aqax3/trainy_final?release-channel=default
+
 ## Demo Account
 
 Username: demouser
