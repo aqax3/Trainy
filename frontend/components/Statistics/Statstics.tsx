@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, ScrollView, StyleSheet } from "react-native";
-import { LineChart, BarChart, XAxis } from "react-native-svg-charts";
 import { IWorkout } from '../../../backend/src/schemas/Workout';
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -63,55 +62,6 @@ function CompletedWorkouts() {
     <View style={styles.card}>
       <Text style={styles.title}>Completed Workouts</Text>
       <Text style={styles.text}>{completedWorkouts}</Text>
-    </View>
-  );
-}
-
-function ExerciseTypeStats() {
-  const [exerciseData, setExerciseData] = useState<number[]>([]);
-  const [exerciseLabels, setExerciseLabels] = useState<string[]>([]);
-
-  useEffect(() => {
-    const fetchExerciseTypeStats = async () => {
-      try {
-        const config = await getAxiosConfig();
-        const response = await axios.get(
-          "https://trainy-app-99e3d8c3fb24.herokuapp.com/exerciseTypeStats",
-          config
-        );
-        const dataValues = response.data.map(
-          (item: { value: any }) => item.value
-        );
-        const dataLabels = response.data.map(
-          (item: { label: any }) => item.label
-        );
-
-        setExerciseData(dataValues);
-        setExerciseLabels(dataLabels);
-      } catch (error) {
-        console.error("Axios Error:", error);
-      }
-    };
-
-    fetchExerciseTypeStats();
-  }, []);
-
-  return (
-    <View style={styles.card}>
-      <Text style={styles.title}>Exercise Type Stats</Text>
-      <BarChart
-        style={{ height: 200, flex: 1 }}
-        data={exerciseData}
-        svg={{ fill: "#92b4f4" }}
-        contentInset={{ top: 20, bottom: 20 }}
-      />
-      <XAxis
-        style={{ marginHorizontal: -10, marginTop: 10 }}
-        data={exerciseLabels}
-        formatLabel={(value, index) => exerciseLabels[index]}
-        contentInset={{ left: 15, right: 15 }}
-        svg={{ fontSize: 10 }}
-      />
     </View>
   );
 }

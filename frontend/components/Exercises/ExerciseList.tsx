@@ -1,24 +1,17 @@
-import React, { useState } from "react";
-import RNPickerSelect from "react-native-picker-select";
-import { useEffect } from "react";
-
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { ActivityIndicator, Text, TouchableOpacity } from "react-native";
+import { ActivityIndicator, TouchableOpacity } from "react-native";
 import { Card } from "@rneui/base";
 import { ScrollView } from "react-native";
 import { TextInput } from "react-native";
 import { Animated } from "react-native";
-import { BlurView } from "@react-native-community/blur";
-import { LinearGradient } from "expo-linear-gradient";
-
 import { useNavigation } from "@react-navigation/native";
-
 import { View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import YoutubePlayer from "react-native-youtube-iframe";
 import { Image } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { StyleSheet } from "react-native";
+import ModalDropdown from 'react-native-modal-dropdown';
 
 interface Exercise {
   _id: string;
@@ -41,9 +34,6 @@ export default function ExerciseList() {
   );
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-
-  const [isLoadingImage, setIsLoadingImage] = useState(false);
-
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredExercises, setFilteredExercises] = useState<Exercise[]>([]);
 
@@ -62,12 +52,15 @@ export default function ExerciseList() {
     setIsLoading(true);
     try {
       const userToken = await AsyncStorage.getItem("userToken");
-      const response = await axios.get(`https://trainy-app-99e3d8c3fb24.herokuapp.com/exercises`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${userToken}`,
-        },
-      });
+      const response = await axios.get(
+        `https://trainy-app-99e3d8c3fb24.herokuapp.com/exercises`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${userToken}`,
+          },
+        }
+      );
       setExercises(response.data);
     } catch (error) {
       console.error(error);
@@ -131,24 +124,47 @@ export default function ExerciseList() {
           {
             //DROP DOWN MENU
           }
-          <RNPickerSelect
-            onValueChange={(value) => setSelectedMuscleGroup(value)}
-            items={[
-              { label: "CHEST", value: "chest" },
-              { label: "BACK", value: "back" },
-              { label: "ARMS", value: "arms" },
-              { label: "LEGS", value: "legs" },
-              { label: "SHOULDERS", value: "shoulders" },
-              { label: "ABDOMINALS", value: "abdominals" },
-            ]}
-            style={{
-              viewContainer: styles.pickerContainer,
-              inputIOS: styles.pickerInputIOS,
-              inputAndroid: styles.pickerInputAndroid,
-            }}
-            value={selectedMuscleGroup}
-            placeholder={{ label: "Select a muscle group", value: null }}
-          />
+          <ModalDropdown 
+    options={[
+        'Select a muscle group',
+        'CHEST',
+        'BACK',
+        'ARMS',
+        'LEGS',
+        'SHOULDERS',
+        'ABDOMINALS',
+    ]}
+    defaultValue={'Select a muscle group'}
+    onSelect={(index, value) => {
+        switch (value) {
+            case 'CHEST':
+                setSelectedMuscleGroup('chest');
+                break;
+            case 'BACK':
+                setSelectedMuscleGroup('back');
+                break;
+            case 'ARMS':
+                setSelectedMuscleGroup('arms');
+                break;
+            case 'LEGS':
+                setSelectedMuscleGroup('legs');
+                break;
+            case 'SHOULDERS':
+                setSelectedMuscleGroup('shoulders');
+                break;
+            case 'ABDOMINALS':
+                setSelectedMuscleGroup('abdominals');
+                break;
+            default:
+                setSelectedMuscleGroup(null);
+                break;
+        }
+        
+    }}
+    style={styles.modalDropdown} // Add this line
+    textStyle={styles.modalDropdownText} // Add this line
+    dropdownStyle={styles.modalDropdownList} // Add
+/>
         </View>
       </View>
 
@@ -166,15 +182,10 @@ export default function ExerciseList() {
           >
             <Card key={index} containerStyle={styles.card}>
               <Card.Title style={styles.cardTitle}>{exercise.name}</Card.Title>
-              {isLoadingImage && (
-                <ActivityIndicator size="large" color="#0000ff" />
-              )}
               <Image
                 source={{ uri: exercise.imageURL }}
                 style={styles.image}
                 resizeMode="cover"
-                onLoadStart={() => setIsLoadingImage(true)}
-                onLoadEnd={() => setIsLoadingImage(false)}
               />
             </Card>
           </TouchableOpacity>
@@ -208,10 +219,8 @@ const styles = StyleSheet.create({
     color: "#e5f4e3",
     backgroundColor: "#4e937a",
   },
-  pickerSearchContainer: {
-  },
-  pickerInnerContainer: {
-  },
+  pickerSearchContainer: {},
+  pickerInnerContainer: {},
   pickerContainer: {
     borderWidth: 3,
     borderColor: "#4e937a",
@@ -223,14 +232,14 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 10,
     paddingVertical: 8,
-    textAlign: 'center'
+    textAlign: "center",
   },
   pickerInputIOS: {
     color: "#e5f4e3",
     paddingTop: 13,
     paddingHorizontal: 10,
     paddingBottom: 13,
-    textAlign: 'center'
+    textAlign: "center",
   },
   card: {
     backgroundColor: "#1a2d3d",
@@ -254,4 +263,25 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderRadius: 15,
   },
+  modalDropdown: {
+    backgroundColor: '#92b4f4',
+    paddingVertical: 10, 
+    paddingHorizontal: 15,
+    borderRadius: 10, 
+    height: 50, // adjust as needed
+    justifyContent: 'center',
+},
+modalDropdownText: {
+    color: '#e5f4e3',
+    fontSize: 16, // adjust as needed
+},
+modalDropdownList: {
+    backgroundColor: '#92b4f4',
+    borderColor: '#e5f4e3',
+    borderWidth: 2,
+    marginTop: 10, // adds a little spacing between button and list
+    width: '90%', // You can adjust this based on your design preferences
+    borderRadius: 5,
+},
+
 });

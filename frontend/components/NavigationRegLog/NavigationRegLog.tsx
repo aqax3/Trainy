@@ -14,7 +14,6 @@ import RegistrationForm from "../RegistrationForm/RegistrationForm";
 import LoginForm from "../LoginForm/LoginForm";
 import HomePage from "../HomePage/HomePage";
 import myWorkoutScreen from "../Workouts/myWorkout";
-import WorkoutScreen from "../Calendar/Calendar";
 import ExerciseList from "../Exercises/ExerciseList";
 import { Fontisto } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
@@ -28,8 +27,6 @@ import EditWorkout from "../Workouts/EditWorkout";
 import WorkoutStatistics from "../Statistics/Statstics";
 import ProfileScreen from "../Profile/Profile";
 import WorkoutDetailScreen from "../Workouts/WorkoutDetailScreen";
-import { CommonActions } from "@react-navigation/native";
-
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Stack = createStackNavigator();
@@ -263,13 +260,6 @@ function HomeTabs() {
         }}
         listeners={({ navigation }) => ({
           tabPress: (e) => {
-            // Prevent the default action (i.e., navigating to the tab)
-            e.preventDefault();
-
-            // Reset the ExerciseStack to start with ExerciseList
-            navigation.jumpTo("Exercises");
-
-            // Navigate to the desired screen (it will be ExerciseList as we reset it above)
             navigation.navigate("ExerciseList");
           },
         })}
