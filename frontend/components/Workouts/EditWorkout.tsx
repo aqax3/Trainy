@@ -124,7 +124,7 @@ const EditWorkout = ({ route, navigation }: Props) => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={{paddingBottom: 150}}>
       <Text style={styles.labelText}>Workout Name:</Text>
       <TextInput
         style={styles.input}

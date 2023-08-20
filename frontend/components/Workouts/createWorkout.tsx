@@ -155,7 +155,7 @@ const CreateWorkoutScreen = () => {
 
   // Render the component
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{paddingBottom: 120}}>
+    <ScrollView style={styles.container} contentContainerStyle={{paddingBottom: 250}}>
       <Text style={styles.label}>Workout Name</Text>
       <TextInput style={styles.input} placeholder="Workout Name" placeholderTextColor={"#92b4f4"} value={workoutName} onChangeText={(text) => setWorkoutName(text)} />
   
