@@ -44,11 +44,11 @@ npm install
 ```
 Start the frontend part using Expo CLI:
 ```bash
-npx expo start
+npx expo start --no-dev --minify
 ```
 If the connection fails, try running Expo in tunnel mode:
 ```bash
-npx expo start --tunnel
+npx expo start --no-dev --minify --tunnel
 ```
 The Expo development server will start, and you can access your application through the Expo app on your mobile device, which you can download on the iOS App Store, or an emulator.
 
