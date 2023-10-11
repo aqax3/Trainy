@@ -86,7 +86,7 @@ const CreateWorkoutScreen = () => {
       console.log("Sending these exercises:", exercisesToSend);
 
       const response = await axios.post(
-        "https://trainy-app-99e3d8c3fb24.herokuapp.com/workouts",
+        "http://localhost:5001/workouts",
         {
           userId,
           name: workoutName,
@@ -114,7 +114,7 @@ const CreateWorkoutScreen = () => {
     try {
       const userToken = await AsyncStorage.getItem("userToken");
 
-      const response = await axios.get(`https://trainy-app-99e3d8c3fb24.herokuapp.com/exercise`, {
+      const response = await axios.get(`http://localhost:5001/exercise`, {
         params: {
           name: name, // Changed 'query' to 'name' for clarity
         },

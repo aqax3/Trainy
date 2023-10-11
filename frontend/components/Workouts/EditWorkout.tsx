@@ -45,7 +45,7 @@ const EditWorkout = ({ route, navigation }: Props) => {
       try {
         const userToken = await AsyncStorage.getItem("userToken");
         const response = await axios.get(
-          `https://trainy-app-99e3d8c3fb24.herokuapp.com/workouts/${workoutId}`,
+          `http://localhost:5001/workouts/${workoutId}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -82,7 +82,7 @@ const EditWorkout = ({ route, navigation }: Props) => {
     try {
       const userToken = await AsyncStorage.getItem("userToken");
       await axios.put(
-        `https://trainy-app-99e3d8c3fb24.herokuapp.com/workouts/${workoutId}`,
+        `http://localhost:5001/workouts/${workoutId}`,
         {
           name: workoutName,
           description,
@@ -108,7 +108,7 @@ const EditWorkout = ({ route, navigation }: Props) => {
   const deleteWorkout = async () => {
     try {
       const userToken = await AsyncStorage.getItem("userToken");
-      await axios.delete(`https://trainy-app-99e3d8c3fb24.herokuapp.com/workouts/${workoutId}`, {
+      await axios.delete(`http://localhost:5001/workouts/${workoutId}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${userToken}`,

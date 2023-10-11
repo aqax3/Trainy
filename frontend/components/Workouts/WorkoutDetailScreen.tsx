@@ -52,7 +52,7 @@ const WorkoutDetailScreen = ({ route }) => {
       try {
         const userToken = await AsyncStorage.getItem("userToken");
         const response = await axios.get(
-          `https://trainy-app-99e3d8c3fb24.herokuapp.com/workouts/${route.params.workoutId}`,
+          `http://localhost:5001/workouts/${route.params.workoutId}`,
           {
             headers: {
               "Content-Type": "application/json",

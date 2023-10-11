@@ -32,7 +32,7 @@ const MyWorkoutScreen = () => {
     try {
       const userToken = await AsyncStorage.getItem("userToken");
       const response = await axios.get(
-        "https://trainy-app-99e3d8c3fb24.herokuapp.com/workouts",
+        "http://localhost:5001/workouts",
         {
           headers: {
             "Content-Type": "application/json",
@@ -51,7 +51,7 @@ const MyWorkoutScreen = () => {
   const fetchAdminWorkouts = async () => {
     try {
       const userToken = await AsyncStorage.getItem("userToken");
-      let url = "https://trainy-app-99e3d8c3fb24.herokuapp.com/adminWorkouts";
+      let url = "http://localhost:5001/adminWorkouts";
 
       if (selectedDifficulty) {
         url += `?difficulty=${selectedDifficulty}`;

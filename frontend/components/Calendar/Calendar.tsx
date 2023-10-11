@@ -83,7 +83,7 @@ const CalendarScreen: React.FC = () => {
     const userToken = await AsyncStorage.getItem("userToken");
     try {
       const response = await axios.get(
-        "https://trainy-app-99e3d8c3fb24.herokuapp.com/workoutcalendar",
+        "http://localhost:5001/workoutcalendar",
         {
           headers: {
             Authorization: `Bearer ${userToken}`,
@@ -115,7 +115,7 @@ const CalendarScreen: React.FC = () => {
     const fetchWorkouts = async () => {
       const userToken = await AsyncStorage.getItem("userToken");
 
-      fetch("https://trainy-app-99e3d8c3fb24.herokuapp.com/workoutcalendar", {
+      fetch("http://localhost:5001/workoutcalendar", {
         headers: {
           Authorization: `Bearer ${userToken}`,
         },
@@ -182,7 +182,7 @@ const CalendarScreen: React.FC = () => {
         workout: currentWorkoutId,
       };
       const response = await axios.post(
-        "https://trainy-app-99e3d8c3fb24.herokuapp.com/workoutcalendar",
+        "http://localhost:5001/workoutcalendar",
         workoutData,
         {
           headers: {
@@ -275,7 +275,7 @@ const CalendarScreen: React.FC = () => {
 
     try {
       const response = await axios.patch(
-        `https://trainy-app-99e3d8c3fb24.herokuapp.com/workoutcalendar/${id}/completed`,
+        `http://localhost:5001/workoutcalendar/${id}/completed`,
         { completed: completedStatus },
         {
           headers: {
@@ -343,7 +343,7 @@ const CalendarScreen: React.FC = () => {
 
     try {
       const response = await axios.delete(
-        `https://trainy-app-99e3d8c3fb24.herokuapp.com/workoutcalendar/${id}`,
+        `http://localhost:5001/workoutcalendar/${id}`,
         {
           headers: {
             Authorization: `Bearer ${userToken}`,

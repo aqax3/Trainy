@@ -41,7 +41,7 @@ function CompletedWorkouts() {
         try {
           const config = await getAxiosConfig();
           const response = await axios.get(
-            "https://trainy-app-99e3d8c3fb24.herokuapp.com/completedWorkouts",
+            "http://localhost:5001/completedWorkouts",
             config
           );
           console.log("Completed Workouts Response:", response.data);
@@ -75,7 +75,7 @@ function AverageWorkoutDuration() {
         try {
           const config = await getAxiosConfig();
           const response = await axios.get(
-            "https://trainy-app-99e3d8c3fb24.herokuapp.com/averageWorkoutDuration",
+            "http://localhost:5001/averageWorkoutDuration",
             config
           );
           setAverageDuration(response.data.averageDuration);
@@ -110,7 +110,7 @@ function LongestShortestWorkout() {
         try {
           const config = await getAxiosConfig();
           const response = await axios.get(
-            "https://trainy-app-99e3d8c3fb24.herokuapp.com/workoutLengthStats",
+            "http://localhost:5001/workoutLengthStats",
             config
           );
           setLongestWorkout(response.data.longest);
@@ -146,7 +146,7 @@ function MostCommonExercise() {
         try {
           const config = await getAxiosConfig();
           const response = await axios.get(
-            "https://trainy-app-99e3d8c3fb24.herokuapp.com/mostCommonExercise",
+            "http://localhost:5001/mostCommonExercise",
             config
           );
           console.log(response.data);
@@ -181,7 +181,7 @@ function AverageSetsAndReps() {
         try {
           const config = await getAxiosConfig();
           const response = await axios.get(
-            "https://trainy-app-99e3d8c3fb24.herokuapp.com/statistics/average-sets-reps",
+            "http://localhost:5001/statistics/average-sets-reps",
             config
           );
           console.log("Average Sets and Reps Response:", response.data);
@@ -220,7 +220,7 @@ function WorkoutStreak() {
         try {
           const config = await getAxiosConfig();
           const response = await axios.get(
-            "https://trainy-app-99e3d8c3fb24.herokuapp.com/statistics/workout-streak",
+            "http://localhost:5001/statistics/workout-streak",
             config
           );
           console.log("Workout Streak Response:", response.data);
@@ -253,7 +253,7 @@ function RecentCompletedWorkouts() {
       const fetchRecentCompletedWorkouts = async () => {
         try {
           const config = await getAxiosConfig();
-          const response = await axios.get("https://trainy-app-99e3d8c3fb24.herokuapp.com/statistics/recent-completed-workouts", config);
+          const response = await axios.get("http://localhost:5001/statistics/recent-completed-workouts", config);
           setRecentWorkouts(response.data);
         } catch (error) {
           console.error("Axios Error:", error);
@@ -286,7 +286,7 @@ function MostUsedExercise() {
       const fetchMostUsedExercise = async () => {
         try {
           const config = await getAxiosConfig();
-          const response = await axios.get("https://trainy-app-99e3d8c3fb24.herokuapp.com/statistics/most-used-exercise", config);
+          const response = await axios.get("http://localhost:5001/statistics/most-used-exercise", config);
           setExercise(response.data);
         } catch (error) {
           console.error("Axios Error:", error);
@@ -317,7 +317,7 @@ function TotalWeightLifted() {
       const fetchTotalWeightLifted = async () => {
         try {
           const config = await getAxiosConfig();
-          const response = await axios.get("https://trainy-app-99e3d8c3fb24.herokuapp.com/statistics/total-weight-lifted", config);
+          const response = await axios.get("http://localhost:5001/statistics/total-weight-lifted", config);
           setTotalWeight(response.data);
         } catch (error) {
           console.error("Axios Error:", error);
@@ -348,7 +348,7 @@ function MostCommonMuscleGroup() {
       const fetchMostCommonMuscleGroup = async () => {
         try {
           const config = await getAxiosConfig();
-          const response = await axios.get("https://trainy-app-99e3d8c3fb24.herokuapp.com/statistics/most-common-muscle-group", config);
+          const response = await axios.get("http://localhost:5001/statistics/most-common-muscle-group", config);
           setMostCommonGroup(response.data);
         } catch (error) {
           console.error("Axios Error:", error);

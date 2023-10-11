@@ -56,7 +56,7 @@ export default function RegistrationForm({ navigation }: Props) {
 
     try {
       const response = await axios.post(
-        "https://trainy-app-99e3d8c3fb24.herokuapp.com/register-user",
+        "http://localhost:5001/register-user",
         {
           username,
           password,
