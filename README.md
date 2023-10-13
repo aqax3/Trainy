@@ -71,3 +71,15 @@ Luka Moleh: luka.moleh@student.um.si
 Nik Fišer: nik.fiser@student.um.si
 
 Anej Lah: anej.lah@student.um.si
+
+
+After scaning the QR code use postman:
+
+POST      localhost:5001/register-user
+body-raw: {"username": "TestAdmin",
+"password": "admin",
+"adminCode": "ew2AH9LOKwCm885naOwyzPfOYval4Jk5"}
+
+
+
+
